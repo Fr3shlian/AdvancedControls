@@ -59,7 +59,7 @@ namespace AdvancedControls.Common.Players
     {
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
-            if (KeybindSystem.DashLeftKeybind.JustPressed && Player.dashDelay == 0)
+            if ((KeybindSystem.DashLeftKeybind.JustPressed || KeybindSystem.DashLeftKeybind.JustReleased) && Player.dashDelay == 0)
             {
                 bool wasMounted = Player.mount.Active;
 
@@ -120,7 +120,7 @@ namespace AdvancedControls.Common.Players
     {
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
-            if (KeybindSystem.DashRightKeybind.JustPressed && Player.dashDelay == 0)
+            if ((KeybindSystem.DashRightKeybind.JustPressed || KeybindSystem.DashRightKeybind.JustReleased) && Player.dashDelay == 0)
             {
                 bool wasMounted = Player.mount.Active;
 
@@ -181,7 +181,7 @@ namespace AdvancedControls.Common.Players
 
         private void CycleRight()
         {
-            if (Player.selectedItem == 49)
+            if (Player.selectedItem > 48)
             {
                 Player.selectedItem = 0;
             }
