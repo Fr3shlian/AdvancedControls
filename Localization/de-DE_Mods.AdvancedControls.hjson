@@ -1,0 +1,49 @@
+﻿# This file will automatically update with entries for new content after a build and reload
+
+Keybinds: {
+	QuickStack.DisplayName: In Kiste Einsortieren
+	DashLeft.DisplayName: Nach links stürmen
+	DashRight.DisplayName: Nach rechts stürmen
+	InventoryReference1.DisplayName: Inventarbezug 1
+	LootAll.DisplayName: Kiste Ausräumen
+	DepositAll.DisplayName: Kiste befüllen
+	InventoryReference2.DisplayName: Inventarbezug 2
+	InventoryReference3.DisplayName: Inventarbezug 3
+	InventoryReference4.DisplayName: Inventarbezug 4
+	InventoryReference5.DisplayName: Inventarbezug 5
+	InventoryReference6.DisplayName: Inventarbezug 6
+	InventoryReference7.DisplayName: Inventarbezug 7
+	InventoryReference8.DisplayName: Inventarbezug 8
+	InventoryReference9.DisplayName: Inventarbezug 9
+	InventoryReference10.DisplayName: Inventarbezug 10
+	EquipmentChangeReference4.DisplayName: Ausrüstung wechseln 4
+	EquipmentChangeReference3.DisplayName: Ausrüstung wechseln 3
+	EquipmentChangeReference2.DisplayName: Ausrüstung wechseln 2
+	EquipmentChangeReference1.DisplayName: Ausrüstung wechseln 1
+	CycleInventoryLeft.DisplayName: Vorheriger Inventarslot
+	CycleInventoryRight.DisplayName: Nächster Inventarslot
+}
+
+Configs: {
+	AdvancedControlsConfig: {
+		DisplayName: Advanced Controls Einstellungen
+		Headers.Dash: Losstürmen
+
+		mountDashBehaviour: {
+			Label: Während dem Reiten
+			Tooltip: ""
+		}
+
+		cancelHooks: {
+			Label: Enterhaken einholen
+			Tooltip: ""
+		}
+	}
+
+	MountDashBehaviour: {
+		Tooltip: ""
+		DashWithMount.Label: Mit Reittier losstürmen
+		DismountDashRemount.Label: Absatteln und wieder aufsatteln
+		DismountDash.Label: Absatteln und losstürmen
+	}
+}

@@ -1,0 +1,49 @@
+# This file will automatically update with entries for new content after a build and reload
+
+Keybinds: {
+	QuickStack.DisplayName: Quick Stack
+	DashLeft.DisplayName: Dash Left
+	DashRight.DisplayName: Dash Right
+	InventoryReference1.DisplayName: Inventory 1
+	LootAll.DisplayName: Loot All
+	DepositAll.DisplayName: Deposit All
+	InventoryReference2.DisplayName: Inventory 2
+	InventoryReference3.DisplayName: Inventory 3
+	InventoryReference4.DisplayName: Inventory 4
+	InventoryReference5.DisplayName: Inventory 5
+	InventoryReference6.DisplayName: Inventory 6
+	InventoryReference7.DisplayName: Inventory 7
+	InventoryReference8.DisplayName: Inventory 8
+	InventoryReference9.DisplayName: Inventory 9
+	InventoryReference10.DisplayName: Inventory 10
+	EquipmentChangeReference4.DisplayName: Equipment Change 4
+	EquipmentChangeReference3.DisplayName: Equipment Change 3
+	EquipmentChangeReference2.DisplayName: Equipment Change 2
+	EquipmentChangeReference1.DisplayName: Equipment Change 1
+	CycleInventoryLeft.DisplayName: Cycle Inventory Left
+	CycleInventoryRight.DisplayName: Cycle Inventory Right
+}
+
+Configs: {
+	AdvancedControlsConfig: {
+		DisplayName: Advanced Controls Config
+		Headers.Dash: Dash
+
+		mountDashBehaviour: {
+			Label: While mounted
+			Tooltip: ""
+		}
+
+		cancelHooks: {
+			Label: Cancel hooks on dash
+			Tooltip: ""
+		}
+	}
+
+	MountDashBehaviour: {
+		Tooltip: ""
+		DashWithMount.Label: Dash with mount
+		DismountDashRemount.Label: Dismount, dash and remount
+		DismountDash.Label: Dismount and dash
+	}
+}

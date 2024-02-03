@@ -1,0 +1,12 @@
+Adds extra keybindings for:
+	- Chest actions
+	- Dashing
+	- Cycling all inventory slots
+	- Dynamic shortcuts to inventory slots
+	- Equipment Change
+
+Instruction for the last two kinds of keybinds:
+	1. Open your inventory
+	2. Hover over a slot
+	3. Press the keybind to bind it to that inventory slot
+	4. Press it outside of your inventory to activate it
