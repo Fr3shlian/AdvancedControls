@@ -1,3 +1,4 @@
 displayName = Advanced Controls
 author = Fr3shlian
 version = 1.0
+side = Client
