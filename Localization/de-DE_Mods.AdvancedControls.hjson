@@ -1,21 +1,23 @@
-﻿# This file will automatically update with entries for new content after a build and reload
+# This file will automatically update with entries for new content after a build and reload
 
 Keybinds: {
 	QuickStack.DisplayName: In Kiste Einsortieren
-	DashLeft.DisplayName: Nach links stürmen
-	DashRight.DisplayName: Nach rechts stürmen
-	InventoryReference1.DisplayName: Inventarbezug 1
+	DashLeft.DisplayName: Nach links losstürmen
+	DashRight.DisplayName: Nach rechts losstürmen
+	Dash.DisplayName: Losstürmen
 	LootAll.DisplayName: Kiste Ausräumen
 	DepositAll.DisplayName: Kiste befüllen
-	InventoryReference2.DisplayName: Inventarbezug 2
-	InventoryReference3.DisplayName: Inventarbezug 3
-	InventoryReference4.DisplayName: Inventarbezug 4
-	InventoryReference5.DisplayName: Inventarbezug 5
-	InventoryReference6.DisplayName: Inventarbezug 6
-	InventoryReference7.DisplayName: Inventarbezug 7
-	InventoryReference8.DisplayName: Inventarbezug 8
-	InventoryReference9.DisplayName: Inventarbezug 9
-	InventoryReference10.DisplayName: Inventarbezug 10
+	InventoryReference1.DisplayName: Dynamische Schnellleiste 1
+	InventoryReference2.DisplayName: Dynamische Schnellleiste 2
+	InventoryReference3.DisplayName: Dynamische Schnellleiste 3
+	InventoryReference4.DisplayName: Dynamische Schnellleiste 4
+	InventoryReference5.DisplayName: Dynamische Schnellleiste 5
+	InventoryReference6.DisplayName: Dynamische Schnellleiste 6
+	InventoryReference7.DisplayName: Dynamische Schnellleiste 7
+	InventoryReference8.DisplayName: Dynamische Schnellleiste 8
+	InventoryReference9.DisplayName: Dynamische Schnellleiste 9
+	InventoryReference10.DisplayName: Dynamische Schnellleiste 10
+	EquipmentChangeReference5.DisplayName: Ausrüstung wechseln 5
 	EquipmentChangeReference4.DisplayName: Ausrüstung wechseln 4
 	EquipmentChangeReference3.DisplayName: Ausrüstung wechseln 3
 	EquipmentChangeReference2.DisplayName: Ausrüstung wechseln 2
@@ -37,6 +39,16 @@ Configs: {
 		cancelHooks: {
 			Label: Enterhaken einholen
 			Tooltip: ""
+		}
+
+		EquipmentChangeReferenceCount: {
+			Tooltip: ""
+			Label: Anzahl der Tastaturbelegungen für Ausrüstung wechseln
+		}
+
+		InventoryReferenceCount: {
+			Tooltip: ""
+			Label: Anzahl der Tastaturbelegungen für Dynamische Schnellleiste
 		}
 	}
 

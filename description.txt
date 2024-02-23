@@ -2,7 +2,7 @@ Adds extra keybindings for:
 	- Chest actions
 	- Dashing
 	- Cycling all inventory slots
-	- Dynamic shortcuts to inventory slots
+	- Dynamic shortcuts to inventory slots ("Dynamic Hotbar" from console Terraria)
 	- Equipment Change
 
 Instruction for the last two kinds of keybinds:

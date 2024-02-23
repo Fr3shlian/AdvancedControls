@@ -55,40 +55,8 @@ namespace AdvancedControls.Common.Players
     }
 
     // --- Dash ---
-    public class DashLeftKeyBindPlayer : ModPlayer
+    public class DashHelper
     {
-        public override void ProcessTriggers(TriggersSet triggersSet)
-        {
-            if ((KeybindSystem.DashLeftKeybind.JustPressed || KeybindSystem.DashLeftKeybind.JustReleased) && Player.dashDelay == 0)
-            {
-                bool wasMounted = Player.mount.Active;
-
-                if (wasMounted)
-                {
-                    Dismount();
-                }
-
-                Player.controlRight = false;
-
-                if (ModContent.GetInstance<AdvancedControlsConfig>().cancelHooks)
-                {
-                    Player.RemoveAllGrapplingHooks();
-                }
-
-                Player.controlLeft = true;
-                Player.releaseLeft = true;
-                Player.controlLeft = true;
-                Player.DashMovement();
-
-                if (wasMounted)
-                {
-                    Player.DashMovement();
-
-                    Remount();
-                }
-            }
-        }
-
         public static void Dismount()
         {
             if (ModContent.GetInstance<AdvancedControlsConfig>().mountDashBehaviour == MountDashBehaviour.DashWithMount)
@@ -114,6 +82,101 @@ namespace AdvancedControls.Common.Players
                 Main.CurrentPlayer.QuickMount();
             }
         }
+
+        public static void DashLeft()
+        {
+            bool wasMounted = Main.CurrentPlayer.mount.Active;
+
+            if (wasMounted)
+            {
+                Dismount();
+            }
+
+            Main.CurrentPlayer.controlRight = false;
+
+            if (ModContent.GetInstance<AdvancedControlsConfig>().cancelHooks)
+            {
+                Main.CurrentPlayer.RemoveAllGrapplingHooks();
+            }
+
+            Main.CurrentPlayer.controlLeft = true;
+            Main.CurrentPlayer.releaseLeft = true;
+            Main.CurrentPlayer.controlLeft = true;
+            Main.CurrentPlayer.DashMovement();
+
+            if (wasMounted)
+            {
+                Main.CurrentPlayer.DashMovement();
+
+                Remount();
+            }
+        }
+
+        public static void DashRight()
+        {
+            bool wasMounted = Main.CurrentPlayer.mount.Active;
+
+            if (wasMounted)
+            {
+                Dismount();
+            }
+
+            Main.CurrentPlayer.controlLeft = false;
+
+            if (ModContent.GetInstance<AdvancedControlsConfig>().cancelHooks)
+            {
+                Main.CurrentPlayer.RemoveAllGrapplingHooks();
+            }
+
+            Main.CurrentPlayer.controlRight = true;
+            Main.CurrentPlayer.releaseRight = true;
+            Main.CurrentPlayer.controlRight = true;
+            Main.CurrentPlayer.DashMovement();
+
+            if (wasMounted)
+            {
+                Main.CurrentPlayer.DashMovement();
+
+                Remount();
+            }
+        }
+    }
+
+    public class DashKeyBindPlayer : ModPlayer
+    {
+        public override void ProcessTriggers(TriggersSet triggersSet)
+        {
+            if ((KeybindSystem.DashKeybind.JustPressed || KeybindSystem.DashKeybind.JustReleased) && Player.dashDelay == 0)
+            {
+                if (Player.controlLeft == true)
+                {
+                    DashHelper.DashLeft();
+                }
+                else if (Player.controlRight == true)
+                {
+                    DashHelper.DashRight();
+                }
+                else if (Player.direction == -1)
+                {
+                    DashHelper.DashLeft();
+                }
+                else
+                {
+                    DashHelper.DashRight();
+                }
+            }
+        }
+    }
+
+    public class DashLeftKeyBindPlayer : ModPlayer
+    {
+        public override void ProcessTriggers(TriggersSet triggersSet)
+        {
+            if ((KeybindSystem.DashLeftKeybind.JustPressed || KeybindSystem.DashLeftKeybind.JustReleased) && Player.dashDelay == 0)
+            {
+                DashHelper.DashLeft();
+            }
+        }
     }
 
     public class DashRightKeyBindPlayer : ModPlayer
@@ -122,31 +185,7 @@ namespace AdvancedControls.Common.Players
         {
             if ((KeybindSystem.DashRightKeybind.JustPressed || KeybindSystem.DashRightKeybind.JustReleased) && Player.dashDelay == 0)
             {
-                bool wasMounted = Player.mount.Active;
-
-                if (wasMounted)
-                {
-                    DashLeftKeyBindPlayer.Dismount();
-                }
-
-                Player.controlLeft = false;
-
-                if (ModContent.GetInstance<AdvancedControlsConfig>().cancelHooks)
-                {
-                    Player.RemoveAllGrapplingHooks();
-                }
-
-                Player.controlRight = true;
-                Player.releaseRight = true;
-                Player.controlRight = true;
-                Player.DashMovement();
-
-                if (wasMounted)
-                {
-                    Player.DashMovement();
-
-                    DashLeftKeyBindPlayer.Remount();
-                }
+                DashHelper.DashRight();
             }
         }
     }
@@ -234,7 +273,19 @@ namespace AdvancedControls.Common.Players
     public class InventoryReferenceKeyBindPlayer : ModPlayer
     {
         public static readonly int[] inventoryReference = Enumerable.Repeat(-1, KeybindSystem.InventoryReferenceKeyBinds.Count).ToArray();
-        private static int lastSelectedItem = 0;
+        private int lastSelectedItem = 0;
+        private bool modItemChange = false;
+
+        public override void PostItemCheck()
+        {
+            if(Player.selectedItem != lastSelectedItem)
+            {
+                if(!modItemChange)
+                {
+                    lastSelectedItem = Player.selectedItem;
+                }
+            }
+        }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
@@ -260,11 +311,14 @@ namespace AdvancedControls.Common.Players
                     else if (inventoryReference[i] != -1)
                     {
                         if (Player.selectedItem == inventoryReference[i])
+                        {
                             Player.selectedItem = lastSelectedItem;
+                            modItemChange = false;
+                        }
                         else
                         {
-                            lastSelectedItem = Player.selectedItem;
                             Player.selectedItem = inventoryReference[i];
+                            modItemChange = true;
                         }
                     }
                 }

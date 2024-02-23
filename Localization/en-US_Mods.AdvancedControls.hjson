@@ -4,18 +4,20 @@ Keybinds: {
 	QuickStack.DisplayName: Quick Stack
 	DashLeft.DisplayName: Dash Left
 	DashRight.DisplayName: Dash Right
-	InventoryReference1.DisplayName: Inventory 1
+	Dash.DisplayName: Dash
 	LootAll.DisplayName: Loot All
 	DepositAll.DisplayName: Deposit All
-	InventoryReference2.DisplayName: Inventory 2
-	InventoryReference3.DisplayName: Inventory 3
-	InventoryReference4.DisplayName: Inventory 4
-	InventoryReference5.DisplayName: Inventory 5
-	InventoryReference6.DisplayName: Inventory 6
-	InventoryReference7.DisplayName: Inventory 7
-	InventoryReference8.DisplayName: Inventory 8
-	InventoryReference9.DisplayName: Inventory 9
-	InventoryReference10.DisplayName: Inventory 10
+	InventoryReference1.DisplayName: Dynamic Hotbar 1
+	InventoryReference2.DisplayName: Dynamic Hotbar 2
+	InventoryReference3.DisplayName: Dynamic Hotbar 3
+	InventoryReference4.DisplayName: Dynamic Hotbar 4
+	InventoryReference5.DisplayName: Dynamic Hotbar 5
+	InventoryReference6.DisplayName: Dynamic Hotbar 6
+	InventoryReference7.DisplayName: Dynamic Hotbar 7
+	InventoryReference8.DisplayName: Dynamic Hotbar 8
+	InventoryReference9.DisplayName: Dynamic Hotbar 9
+	InventoryReference10.DisplayName: Dynamic Hotbar 10
+	EquipmentChangeReference5.DisplayName: Equipment Change 5
 	EquipmentChangeReference4.DisplayName: Equipment Change 4
 	EquipmentChangeReference3.DisplayName: Equipment Change 3
 	EquipmentChangeReference2.DisplayName: Equipment Change 2
@@ -37,6 +39,16 @@ Configs: {
 		cancelHooks: {
 			Label: Cancel hooks on dash
 			Tooltip: ""
+		}
+
+		EquipmentChangeReferenceCount: {
+			Tooltip: ""
+			Label: Equipment Change Count
+		}
+
+		InventoryReferenceCount: {
+			Tooltip: ""
+			Label: Dynamic Hotbar Count
 		}
 	}
 

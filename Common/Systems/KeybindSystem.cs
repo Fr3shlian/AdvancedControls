@@ -6,6 +6,7 @@ using AdvancedControls.Common.Players;
 using ReLogic.Graphics;
 using Terraria.GameContent;
 using Microsoft.Xna.Framework;
+using AdvancedControls.Common.Configs;
 
 namespace AdvancedControls.Common.Systems
 {
@@ -17,6 +18,7 @@ namespace AdvancedControls.Common.Systems
         public static ModKeybind QuickStackKeybind { get; private set; }
 
         // --- Dash ---
+        public static ModKeybind DashKeybind { get; private set; }
         public static ModKeybind DashLeftKeybind { get; private set; }
         public static ModKeybind DashRightKeybind { get; private set; }
 
@@ -37,21 +39,22 @@ namespace AdvancedControls.Common.Systems
             QuickStackKeybind = KeybindLoader.RegisterKeybind(Mod, "QuickStack", Microsoft.Xna.Framework.Input.Keys.Down);
 
             // --- Dash ---
-            DashLeftKeybind = KeybindLoader.RegisterKeybind(Mod, "DashLeft", Microsoft.Xna.Framework.Input.Keys.Q);
-            DashRightKeybind = KeybindLoader.RegisterKeybind(Mod, "DashRight", Microsoft.Xna.Framework.Input.Keys.F);
+            DashKeybind = KeybindLoader.RegisterKeybind(Mod, "Dash", Microsoft.Xna.Framework.Input.Keys.Q);
+            DashLeftKeybind = KeybindLoader.RegisterKeybind(Mod, "DashLeft", Microsoft.Xna.Framework.Input.Keys.None);
+            DashRightKeybind = KeybindLoader.RegisterKeybind(Mod, "DashRight", Microsoft.Xna.Framework.Input.Keys.None);
 
             // --- Cycle Inventory ---
             CycleInventoryLeftKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryLeft", Microsoft.Xna.Framework.Input.Keys.I);
             CycleInventoryRightKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryRight", Microsoft.Xna.Framework.Input.Keys.K);
 
             // --- Inventory Reference ---
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < ModContent.GetInstance<AdvancedControlsConfig>().InventoryReferenceCount; i++)
             {
                 InventoryReferenceKeyBinds.Add(KeybindLoader.RegisterKeybind(Mod, "InventoryReference" + (i + 1), Microsoft.Xna.Framework.Input.Keys.None));
             }
 
-            // --- Equipment Change References ---
-            for(int i = 0; i < 4; i++)
+            // --- Equipment Change Reference ---
+            for(int i = 0; i < ModContent.GetInstance<AdvancedControlsConfig>().EquipmentChangeReferenceCount; i++)
             {
                 EquipmentChangeReferenceKeyBinds.Add(KeybindLoader.RegisterKeybind(Mod, "EquipmentChangeReference" + (i + 1), Microsoft.Xna.Framework.Input.Keys.None));
             }
@@ -63,6 +66,7 @@ namespace AdvancedControls.Common.Systems
             DepositAllKeybind = null;
             QuickStackKeybind = null;
 
+            DashKeybind = null;
             DashLeftKeybind = null;
             DashRightKeybind = null;
 

@@ -21,5 +21,15 @@ namespace AdvancedControls.Common.Configs
         
         [DefaultValue(true)]
         public bool cancelHooks;
+
+        [ReloadRequired]
+        [DefaultValue(5)]
+        [Range(0, 10)]
+        public int InventoryReferenceCount;
+
+        [ReloadRequired]
+        [DefaultValue(3)]
+        [Range(0, 5)]
+        public int EquipmentChangeReferenceCount;
     }
 }

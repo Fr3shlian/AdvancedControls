@@ -1,0 +1,4 @@
+﻿[h1]v1.3[/h1]
+- Added a standalone dash button next to directional ones (comment suggestion).
+- Added options to change the amount of reference buttons.
+- Changed the name of the "Inventory Reference" control binds to "Dynamic Hotbar", matching console Terraria.
