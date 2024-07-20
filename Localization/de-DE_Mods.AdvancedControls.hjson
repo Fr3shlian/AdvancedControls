@@ -24,12 +24,24 @@ Keybinds: {
 	EquipmentChangeReference1.DisplayName: Ausrüstung wechseln 1
 	CycleInventoryLeft.DisplayName: Vorheriger Inventarslot
 	CycleInventoryRight.DisplayName: Nächster Inventarslot
+	MechanicalRulerToggle.DisplayName: Mechanisches Lineal umschalten
+	RulerToggle.DisplayName: Lineal umschalten
+	UseTeleport.DisplayName: Teleportieritem verwenden
+	Recall.DisplayName: Nach Hause zurückkehren
+	RecallSpawn.DisplayName: Zum Spawn zurückkehren
+	RecallOcean.DisplayName: Zum Ozean zurückkehren
+	RecallUnderworld.DisplayName: In die Unterwelt zurückkehren
 }
 
 Configs: {
 	AdvancedControlsConfig: {
 		DisplayName: Advanced Controls Einstellungen
-		Headers.Dash: Losstürmen
+
+		Headers: {
+			Dash: Losstürmen
+			Inventory: Inventarwerkzeuge
+			QuickUse: Itemkürzel
+		}
 
 		mountDashBehaviour: {
 			Label: Während dem Reiten
@@ -49,6 +61,16 @@ Configs: {
 		InventoryReferenceCount: {
 			Tooltip: ""
 			Label: Anzahl der Tastaturbelegungen für Dynamische Schnellleiste
+		}
+
+		preventHealthLoss: {
+			Label: Schaden von Teleportitems vermeiden
+			Tooltip: ""
+		}
+
+		prioritizeRecallPotions: {
+			Tooltip: ""
+			Label: Rückruftränke priorisieren
 		}
 	}
 

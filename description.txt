@@ -1,11 +1,14 @@
 Adds extra keybindings for:
 	- Chest actions
 	- Dashing
-	- Cycling all inventory slots
+	- Cycling all inventory slots (not just the hotbar)
 	- Dynamic shortcuts to inventory slots ("Dynamic Hotbar" from console Terraria)
 	- Equipment Change
+	- Toggling rulers
+	- Using Rod of Discord/Harmony
+	- Using teleport items like Recall Potions and the Magic Conch
 
-Instruction for the last two kinds of keybinds:
+Instruction for Dynamic Hotbar and Equipment Change:
 	1. Open your inventory
 	2. Hover over a slot
 	3. Press the keybind to bind it to that inventory slot

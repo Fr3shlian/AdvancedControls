@@ -24,12 +24,24 @@ Keybinds: {
 	EquipmentChangeReference1.DisplayName: Equipment Change 1
 	CycleInventoryLeft.DisplayName: Cycle Inventory Left
 	CycleInventoryRight.DisplayName: Cycle Inventory Right
+	MechanicalRulerToggle.DisplayName: Mechanical Ruler Toggle
+	RulerToggle.DisplayName: Ruler Toggle
+	UseTeleport.DisplayName: Use Teleport Item
+	Recall.DisplayName: Recall Home
+	RecallSpawn.DisplayName: Recall Spawn
+	RecallOcean.DisplayName: Recall Ocean
+	RecallUnderworld.DisplayName: Recall Underworld
 }
 
 Configs: {
 	AdvancedControlsConfig: {
 		DisplayName: Advanced Controls Config
-		Headers.Dash: Dash
+
+		Headers: {
+			Dash: Dash
+			Inventory: Inventory Tweaks
+			QuickUse: Quick Use
+		}
 
 		mountDashBehaviour: {
 			Label: While mounted
@@ -49,6 +61,16 @@ Configs: {
 		InventoryReferenceCount: {
 			Tooltip: ""
 			Label: Dynamic Hotbar Count
+		}
+
+		preventHealthLoss: {
+			Label: Prevent Teleport Health Loss
+			Tooltip: ""
+		}
+
+		prioritizeRecallPotions: {
+			Tooltip: ""
+			Label: Prioritize Recall Potions
 		}
 	}
 

@@ -4,8 +4,11 @@ using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ModLoader;
 using Terraria.UI;
+using Terraria.ID;
 using System.Linq;
 using AdvancedControls.Common.Configs;
+using System.Collections.Generic;
+using AdvancedControls.Common.GlobalItems;
 
 namespace AdvancedControls.Common.Players
 {
@@ -92,14 +95,12 @@ namespace AdvancedControls.Common.Players
                 Dismount();
             }
 
-            Main.CurrentPlayer.controlRight = false;
-
             if (ModContent.GetInstance<AdvancedControlsConfig>().cancelHooks)
             {
                 Main.CurrentPlayer.RemoveAllGrapplingHooks();
             }
 
-            Main.CurrentPlayer.controlLeft = true;
+            Main.CurrentPlayer.controlRight = false;
             Main.CurrentPlayer.releaseLeft = true;
             Main.CurrentPlayer.controlLeft = true;
             Main.CurrentPlayer.DashMovement();
@@ -121,14 +122,12 @@ namespace AdvancedControls.Common.Players
                 Dismount();
             }
 
-            Main.CurrentPlayer.controlLeft = false;
-
             if (ModContent.GetInstance<AdvancedControlsConfig>().cancelHooks)
             {
                 Main.CurrentPlayer.RemoveAllGrapplingHooks();
             }
 
-            Main.CurrentPlayer.controlRight = true;
+            Main.CurrentPlayer.controlLeft = false;
             Main.CurrentPlayer.releaseRight = true;
             Main.CurrentPlayer.controlRight = true;
             Main.CurrentPlayer.DashMovement();
@@ -235,9 +234,13 @@ namespace AdvancedControls.Common.Players
     public class HoverSlotPlayer : ModPlayer
     {
         private static int hoveredSlot = -1;
+        private static Item[] hoveredInventory = null;
+        private static int slotContext = -1;
 
         public override bool HoverSlot(Item[] inventory, int context, int slot)
         {
+            hoveredInventory = inventory;
+            slotContext = context;
             hoveredSlot = slot;
             return false;
         }
@@ -245,6 +248,16 @@ namespace AdvancedControls.Common.Players
         public static int GetHoveredSlot()
         {
             return hoveredSlot;
+        }
+
+        public static Item[] GetHoveredInventory()
+        {
+            return hoveredInventory;
+        }
+
+        public static int GetContext()
+        {
+            return slotContext;
         }
 
         public static void RemoveOtherReference(int slot)
@@ -278,9 +291,9 @@ namespace AdvancedControls.Common.Players
 
         public override void PostItemCheck()
         {
-            if(Player.selectedItem != lastSelectedItem)
+            if (Player.selectedItem != lastSelectedItem)
             {
-                if(!modItemChange)
+                if (!modItemChange)
                 {
                     lastSelectedItem = Player.selectedItem;
                 }
@@ -366,6 +379,190 @@ namespace AdvancedControls.Common.Players
                     }
                 }
             }
+        }
+    }
+
+    // --- Rulers ---
+    public class RulerKeyBindPlayer : ModPlayer
+    {
+        public override void ProcessTriggers(TriggersSet triggersSet)
+        {
+            if (KeybindSystem.RulerKeyBind.JustPressed)
+            {
+                Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] = Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] == 1 ? 0 : 1;
+            }
+        }
+    }
+
+    public class MechanicalRulerKeyBindPlayer : ModPlayer
+    {
+        public override void ProcessTriggers(TriggersSet triggersSet)
+        {
+            if (KeybindSystem.MechanicalRulerKeyBind.JustPressed)
+            {
+                Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerGrid] = Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerGrid] == 1 ? 0 : 1;
+            }
+        }
+    }
+
+    // --- QoL ---
+    public class InventoryHelperPlayer : ModPlayer
+    {
+        private static int priorSelectedItem = -1;
+
+        //Switch back to the prior item once the player finishes using it
+        public override void PostUpdate()
+        {
+            if (priorSelectedItem != -1 && Player.itemTime <= 0)
+            {
+                Player.selectedItem = priorSelectedItem;
+                priorSelectedItem = -1;
+            }
+        }
+
+        public static void UseItem(int slot)
+        {
+            priorSelectedItem = Main.CurrentPlayer.selectedItem;
+            Main.CurrentPlayer.selectedItem = slot;
+            Main.CurrentPlayer.controlUseItem = true;
+        }
+    }
+
+    public class TeleportKeyBindPlayer : ModPlayer
+    {
+        public override void ProcessTriggers(TriggersSet triggersSet)
+        {
+            if (KeybindSystem.TeleportKeyBind.JustPressed)
+            {
+                int slot = Player.FindItem(ItemID.RodOfHarmony);
+
+                if (slot != -1)
+                    InventoryHelperPlayer.UseItem(slot);
+                else if ((slot = Player.FindItem(ItemID.RodofDiscord)) != -1)
+                {
+                    if (ModContent.GetInstance<AdvancedControlsConfig>().preventHealthLoss && !Player.creativeGodMode && Player.HasBuff(BuffID.ChaosState))
+                        return;
+
+                    InventoryHelperPlayer.UseItem(slot);
+                }
+            }
+        }
+    }
+
+    public class RecallKeyBindPlayer : ModPlayer
+    {
+        int requiredShellPhone = -1;
+        int priorSelectedItem = -1;
+
+        //Cycles through all shellphone modes, then uses it and switches back to the previous held item
+        public override void PostUpdate()
+        {
+            if (requiredShellPhone != -1)
+            {
+                if (Player.inventory[Player.selectedItem].type != requiredShellPhone)
+                {
+                    ShellphoneGlobal.specialUse = true;
+                    ItemLoader.AltFunctionUse(Player.inventory[Player.selectedItem], Player);
+                    ShellphoneGlobal.specialUse = false;
+                }
+                else
+                {
+                    Player.controlUseItem = true;
+                    Player.ItemCheck();
+                    requiredShellPhone = -1;
+                }
+            }
+            else if (priorSelectedItem != -1 && Player.itemTime <= 0)
+            {
+                Player.selectedItem = priorSelectedItem;
+                priorSelectedItem = -1;
+            }
+        }
+
+        public override void ProcessTriggers(TriggersSet triggersSet)
+        {
+            if (KeybindSystem.RecallKeyBind.JustPressed)
+            {
+                int slot;
+
+                if (ModContent.GetInstance<AdvancedControlsConfig>().prioritizeRecallPotions)
+                {
+                    slot = FindRecallPotions();
+
+                    if (slot != -1)
+                        InventoryHelperPlayer.UseItem(slot);
+                    else if ((slot = FindMirror()) != -1)
+                        InventoryHelperPlayer.UseItem(slot);
+                    else if ((slot = FindShellPhone()) != -1)
+                    {
+                        InitializeShellPhoneCycle(slot, ItemID.Shellphone);
+                    }
+                }
+                else
+                {
+                    slot = FindMirror();
+
+                    if (slot != -1)
+                        InventoryHelperPlayer.UseItem(slot);
+                    else if ((slot = FindShellPhone()) != -1)
+                        InitializeShellPhoneCycle(slot, ItemID.Shellphone);
+                    else if ((slot = FindRecallPotions()) != -1)
+                    {
+                        InventoryHelperPlayer.UseItem(slot);
+                    }
+                }
+            }
+
+            if (KeybindSystem.RecallSpawnKeyBind.JustPressed)
+            {
+                int slot = FindShellPhone();
+
+                if (slot != -1)
+                    InitializeShellPhoneCycle(slot, ItemID.ShellphoneSpawn);
+            }
+
+            if (KeybindSystem.RecallOceanKeyBind.JustPressed)
+            {
+                int slot = Player.FindItem(ItemID.MagicConch);
+
+                if (slot != -1)
+                    InventoryHelperPlayer.UseItem(slot);
+                else if((slot = FindShellPhone()) != -1)
+                    InitializeShellPhoneCycle(slot, ItemID.ShellphoneOcean);
+            }
+
+            if (KeybindSystem.RecallUnderworldKeyBind.JustPressed)
+            {
+                int slot = Player.FindItem(ItemID.DemonConch);
+
+                if (slot != -1)
+                    InventoryHelperPlayer.UseItem(slot);
+                else if ((slot = FindShellPhone()) != -1)
+                    InitializeShellPhoneCycle(slot, ItemID.ShellphoneHell);
+            }
+
+        }
+
+        private int FindRecallPotions()
+        {
+            return Player.FindItem(ItemID.RecallPotion);
+        }
+
+        private int FindMirror()
+        {
+            return Player.FindItem(new List<int>() { ItemID.Shellphone, ItemID.MagicMirror, ItemID.IceMirror });
+        }
+
+        private int FindShellPhone()
+        {
+            return Player.FindItem(new List<int>() { ItemID.Shellphone, ItemID.ShellphoneSpawn, ItemID.ShellphoneOcean, ItemID.ShellphoneHell });
+        }
+
+        private void InitializeShellPhoneCycle(int slot, int shellPhoneID)
+        {
+            requiredShellPhone = shellPhoneID;
+            priorSelectedItem = Player.selectedItem;
+            Player.selectedItem = slot;
         }
     }
 }

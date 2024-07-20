@@ -22,14 +22,24 @@ namespace AdvancedControls.Common.Configs
         [DefaultValue(true)]
         public bool cancelHooks;
 
+
+        [Header("Inventory")]
         [ReloadRequired]
-        [DefaultValue(5)]
+        [DefaultValue(3)]
         [Range(0, 10)]
         public int InventoryReferenceCount;
 
         [ReloadRequired]
-        [DefaultValue(3)]
+        [DefaultValue(2)]
         [Range(0, 5)]
         public int EquipmentChangeReferenceCount;
+
+
+        [Header("QuickUse")]
+        [DefaultValue(false)]
+        public bool preventHealthLoss;
+
+        [DefaultValue(false)]
+        public bool prioritizeRecallPotions;
     }
 }

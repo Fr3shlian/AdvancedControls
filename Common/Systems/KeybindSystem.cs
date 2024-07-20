@@ -31,6 +31,17 @@ namespace AdvancedControls.Common.Systems
         // --- Equipment Change Reference ---
         public static List<ModKeybind> EquipmentChangeReferenceKeyBinds { get; private set; } = new List<ModKeybind>();
 
+        // --- Rulers ---
+        public static ModKeybind RulerKeyBind { get; private set; }
+        public static ModKeybind MechanicalRulerKeyBind { get; private set; }
+
+        // --- QoL ---
+        public static ModKeybind TeleportKeyBind { get; private set; }
+        public static ModKeybind RecallKeyBind { get; private set; }
+        public static ModKeybind RecallSpawnKeyBind { get; private set; }
+        public static ModKeybind RecallOceanKeyBind { get; private set; }
+        public static ModKeybind RecallUnderworldKeyBind { get; private set; }
+
         public override void Load()
         {
             // --- Chest controls ---
@@ -44,8 +55,8 @@ namespace AdvancedControls.Common.Systems
             DashRightKeybind = KeybindLoader.RegisterKeybind(Mod, "DashRight", Microsoft.Xna.Framework.Input.Keys.None);
 
             // --- Cycle Inventory ---
-            CycleInventoryLeftKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryLeft", Microsoft.Xna.Framework.Input.Keys.I);
-            CycleInventoryRightKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryRight", Microsoft.Xna.Framework.Input.Keys.K);
+            CycleInventoryLeftKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryLeft", Microsoft.Xna.Framework.Input.Keys.None);
+            CycleInventoryRightKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryRight", Microsoft.Xna.Framework.Input.Keys.None);
 
             // --- Inventory Reference ---
             for (int i = 0; i < ModContent.GetInstance<AdvancedControlsConfig>().InventoryReferenceCount; i++)
@@ -58,6 +69,17 @@ namespace AdvancedControls.Common.Systems
             {
                 EquipmentChangeReferenceKeyBinds.Add(KeybindLoader.RegisterKeybind(Mod, "EquipmentChangeReference" + (i + 1), Microsoft.Xna.Framework.Input.Keys.None));
             }
+
+            //Rulers
+            RulerKeyBind = KeybindLoader.RegisterKeybind(Mod, "RulerToggle", Microsoft.Xna.Framework.Input.Keys.K);
+            MechanicalRulerKeyBind = KeybindLoader.RegisterKeybind(Mod, "MechanicalRulerToggle", Microsoft.Xna.Framework.Input.Keys.L);
+
+            //QoL
+            TeleportKeyBind = KeybindLoader.RegisterKeybind(Mod, "UseTeleport", Microsoft.Xna.Framework.Input.Keys.G);
+            RecallKeyBind = KeybindLoader.RegisterKeybind(Mod, "Recall", Microsoft.Xna.Framework.Input.Keys.Z);
+            RecallSpawnKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallSpawn", Microsoft.Xna.Framework.Input.Keys.U);
+            RecallOceanKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallOcean", Microsoft.Xna.Framework.Input.Keys.I);
+            RecallUnderworldKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallUnderworld", Microsoft.Xna.Framework.Input.Keys.O);
         }
 
         public override void Unload()
@@ -75,6 +97,9 @@ namespace AdvancedControls.Common.Systems
 
             InventoryReferenceKeyBinds.Clear();
             EquipmentChangeReferenceKeyBinds.Clear();
+
+            RulerKeyBind = null;
+            MechanicalRulerKeyBind = null;
         }
 
         // --- For displaying which inventory slots the reference buttons are set to ---
