@@ -1,7 +1,2 @@
-﻿[h1]v1.4[/h1]
-- Added a toggle button for the ruler
-- Added a toggle button for the mechanical ruler
-- Added a keybind for using the Rod of Discord/Harmony
-- Added keybinds for using corresponding items to travell to spawn, home, to the ocean and to the underworld (automatically switches modes with the shellphone)
-
-Upcoming additions: Rework for Dynamic Hotbar and Equipment Change, Combo Buttons (this one might take a while)
+﻿[h1]v1.4.1[/h1]
+- Fixed a bug where the teleport keybinds wouldn't switch back to the prior item after usage in multiplayer

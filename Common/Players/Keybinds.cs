@@ -425,6 +425,7 @@ namespace AdvancedControls.Common.Players
             priorSelectedItem = Main.CurrentPlayer.selectedItem;
             Main.CurrentPlayer.selectedItem = slot;
             Main.CurrentPlayer.controlUseItem = true;
+            Main.CurrentPlayer.ItemCheck();
         }
     }
 
