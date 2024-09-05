@@ -22,17 +22,20 @@ namespace AdvancedControls.Common.Configs
         [DefaultValue(true)]
         public bool cancelHooks;
 
+        [DefaultValue(true)]
+        public bool dashBuffer;
+
 
         [Header("Inventory")]
         [ReloadRequired]
-        [DefaultValue(3)]
+        [DefaultValue(4)]
         [Range(0, 10)]
-        public int InventoryReferenceCount;
+        public int dynamicHotbarCount;
 
         [ReloadRequired]
         [DefaultValue(2)]
         [Range(0, 5)]
-        public int EquipmentChangeReferenceCount;
+        public int equipmentChangeReferenceCount;
 
 
         [Header("QuickUse")]

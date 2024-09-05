@@ -1,2 +1,10 @@
-﻿[h1]v1.4.1[/h1]
-- Fixed a bug where the teleport keybinds wouldn't switch back to the prior item after usage in multiplayer
+﻿[h1]v1.5[/h1]
+[list]
+[*] Added a buffer option for the dash keybinds
+[*] Dynamic Hotbar and Equipment Change configurations will now be separated and saved per character
+[*] Changed the behaviour of Dynamic Hotbar when switching between other referenced slots to match console Terraria
+[*] Changed unbinding for Dynamic Hotbar and Equipment Change keybinds to holding the key for a split second
+[*] Made it so you will still switch back to your previous item after pressing a recall or teleport keybind a second time
+[*] Cleaned up code for switching the shellphone mode
+[*] Cleaned up code for the dash keybinds
+[/list]

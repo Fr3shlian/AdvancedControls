@@ -9,6 +9,7 @@ using System.Linq;
 using AdvancedControls.Common.Configs;
 using System.Collections.Generic;
 using AdvancedControls.Common.GlobalItems;
+using Terraria.ModLoader.IO;
 
 namespace AdvancedControls.Common.Players
 {
@@ -58,133 +59,116 @@ namespace AdvancedControls.Common.Players
     }
 
     // --- Dash ---
-    public class DashHelper
+    public class DashKeyBindPlayer : ModPlayer
     {
-        public static void Dismount()
+        int dashBuffer = 0;
+
+        public override void PostUpdate()
         {
-            if (ModContent.GetInstance<AdvancedControlsConfig>().mountDashBehaviour == MountDashBehaviour.DashWithMount)
+            if (Player.dashDelay == 0)
             {
-                Main.CurrentPlayer.mount._active = false;
+                if (dashBuffer == -1)
+                {
+                    DashLeft();
+                    dashBuffer = 0;
+                }
+                else if (dashBuffer == 1)
+                {
+                    DashRight();
+                    dashBuffer = 0;
+                }
+            }
+        }
+
+        public override void ProcessTriggers(TriggersSet triggersSet)
+        {
+            if (KeybindSystem.DashKeybind.JustPressed)
+            {
+                if (Player.dashDelay == 0)
+                    if (Player.controlLeft == true)
+                        DashLeft();
+                    else if (Player.controlRight == true || Player.direction == 1)
+                        DashRight();
+                    else DashLeft();
+                else if (Util.GetConfig().dashBuffer)
+                    dashBuffer = Player.controlLeft ? -1 : Player.controlRight || Player.direction == 1 ? 1 : -1;
+            }
+
+            if (KeybindSystem.DashLeftKeybind.JustPressed)
+                if (Player.dashDelay == 0)
+                    DashLeft();
+                else if (Util.GetConfig().dashBuffer)
+                    dashBuffer = -1;
+
+            if (KeybindSystem.DashRightKeybind.JustPressed)
+                if (Player.dashDelay == 0)
+                    DashRight();
+                else if (Util.GetConfig().dashBuffer)
+                    dashBuffer = 1;
+        }
+
+        private void Dismount()
+        {
+            if (Util.GetConfig().mountDashBehaviour == MountDashBehaviour.DashWithMount)
+            {
+                Player.mount._active = false;
             }
             else
             {
-                Main.CurrentPlayer.QuickMount();
+                Player.QuickMount();
             }
         }
 
-        public static void Remount()
+        private void Remount()
         {
-            AdvancedControlsConfig instance = ModContent.GetInstance<AdvancedControlsConfig>();
+            AdvancedControlsConfig config = Util.GetConfig();
 
-            if (instance.mountDashBehaviour == MountDashBehaviour.DashWithMount)
-            {
-                Main.CurrentPlayer.mount._active = true;
-            }
-            else if (instance.mountDashBehaviour == MountDashBehaviour.DismountDashRemount)
-            {
-                Main.CurrentPlayer.QuickMount();
-            }
+            if (config.mountDashBehaviour == MountDashBehaviour.DashWithMount)
+                Player.mount._active = true;
+            else if (config.mountDashBehaviour == MountDashBehaviour.DismountDashRemount)
+                Player.QuickMount();
         }
 
-        public static void DashLeft()
+        private void DashLeft()
         {
-            bool wasMounted = Main.CurrentPlayer.mount.Active;
+            bool wasMounted = Player.mount.Active;
+
+            if (wasMounted) Dismount();
+
+            if (Util.GetConfig().cancelHooks) Player.RemoveAllGrapplingHooks();
+
+            Player.controlRight = false;
+            Player.controlLeft = true;
+            Player.releaseLeft = true;
+            Player.DashMovement();
 
             if (wasMounted)
             {
-                Dismount();
-            }
-
-            if (ModContent.GetInstance<AdvancedControlsConfig>().cancelHooks)
-            {
-                Main.CurrentPlayer.RemoveAllGrapplingHooks();
-            }
-
-            Main.CurrentPlayer.controlRight = false;
-            Main.CurrentPlayer.releaseLeft = true;
-            Main.CurrentPlayer.controlLeft = true;
-            Main.CurrentPlayer.DashMovement();
-
-            if (wasMounted)
-            {
-                Main.CurrentPlayer.DashMovement();
-
+                Player.DashMovement();
                 Remount();
             }
         }
 
-        public static void DashRight()
+        private void DashRight()
         {
-            bool wasMounted = Main.CurrentPlayer.mount.Active;
+            bool wasMounted = Player.mount.Active;
+
+            if (wasMounted) Dismount();
+
+            if (Util.GetConfig().cancelHooks)
+            {
+                Player.RemoveAllGrapplingHooks();
+            }
+
+            Player.controlLeft = false;
+            Player.controlRight = true;
+            Player.releaseRight = true;
+            Player.DashMovement();
 
             if (wasMounted)
             {
-                Dismount();
-            }
-
-            if (ModContent.GetInstance<AdvancedControlsConfig>().cancelHooks)
-            {
-                Main.CurrentPlayer.RemoveAllGrapplingHooks();
-            }
-
-            Main.CurrentPlayer.controlLeft = false;
-            Main.CurrentPlayer.releaseRight = true;
-            Main.CurrentPlayer.controlRight = true;
-            Main.CurrentPlayer.DashMovement();
-
-            if (wasMounted)
-            {
-                Main.CurrentPlayer.DashMovement();
-
+                Player.DashMovement();
                 Remount();
-            }
-        }
-    }
-
-    public class DashKeyBindPlayer : ModPlayer
-    {
-        public override void ProcessTriggers(TriggersSet triggersSet)
-        {
-            if ((KeybindSystem.DashKeybind.JustPressed || KeybindSystem.DashKeybind.JustReleased) && Player.dashDelay == 0)
-            {
-                if (Player.controlLeft == true)
-                {
-                    DashHelper.DashLeft();
-                }
-                else if (Player.controlRight == true)
-                {
-                    DashHelper.DashRight();
-                }
-                else if (Player.direction == -1)
-                {
-                    DashHelper.DashLeft();
-                }
-                else
-                {
-                    DashHelper.DashRight();
-                }
-            }
-        }
-    }
-
-    public class DashLeftKeyBindPlayer : ModPlayer
-    {
-        public override void ProcessTriggers(TriggersSet triggersSet)
-        {
-            if ((KeybindSystem.DashLeftKeybind.JustPressed || KeybindSystem.DashLeftKeybind.JustReleased) && Player.dashDelay == 0)
-            {
-                DashHelper.DashLeft();
-            }
-        }
-    }
-
-    public class DashRightKeyBindPlayer : ModPlayer
-    {
-        public override void ProcessTriggers(TriggersSet triggersSet)
-        {
-            if ((KeybindSystem.DashRightKeybind.JustPressed || KeybindSystem.DashRightKeybind.JustReleased) && Player.dashDelay == 0)
-            {
-                DashHelper.DashRight();
             }
         }
     }
@@ -260,22 +244,25 @@ namespace AdvancedControls.Common.Players
             return slotContext;
         }
 
-        public static void RemoveOtherReference(int slot)
+        public void RemoveOtherReference(int slot)
         {
-            for (int i = 0; i < KeybindSystem.InventoryReferenceKeyBinds.Count; i++)
+            DynamicHotbarKeyBindPlayer kbp = Player.GetModPlayer<DynamicHotbarKeyBindPlayer>();
+
+            for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++)
             {
-                if (slot == InventoryReferenceKeyBindPlayer.inventoryReference[i])
+                if (slot == kbp.GetReference(i))
                 {
-                    InventoryReferenceKeyBindPlayer.inventoryReference[i] = -1;
+                    kbp.UnbindReference(i);
                     return;
                 }
             }
-
+            EquipmentChangeReferenceKeyBindPlayer erp = Player.GetModPlayer<EquipmentChangeReferenceKeyBindPlayer>();
+            
             for (int i = 0; i < KeybindSystem.EquipmentChangeReferenceKeyBinds.Count; i++)
             {
-                if (slot == EquipmentChangeReferenceKeyBindPlayer.equipmentReference[i])
+                if (slot == erp.GetReference(i))
                 {
-                    EquipmentChangeReferenceKeyBindPlayer.equipmentReference[i] = -1;
+                    erp.UnbindReference(i);
                     return;
                 }
             }
@@ -283,66 +270,154 @@ namespace AdvancedControls.Common.Players
     }
 
     // --- Inventory Reference ---
-    public class InventoryReferenceKeyBindPlayer : ModPlayer
+    public class DynamicHotbarKeyBindPlayer : ModPlayer
     {
-        public static readonly int[] inventoryReference = Enumerable.Repeat(-1, KeybindSystem.InventoryReferenceKeyBinds.Count).ToArray();
-        private int lastSelectedItem = 0;
-        private bool modItemChange = false;
+        private readonly int[] dynamicHotbar = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
+        private int lastSelectedItem = -1;
 
-        public override void PostItemCheck()
+        private int[] frameCounter = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
+
+        public override void PostUpdate()
         {
-            if (Player.selectedItem != lastSelectedItem)
+            for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++)
             {
-                if (!modItemChange)
+                if (frameCounter[i] == 1)
                 {
-                    lastSelectedItem = Player.selectedItem;
+                    frameCounter[i] = -1;
+                    dynamicHotbar[i] = -1;
                 }
+                else if (frameCounter[i] != -1) frameCounter[i]--;
             }
+        }
+
+        public override void SaveData(TagCompound tag)
+        {
+            tag.Set("dynamicHotbar", dynamicHotbar, true);
+        }
+
+        public override void LoadData(TagCompound tag)
+        {
+            if (tag.ContainsKey("dynamicHotbar"))
+            {
+                int[] data = tag.GetIntArray("dynamicHotbar");
+                for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++)
+                    dynamicHotbar[i] = data[i];
+            }
+            else for (int i = 0; i < dynamicHotbar.Length; i++)
+                {
+                    dynamicHotbar[i] = -1;
+                }
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
-            for (int i = 0; i < KeybindSystem.InventoryReferenceKeyBinds.Count; i++)
+            for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++)
             {
-                if (KeybindSystem.InventoryReferenceKeyBinds[i].JustPressed)
+                if (KeybindSystem.DynamicHotbarKeyBinds[i].JustPressed)
                 {
                     if (Main.playerInventory)
                     {
-                        if (HoverSlotPlayer.GetHoveredSlot() > -1 && HoverSlotPlayer.GetHoveredSlot() < 50)
+                        if (dynamicHotbar[i] == -1 && HoverSlotPlayer.GetHoveredSlot() > -1 && HoverSlotPlayer.GetHoveredSlot() < 50)
                         {
-                            if (inventoryReference[i] == HoverSlotPlayer.GetHoveredSlot())
-                                inventoryReference[i] = -1;
-                            else
-                            {
-                                HoverSlotPlayer.RemoveOtherReference(HoverSlotPlayer.GetHoveredSlot());
-                                inventoryReference[i] = HoverSlotPlayer.GetHoveredSlot();
-                            }
-
-                            return;
+                            Player.GetModPlayer<HoverSlotPlayer>().RemoveOtherReference(HoverSlotPlayer.GetHoveredSlot());
+                            dynamicHotbar[i] = HoverSlotPlayer.GetHoveredSlot();
                         }
+                        else frameCounter[i] = 10;
                     }
-                    else if (inventoryReference[i] != -1)
+                    else if (dynamicHotbar[i] != -1)
                     {
-                        if (Player.selectedItem == inventoryReference[i])
+                        DynamicHotbarAction(i);
+                    }
+                }
+                else if (KeybindSystem.DynamicHotbarKeyBinds[i].JustReleased)
+                {
+                    for (int j = 0; j < KeybindSystem.DynamicHotbarKeyBinds.Count; j++)
+                    {
+                        if (frameCounter[j] != -1)
                         {
-                            Player.selectedItem = lastSelectedItem;
-                            modItemChange = false;
-                        }
-                        else
-                        {
-                            Player.selectedItem = inventoryReference[i];
-                            modItemChange = true;
+                            frameCounter[j] = -1;
+                            DynamicHotbarAction(i);
                         }
                     }
                 }
             }
+        }
+
+        private bool IsItemReferenced(int slot)
+        {
+            for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++)
+            {
+                if (dynamicHotbar[i] == slot) return true;
+            }
+
+            return false;
+        }
+
+        private void DynamicHotbarAction(int slot)
+        {
+            if (Player.selectedItem == dynamicHotbar[slot] && lastSelectedItem != -1)
+            {
+                Player.selectedItem = lastSelectedItem;
+                lastSelectedItem = -1;
+            }
+            else
+            {
+                if ((Player.selectedItem < 10 && !IsItemReferenced(Player.selectedItem) && IsItemReferenced(dynamicHotbar[slot])) || lastSelectedItem == -1)
+                    lastSelectedItem = Player.selectedItem;
+
+                Player.selectedItem = dynamicHotbar[slot];
+            }
+        }
+
+        public int GetReference(int slot)
+        {
+            return dynamicHotbar[slot];
+        }
+
+        public void UnbindReference(int slot)
+        {
+            dynamicHotbar[slot] = -1;
         }
     }
 
     // --- Equipment Change Reference ---
     public class EquipmentChangeReferenceKeyBindPlayer : ModPlayer
     {
-        public static readonly int[] equipmentReference = Enumerable.Repeat(-1, KeybindSystem.EquipmentChangeReferenceKeyBinds.Count).ToArray();
+        private readonly int[] equipmentReference = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
+
+        private readonly int[] frameCounter = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
+
+        public override void PostUpdate()
+        {
+            for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++)
+            {
+                if (frameCounter[i] == 1)
+                {
+                    frameCounter[i] = -1;
+                    equipmentReference[i] = -1;
+                }
+                else if (frameCounter[i] != -1) frameCounter[i]--;
+            }
+        }
+
+        public override void SaveData(TagCompound tag)
+        {
+            tag.Set("equipmentReference", equipmentReference, true);
+        }
+
+        public override void LoadData(TagCompound tag)
+        {
+            if (tag.ContainsKey("equipmentReference"))
+            {
+                int[] data = tag.GetIntArray("equipmentReference");
+                for (int i = 0; i < KeybindSystem.EquipmentChangeReferenceKeyBinds.Count; i++)
+                    equipmentReference[i] = data[i];
+            }
+            else for (int i = 0; i < equipmentReference.Length; i++)
+                {
+                    equipmentReference[i] = -1;
+                }
+        }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
@@ -352,33 +427,53 @@ namespace AdvancedControls.Common.Players
                 {
                     if (Main.playerInventory)
                     {
-                        if (HoverSlotPlayer.GetHoveredSlot() > -1 && HoverSlotPlayer.GetHoveredSlot() < 50)
+                        if (equipmentReference[i] == -1 && HoverSlotPlayer.GetHoveredSlot() > -1 && HoverSlotPlayer.GetHoveredSlot() < 50)
                         {
-                            if (equipmentReference[i] == HoverSlotPlayer.GetHoveredSlot())
-                                equipmentReference[i] = -1;
-                            else
-                            {
-                                HoverSlotPlayer.RemoveOtherReference(HoverSlotPlayer.GetHoveredSlot());
-                                equipmentReference[i] = HoverSlotPlayer.GetHoveredSlot();
-                            }
-
-                            return;
+                            Player.GetModPlayer<HoverSlotPlayer>().RemoveOtherReference(HoverSlotPlayer.GetHoveredSlot());
+                            equipmentReference[i] = HoverSlotPlayer.GetHoveredSlot();
                         }
+                        else frameCounter[i] = 10;
                     }
                     else if (equipmentReference[i] != -1 && ItemSlot.Equippable(ref Player.inventory[equipmentReference[i]]))
                     {
-                        int mountType = Player.inventory[equipmentReference[i]].mountType;
-
-                        ItemSlot.SwapEquip(ref Player.inventory[equipmentReference[i]]);
-                        Player.inventory[equipmentReference[i]].favorited = true;
-
-                        if (Player.mount.Active && mountType != -1)
+                        EquipmentChangeAction(i);
+                    }
+                }
+                else if (KeybindSystem.EquipmentChangeReferenceKeyBinds[i].JustReleased)
+                {
+                    for (int j = 0; j < KeybindSystem.EquipmentChangeReferenceKeyBinds.Count; j++)
+                    {
+                        if (frameCounter[j] != -1)
                         {
-                            Player.mount.SetMount(mountType, Player);
+                            frameCounter[j] = -1;
+                            EquipmentChangeAction(i);
                         }
                     }
                 }
             }
+        }
+
+        private void EquipmentChangeAction(int slot)
+        {
+            int mountType = Player.inventory[equipmentReference[slot]].mountType;
+
+            ItemSlot.SwapEquip(ref Player.inventory[equipmentReference[slot]]);
+            Player.inventory[equipmentReference[slot]].favorited = true;
+
+            if (Player.mount.Active && mountType != -1)
+            {
+                Player.mount.SetMount(mountType, Player);
+            }
+        }
+
+        public int GetReference(int slot)
+        {
+            return equipmentReference[slot];
+        }
+
+        public void UnbindReference(int slot)
+        {
+            equipmentReference[slot] = -1;
         }
     }
 
@@ -422,10 +517,13 @@ namespace AdvancedControls.Common.Players
 
         public static void UseItem(int slot)
         {
-            priorSelectedItem = Main.CurrentPlayer.selectedItem;
-            Main.CurrentPlayer.selectedItem = slot;
-            Main.CurrentPlayer.controlUseItem = true;
-            Main.CurrentPlayer.ItemCheck();
+            if (Main.CurrentPlayer.itemTime == 0)
+            {
+                priorSelectedItem = Main.CurrentPlayer.selectedItem;
+                Main.CurrentPlayer.selectedItem = slot;
+                Main.CurrentPlayer.controlUseItem = true;
+                Main.CurrentPlayer.ItemCheck();
+            }
         }
     }
 
@@ -441,7 +539,7 @@ namespace AdvancedControls.Common.Players
                     InventoryHelperPlayer.UseItem(slot);
                 else if ((slot = Player.FindItem(ItemID.RodofDiscord)) != -1)
                 {
-                    if (ModContent.GetInstance<AdvancedControlsConfig>().preventHealthLoss && !Player.creativeGodMode && Player.HasBuff(BuffID.ChaosState))
+                    if (Util.GetConfig().preventHealthLoss && !Player.creativeGodMode && Player.HasBuff(BuffID.ChaosState))
                         return;
 
                     InventoryHelperPlayer.UseItem(slot);
@@ -455,16 +553,15 @@ namespace AdvancedControls.Common.Players
         int requiredShellPhone = -1;
         int priorSelectedItem = -1;
 
-        //Cycles through all shellphone modes, then uses it and switches back to the previous held item
+        //Switches to the correct shellphone mode, then uses it and switches back to the previous held item
         public override void PostUpdate()
         {
             if (requiredShellPhone != -1)
             {
                 if (Player.inventory[Player.selectedItem].type != requiredShellPhone)
                 {
-                    ShellphoneGlobal.specialUse = true;
+                    ShellphoneGlobal.requiredShellPhone = requiredShellPhone;
                     ItemLoader.AltFunctionUse(Player.inventory[Player.selectedItem], Player);
-                    ShellphoneGlobal.specialUse = false;
                 }
                 else
                 {
@@ -485,8 +582,8 @@ namespace AdvancedControls.Common.Players
             if (KeybindSystem.RecallKeyBind.JustPressed)
             {
                 int slot;
-
-                if (ModContent.GetInstance<AdvancedControlsConfig>().prioritizeRecallPotions)
+                
+                if (Util.GetConfig().prioritizeRecallPotions)
                 {
                     slot = FindRecallPotions();
 
@@ -496,7 +593,7 @@ namespace AdvancedControls.Common.Players
                         InventoryHelperPlayer.UseItem(slot);
                     else if ((slot = FindShellPhone()) != -1)
                     {
-                        InitializeShellPhoneCycle(slot, ItemID.Shellphone);
+                        UseShellPhone(slot, ItemID.Shellphone);
                     }
                 }
                 else
@@ -506,7 +603,7 @@ namespace AdvancedControls.Common.Players
                     if (slot != -1)
                         InventoryHelperPlayer.UseItem(slot);
                     else if ((slot = FindShellPhone()) != -1)
-                        InitializeShellPhoneCycle(slot, ItemID.Shellphone);
+                        UseShellPhone(slot, ItemID.Shellphone);
                     else if ((slot = FindRecallPotions()) != -1)
                     {
                         InventoryHelperPlayer.UseItem(slot);
@@ -519,7 +616,7 @@ namespace AdvancedControls.Common.Players
                 int slot = FindShellPhone();
 
                 if (slot != -1)
-                    InitializeShellPhoneCycle(slot, ItemID.ShellphoneSpawn);
+                    UseShellPhone(slot, ItemID.ShellphoneSpawn);
             }
 
             if (KeybindSystem.RecallOceanKeyBind.JustPressed)
@@ -528,8 +625,8 @@ namespace AdvancedControls.Common.Players
 
                 if (slot != -1)
                     InventoryHelperPlayer.UseItem(slot);
-                else if((slot = FindShellPhone()) != -1)
-                    InitializeShellPhoneCycle(slot, ItemID.ShellphoneOcean);
+                else if ((slot = FindShellPhone()) != -1)
+                    UseShellPhone(slot, ItemID.ShellphoneOcean);
             }
 
             if (KeybindSystem.RecallUnderworldKeyBind.JustPressed)
@@ -539,7 +636,7 @@ namespace AdvancedControls.Common.Players
                 if (slot != -1)
                     InventoryHelperPlayer.UseItem(slot);
                 else if ((slot = FindShellPhone()) != -1)
-                    InitializeShellPhoneCycle(slot, ItemID.ShellphoneHell);
+                    UseShellPhone(slot, ItemID.ShellphoneHell);
             }
 
         }
@@ -559,11 +656,22 @@ namespace AdvancedControls.Common.Players
             return Player.FindItem(new List<int>() { ItemID.Shellphone, ItemID.ShellphoneSpawn, ItemID.ShellphoneOcean, ItemID.ShellphoneHell });
         }
 
-        private void InitializeShellPhoneCycle(int slot, int shellPhoneID)
+        private void UseShellPhone(int slot, int shellPhoneID)
         {
-            requiredShellPhone = shellPhoneID;
-            priorSelectedItem = Player.selectedItem;
-            Player.selectedItem = slot;
+            if (Main.CurrentPlayer.itemTime == 0)
+            {
+                requiredShellPhone = shellPhoneID;
+                priorSelectedItem = Player.selectedItem;
+                Player.selectedItem = slot;
+            }
         }
+    }
+}
+
+public class Util
+{
+    public static AdvancedControlsConfig GetConfig()
+    {
+        return ModContent.GetInstance<AdvancedControlsConfig>();
     }
 }

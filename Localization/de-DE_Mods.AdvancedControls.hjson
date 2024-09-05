@@ -7,16 +7,16 @@ Keybinds: {
 	Dash.DisplayName: Losstürmen
 	LootAll.DisplayName: Kiste Ausräumen
 	DepositAll.DisplayName: Kiste befüllen
-	InventoryReference1.DisplayName: Dynamische Schnellleiste 1
-	InventoryReference2.DisplayName: Dynamische Schnellleiste 2
-	InventoryReference3.DisplayName: Dynamische Schnellleiste 3
-	InventoryReference4.DisplayName: Dynamische Schnellleiste 4
-	InventoryReference5.DisplayName: Dynamische Schnellleiste 5
-	InventoryReference6.DisplayName: Dynamische Schnellleiste 6
-	InventoryReference7.DisplayName: Dynamische Schnellleiste 7
-	InventoryReference8.DisplayName: Dynamische Schnellleiste 8
-	InventoryReference9.DisplayName: Dynamische Schnellleiste 9
-	InventoryReference10.DisplayName: Dynamische Schnellleiste 10
+	DynamicHotbar1.DisplayName: Dynamische Schnellleiste 1
+	DynamicHotbar2.DisplayName: Dynamische Schnellleiste 2
+	DynamicHotbar3.DisplayName: Dynamische Schnellleiste 3
+	DynamicHotbar4.DisplayName: Dynamische Schnellleiste 4
+	DynamicHotbar5.DisplayName: Dynamische Schnellleiste 5
+	DynamicHotbar6.DisplayName: Dynamische Schnellleiste 6
+	DynamicHotbar7.DisplayName: Dynamische Schnellleiste 7
+	DynamicHotbar8.DisplayName: Dynamische Schnellleiste 8
+	DynamicHotbar9.DisplayName: Dynamische Schnellleiste 9
+	DynamicHotbar10.DisplayName: Dynamische Schnellleiste 10
 	EquipmentChangeReference5.DisplayName: Ausrüstung wechseln 5
 	EquipmentChangeReference4.DisplayName: Ausrüstung wechseln 4
 	EquipmentChangeReference3.DisplayName: Ausrüstung wechseln 3
@@ -53,12 +53,12 @@ Configs: {
 			Tooltip: ""
 		}
 
-		EquipmentChangeReferenceCount: {
+		equipmentChangeReferenceCount: {
 			Tooltip: ""
 			Label: Anzahl der Tastaturbelegungen für Ausrüstung wechseln
 		}
 
-		InventoryReferenceCount: {
+		DynamicHotbarCount: {
 			Tooltip: ""
 			Label: Anzahl der Tastaturbelegungen für Dynamische Schnellleiste
 		}
@@ -71,6 +71,16 @@ Configs: {
 		prioritizeRecallPotions: {
 			Tooltip: ""
 			Label: Rückruftränke priorisieren
+		}
+
+		dashBuffer: {
+			Label: Losstürmen buffern
+			Tooltip: ""
+		}
+
+		dynamicHotbarCount: {
+			// Label: dynamic Hotbar Count
+			// Tooltip: ""
 		}
 	}
 
