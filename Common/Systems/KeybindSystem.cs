@@ -41,6 +41,14 @@ namespace AdvancedControls.Common.Systems
         public static ModKeybind RecallSpawnKeyBind { get; private set; }
         public static ModKeybind RecallOceanKeyBind { get; private set; }
         public static ModKeybind RecallUnderworldKeyBind { get; private set; }
+        public static ModKeybind RecallReturnKeyBind { get; private set; }
+
+        // --- Thorium Mod ---
+        public static ModKeybind RecallDungeonKeyBind { get; private set; }
+        public static ModKeybind RecallTempleKeyBind { get; private set; }
+        public static ModKeybind RecallDeathLocationKeyBind { get; private set; }
+        public static ModKeybind TeleportRandomKeybind { get; private set; }
+        public static Mod Thorium = null;
 
         public override void Load()
         {
@@ -65,21 +73,32 @@ namespace AdvancedControls.Common.Systems
             }
 
             // --- Equipment Change Reference ---
-            for(int i = 0; i < ModContent.GetInstance<AdvancedControlsConfig>().equipmentChangeReferenceCount; i++)
+            for (int i = 0; i < ModContent.GetInstance<AdvancedControlsConfig>().equipmentChangeReferenceCount; i++)
             {
                 EquipmentChangeReferenceKeyBinds.Add(KeybindLoader.RegisterKeybind(Mod, "EquipmentChangeReference" + (i + 1), Microsoft.Xna.Framework.Input.Keys.None));
             }
 
-            //Rulers
+            // --- Rulers ---
             RulerKeyBind = KeybindLoader.RegisterKeybind(Mod, "RulerToggle", Microsoft.Xna.Framework.Input.Keys.K);
             MechanicalRulerKeyBind = KeybindLoader.RegisterKeybind(Mod, "MechanicalRulerToggle", Microsoft.Xna.Framework.Input.Keys.L);
 
-            //QoL
+            // --- QoL ---
             TeleportKeyBind = KeybindLoader.RegisterKeybind(Mod, "UseTeleport", Microsoft.Xna.Framework.Input.Keys.G);
-            RecallKeyBind = KeybindLoader.RegisterKeybind(Mod, "Recall", Microsoft.Xna.Framework.Input.Keys.Z);
-            RecallSpawnKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallSpawn", Microsoft.Xna.Framework.Input.Keys.U);
-            RecallOceanKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallOcean", Microsoft.Xna.Framework.Input.Keys.I);
-            RecallUnderworldKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallUnderworld", Microsoft.Xna.Framework.Input.Keys.O);
+            RecallKeyBind = KeybindLoader.RegisterKeybind(Mod, "Recall", Microsoft.Xna.Framework.Input.Keys.NumPad1);
+            RecallSpawnKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallSpawn", Microsoft.Xna.Framework.Input.Keys.NumPad2);
+            RecallOceanKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallOcean", Microsoft.Xna.Framework.Input.Keys.NumPad3);
+            RecallUnderworldKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallUnderworld", Microsoft.Xna.Framework.Input.Keys.NumPad4);
+            RecallReturnKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallReturn", Microsoft.Xna.Framework.Input.Keys.NumPad5);
+
+            // --- Thorium Mod ---
+            if (ModLoader.TryGetMod("ThoriumMod", out Mod thorium))
+            {
+                Thorium = thorium;
+                RecallDungeonKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallDungeon", Microsoft.Xna.Framework.Input.Keys.NumPad6);
+                RecallTempleKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallTemple", Microsoft.Xna.Framework.Input.Keys.NumPad7);
+                RecallDeathLocationKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallDeathLocation", Microsoft.Xna.Framework.Input.Keys.NumPad8);
+                TeleportRandomKeybind = KeybindLoader.RegisterKeybind(Mod, "TeleportRandomLocation", Microsoft.Xna.Framework.Input.Keys.NumPad9);
+            }
         }
 
         public override void Unload()
@@ -100,6 +119,21 @@ namespace AdvancedControls.Common.Systems
 
             RulerKeyBind = null;
             MechanicalRulerKeyBind = null;
+
+            TeleportKeyBind = null;
+            RecallKeyBind = null;
+            RecallSpawnKeyBind = null;
+            RecallOceanKeyBind = null;
+            RecallUnderworldKeyBind = null;
+            RecallReturnKeyBind = null;
+
+            if (Thorium != null)
+            {
+                RecallDungeonKeyBind = null;
+                RecallTempleKeyBind = null;
+                RecallDeathLocationKeyBind = null;
+                TeleportRandomKeybind = null;
+            }
         }
 
         // --- For displaying which inventory slots the reference buttons are set to ---
@@ -116,7 +150,7 @@ namespace AdvancedControls.Common.Systems
                     layers.Remove(textLayer);
                 }
 
-                if(Main.playerInventory)
+                if (Main.playerInventory)
                 {
                     textLayer = new LegacyGameInterfaceLayer("AdvancedControls: ItemSlotReference", DrawInventorySlotText, InterfaceScaleType.Game);
                     layers.Insert(inventoryLayerIndex, textLayer);

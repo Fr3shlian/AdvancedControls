@@ -10,6 +10,8 @@ using AdvancedControls.Common.Configs;
 using System.Collections.Generic;
 using AdvancedControls.Common.GlobalItems;
 using Terraria.ModLoader.IO;
+using System;
+using System.Reflection;
 
 namespace AdvancedControls.Common.Players
 {
@@ -257,7 +259,7 @@ namespace AdvancedControls.Common.Players
                 }
             }
             EquipmentChangeReferenceKeyBindPlayer erp = Player.GetModPlayer<EquipmentChangeReferenceKeyBindPlayer>();
-            
+
             for (int i = 0; i < KeybindSystem.EquipmentChangeReferenceKeyBinds.Count; i++)
             {
                 if (slot == erp.GetReference(i))
@@ -517,12 +519,12 @@ namespace AdvancedControls.Common.Players
 
         public static void UseItem(int slot)
         {
-            if (Main.CurrentPlayer.itemTime == 0)
+            if (Main.LocalPlayer.itemTime == 0)
             {
-                priorSelectedItem = Main.CurrentPlayer.selectedItem;
-                Main.CurrentPlayer.selectedItem = slot;
-                Main.CurrentPlayer.controlUseItem = true;
-                Main.CurrentPlayer.ItemCheck();
+                priorSelectedItem = Main.LocalPlayer.selectedItem;
+                Main.LocalPlayer.selectedItem = slot;
+                Main.LocalPlayer.ItemCheck();
+                Main.LocalPlayer.controlUseItem = true;
             }
         }
     }
@@ -582,8 +584,12 @@ namespace AdvancedControls.Common.Players
             if (KeybindSystem.RecallKeyBind.JustPressed)
             {
                 int slot;
-                
-                if (Util.GetConfig().prioritizeRecallPotions)
+
+                if ((slot = FindWishingGlass()) != -1)
+                {
+                    UseWishingGlass(slot, "Home");
+                }
+                else if (Util.GetConfig().prioritizeRecallPotions)
                 {
                     slot = FindRecallPotions();
 
@@ -613,17 +619,21 @@ namespace AdvancedControls.Common.Players
 
             if (KeybindSystem.RecallSpawnKeyBind.JustPressed)
             {
-                int slot = FindShellPhone();
+                int slot = FindWishingGlass();
 
                 if (slot != -1)
+                    UseWishingGlass(slot, "Spawn");
+                else if ((slot = FindShellPhone()) != -1)
                     UseShellPhone(slot, ItemID.ShellphoneSpawn);
             }
 
             if (KeybindSystem.RecallOceanKeyBind.JustPressed)
             {
-                int slot = Player.FindItem(ItemID.MagicConch);
+                int slot = FindWishingGlass();
 
                 if (slot != -1)
+                    UseWishingGlass(slot, "Beach");
+                else if ((slot = Player.FindItem(ItemID.MagicConch)) != -1)
                     InventoryHelperPlayer.UseItem(slot);
                 else if ((slot = FindShellPhone()) != -1)
                     UseShellPhone(slot, ItemID.ShellphoneOcean);
@@ -631,14 +641,55 @@ namespace AdvancedControls.Common.Players
 
             if (KeybindSystem.RecallUnderworldKeyBind.JustPressed)
             {
-                int slot = Player.FindItem(ItemID.DemonConch);
+                int slot = FindWishingGlass();
 
                 if (slot != -1)
+                    UseWishingGlass(slot, "Underworld");
+                else if ((slot = Player.FindItem(ItemID.DemonConch)) != -1)
                     InventoryHelperPlayer.UseItem(slot);
                 else if ((slot = FindShellPhone()) != -1)
                     UseShellPhone(slot, ItemID.ShellphoneHell);
             }
 
+            if (KeybindSystem.RecallReturnKeyBind.JustPressed)
+            {
+                int slot = Player.FindItem(ItemID.PotionOfReturn);
+
+                if (slot != -1)
+                    InventoryHelperPlayer.UseItem(slot);
+            }
+
+            // --- Thorium Mod ---
+            if (KeybindSystem.Thorium != null)
+            {
+                if (KeybindSystem.RecallDeathLocationKeyBind.JustPressed)
+                {
+                    int slot = FindWishingGlass();
+
+                    if (slot != -1) UseWishingGlass(slot, "DeathLocation");
+                }
+
+                if (KeybindSystem.RecallDungeonKeyBind.JustPressed)
+                {
+                    int slot = FindWishingGlass();
+
+                    if (slot != -1) UseWishingGlass(slot, "Dungeon");
+                }
+
+                if (KeybindSystem.RecallTempleKeyBind.JustPressed)
+                {
+                    int slot = FindWishingGlass();
+
+                    if (slot != -1) UseWishingGlass(slot, "Temple");
+                }
+
+                if (KeybindSystem.TeleportRandomKeybind.JustPressed)
+                {
+                    int slot = FindWishingGlass();
+
+                    if (slot != -1) UseWishingGlass(slot, "Random");
+                }
+            }
         }
 
         private int FindRecallPotions()
@@ -656,14 +707,42 @@ namespace AdvancedControls.Common.Players
             return Player.FindItem(new List<int>() { ItemID.Shellphone, ItemID.ShellphoneSpawn, ItemID.ShellphoneOcean, ItemID.ShellphoneHell });
         }
 
+        private int FindWishingGlass()
+        {
+            if (KeybindSystem.Thorium == null)
+                return -1;
+            else return Player.FindItem(KeybindSystem.Thorium.Find<ModItem>("WishingGlass").Type);
+        }
+
         private void UseShellPhone(int slot, int shellPhoneID)
         {
-            if (Main.CurrentPlayer.itemTime == 0)
+            if (Main.LocalPlayer.itemTime == 0)
             {
                 requiredShellPhone = shellPhoneID;
                 priorSelectedItem = Player.selectedItem;
                 Player.selectedItem = slot;
             }
+        }
+
+        private object GetThoriumPlayer()
+        {
+            Type ThoriumPlayerHelperType = KeybindSystem.Thorium.Code.GetType("ThoriumMod.Utilities.PlayerHelper");
+            MethodInfo getThoriumPlayerMethod = ThoriumPlayerHelperType.GetMethod("GetThoriumPlayer", BindingFlags.Static | BindingFlags.Public);
+            return getThoriumPlayerMethod.Invoke(null, [Player]);
+        }
+
+        private void UseWishingGlass(int slot, string destination)
+        {
+            object thoriumPlayerInstance = GetThoriumPlayer();
+
+            Type ThoriumPlayerType = KeybindSystem.Thorium.Code.GetType("ThoriumMod.ThoriumPlayer");
+            FieldInfo tpDestinationField = ThoriumPlayerType.GetField("itemWishingGlassChoice", BindingFlags.Instance | BindingFlags.Public);
+
+            Type WishingGlassChoiceType = KeybindSystem.Thorium.Code.GetType("ThoriumMod.UI.ResourceBars.WishingGlassChoice");
+            FieldInfo wishingGlassChoice = WishingGlassChoiceType.GetField(destination, BindingFlags.Static | BindingFlags.Public);
+            tpDestinationField.SetValue(thoriumPlayerInstance, wishingGlassChoice.GetValue(null));
+
+            InventoryHelperPlayer.UseItem(slot);
         }
     }
 }
