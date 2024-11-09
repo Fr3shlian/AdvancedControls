@@ -27,9 +27,9 @@ namespace AdvancedControls.Common.Systems
         public static ModKeybind CycleInventoryRightKeybind { get; private set; }
 
         // --- Inventory Reference ---
-        public static List<ModKeybind> DynamicHotbarKeyBinds { get; private set; } = new List<ModKeybind>();
+        public static List<ModKeybind> DynamicHotbarKeyBinds { get; private set; } = [];
         // --- Equipment Change Reference ---
-        public static List<ModKeybind> EquipmentChangeReferenceKeyBinds { get; private set; } = new List<ModKeybind>();
+        public static List<ModKeybind> EquipmentChangeReferenceKeyBinds { get; private set; } = [];
 
         // --- Rulers ---
         public static ModKeybind RulerKeyBind { get; private set; }
@@ -160,63 +160,37 @@ namespace AdvancedControls.Common.Systems
 
         private bool DrawInventorySlotText()
         {
-            bool drawn = false;
-
             DynamicHotbarKeyBindPlayer kbp = Main.CurrentPlayer.GetModPlayer<DynamicHotbarKeyBindPlayer>();
             EquipmentChangeReferenceKeyBindPlayer erp = Main.CurrentPlayer.GetModPlayer<EquipmentChangeReferenceKeyBindPlayer>();
 
             for (int i = 0; i < DynamicHotbarKeyBinds.Count; i++)
             {
                 if (kbp.GetReference(i) != -1)
-                {
-                    if (drawn)
-                    {
-                        Main.spriteBatch.Begin();
-                    }
-
-                    Main.spriteBatch.DrawString(((DynamicSpriteFont)FontAssets.ItemStack), (i + 1).ToString(), GetVectorForInventorySlot(kbp.GetReference(i)), Microsoft.Xna.Framework.Color.White);
-                    Main.spriteBatch.End();
-
-                    drawn = true;
-                }
+                    Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, (i + 1).ToString(), GetVectorForInventorySlot(kbp.GetReference(i)), Color.White, 0f, Vector2.Zero, Main.UIScale, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
             }
 
             for (int i = 0; i < EquipmentChangeReferenceKeyBinds.Count; i++)
             {
-                if (erp.GetReference(i) != -1)
-                {
-                    if (drawn)
-                    {
-                        Main.spriteBatch.Begin();
-                    }
-
-                    Main.spriteBatch.DrawString(((DynamicSpriteFont)FontAssets.ItemStack), (i + 1 + DynamicHotbarKeyBinds.Count).ToString(), GetVectorForInventorySlot(erp.GetReference(i)), Microsoft.Xna.Framework.Color.White);
-                    Main.spriteBatch.End();
-
-                    drawn = true;
-                }
-            }
-
-            if (drawn)
-            {
-                Main.spriteBatch.Begin();
+                if (erp.EquipmentReference[i].Slot != -1)
+                    Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, "E" + (i + 1), GetVectorForInventorySlot(erp.EquipmentReference[i].Slot, -12f), Color.White, 0f, Vector2.Zero, Main.UIScale, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
             }
 
             return true;
         }
 
-        private static Vector2 GetVectorForInventorySlot(int slot)
+        //return new Vector2((int) (20f + columnCount * 56 * Main.inventoryScale) * Main.UIScale, (int) (20f + rowCount * 56 * Main.inventoryScale) * Main.UIScale);
+        private static Vector2 GetVectorForInventorySlot(int slot, float xAdjustment = 0f)
         {
-            int rowCount = (slot / 10);
-            int columnCount = (slot % 10);
+            int rowCount = slot / 10;
+            int columnCount = slot % 10;
 
-            float xFirstSlot = 46.5f * Main.UIScale;
-            float yFirstSlot = 20f * Main.UIScale;
+            float xFirstSlot = 52.5f + xAdjustment;
+            float yFirstSlot = 20.5f;
 
-            float xSlotAdjustment = 47.5f * columnCount * Main.UIScale;
-            float ySlotAdjustment = 47.5f * rowCount * Main.UIScale;
+            float xAnySlot = 23.5f * columnCount * Main.inventoryScale;
+            float yAnySlot = 23f * rowCount * Main.inventoryScale;
 
-            return new Vector2(xFirstSlot + xSlotAdjustment, yFirstSlot + ySlotAdjustment);
+            return new Vector2((xFirstSlot + xAnySlot + columnCount * 56 * Main.inventoryScale) * Main.UIScale, (yFirstSlot + yAnySlot + rowCount * 56 * Main.inventoryScale) * Main.UIScale);
         }
     }
 }

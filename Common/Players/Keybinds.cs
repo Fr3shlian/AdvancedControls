@@ -7,7 +7,6 @@ using Terraria.UI;
 using Terraria.ID;
 using System.Linq;
 using AdvancedControls.Common.Configs;
-using System.Collections.Generic;
 using AdvancedControls.Common.GlobalItems;
 using Terraria.ModLoader.IO;
 using System;
@@ -219,31 +218,16 @@ namespace AdvancedControls.Common.Players
     // --- Helper Class for Reference Buttons ---
     public class HoverSlotPlayer : ModPlayer
     {
-        private static int hoveredSlot = -1;
-        private static Item[] hoveredInventory = null;
-        private static int slotContext = -1;
+        public static int HoveredSlot { get; private set; } = -1;
+        public static Item[] HoveredInventory { get; private set; } = null;
+        public static int HoveredSlotContext { get; private set; } = -1;
 
         public override bool HoverSlot(Item[] inventory, int context, int slot)
         {
-            hoveredInventory = inventory;
-            slotContext = context;
-            hoveredSlot = slot;
+            HoveredInventory = inventory;
+            HoveredSlotContext = context;
+            HoveredSlot = slot;
             return false;
-        }
-
-        public static int GetHoveredSlot()
-        {
-            return hoveredSlot;
-        }
-
-        public static Item[] GetHoveredInventory()
-        {
-            return hoveredInventory;
-        }
-
-        public static int GetContext()
-        {
-            return slotContext;
         }
 
         public void RemoveOtherReference(int slot)
@@ -262,7 +246,7 @@ namespace AdvancedControls.Common.Players
 
             for (int i = 0; i < KeybindSystem.EquipmentChangeReferenceKeyBinds.Count; i++)
             {
-                if (slot == erp.GetReference(i))
+                if (slot == erp.EquipmentReference[i].Slot)
                 {
                     erp.UnbindReference(i);
                     return;
@@ -274,10 +258,10 @@ namespace AdvancedControls.Common.Players
     // --- Inventory Reference ---
     public class DynamicHotbarKeyBindPlayer : ModPlayer
     {
-        private readonly int[] dynamicHotbar = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
+        private int[] dynamicHotbar = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
         private int lastSelectedItem = -1;
 
-        private int[] frameCounter = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
+        private readonly int[] frameCounter = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
 
         public override void PostUpdate()
         {
@@ -301,14 +285,10 @@ namespace AdvancedControls.Common.Players
         {
             if (tag.ContainsKey("dynamicHotbar"))
             {
-                int[] data = tag.GetIntArray("dynamicHotbar");
-                for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++)
-                    dynamicHotbar[i] = data[i];
+                dynamicHotbar = tag.GetIntArray("dynamicHotbar");
             }
             else for (int i = 0; i < dynamicHotbar.Length; i++)
-                {
                     dynamicHotbar[i] = -1;
-                }
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
@@ -319,10 +299,10 @@ namespace AdvancedControls.Common.Players
                 {
                     if (Main.playerInventory)
                     {
-                        if (dynamicHotbar[i] == -1 && HoverSlotPlayer.GetHoveredSlot() > -1 && HoverSlotPlayer.GetHoveredSlot() < 50)
+                        if (dynamicHotbar[i] == -1 && HoverSlotPlayer.HoveredSlot != -1 && HoverSlotPlayer.HoveredSlot < 50)
                         {
-                            Player.GetModPlayer<HoverSlotPlayer>().RemoveOtherReference(HoverSlotPlayer.GetHoveredSlot());
-                            dynamicHotbar[i] = HoverSlotPlayer.GetHoveredSlot();
+                            Player.GetModPlayer<HoverSlotPlayer>().RemoveOtherReference(HoverSlotPlayer.HoveredSlot);
+                            dynamicHotbar[i] = HoverSlotPlayer.HoveredSlot;
                         }
                         else frameCounter[i] = 10;
                     }
@@ -333,13 +313,10 @@ namespace AdvancedControls.Common.Players
                 }
                 else if (KeybindSystem.DynamicHotbarKeyBinds[i].JustReleased)
                 {
-                    for (int j = 0; j < KeybindSystem.DynamicHotbarKeyBinds.Count; j++)
+                    if (frameCounter[i] != -1)
                     {
-                        if (frameCounter[j] != -1)
-                        {
-                            frameCounter[j] = -1;
-                            DynamicHotbarAction(i);
-                        }
+                        frameCounter[i] = -1;
+                        DynamicHotbarAction(i);
                     }
                 }
             }
@@ -364,7 +341,7 @@ namespace AdvancedControls.Common.Players
             }
             else
             {
-                if ((Player.selectedItem < 10 && !IsItemReferenced(Player.selectedItem) && IsItemReferenced(dynamicHotbar[slot])) || lastSelectedItem == -1)
+                if ((Player.selectedItem < 10 && !IsItemReferenced(Player.selectedItem)) || lastSelectedItem == -1)
                     lastSelectedItem = Player.selectedItem;
 
                 Player.selectedItem = dynamicHotbar[slot];
@@ -385,7 +362,69 @@ namespace AdvancedControls.Common.Players
     // --- Equipment Change Reference ---
     public class EquipmentChangeReferenceKeyBindPlayer : ModPlayer
     {
-        private readonly int[] equipmentReference = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
+        public class InventoryReference(int slot = -1, Item[] inventory = null, int context = -1) : TagSerializable
+        {
+            public static readonly Func<TagCompound, InventoryReference> DESERIALIZER = DeserializeData;
+
+            public int Slot { get; set; } = slot;
+            public Item[] Inventory { get; set; } = inventory;
+            public int Context { get; set; } = context;
+
+            public ref Item GetItem()
+            {
+                return ref Inventory[Slot];
+            }
+
+            private enum InventoryType
+            {
+                Base,
+                Equipment,
+                MiscEquips
+            }
+
+            private int GetInventoryType()
+            {
+                if (Inventory == Main.CurrentPlayer.inventory) return (int)InventoryType.Base;
+                else if (Inventory == Main.CurrentPlayer.armor) return (int)InventoryType.Equipment;
+                else if (Inventory == Main.CurrentPlayer.miscEquips) return (int)InventoryType.MiscEquips;
+                else return -1;
+            }
+
+            private static Item[] GetInventoryReference(InventoryType type)
+            {
+                switch (type)
+                {
+                    case InventoryType.Base: return Main.CurrentPlayer.inventory;
+                    case InventoryType.Equipment: return Main.CurrentPlayer.armor;
+                    case InventoryType.MiscEquips: return Main.CurrentPlayer.miscEquips;
+                    default: return null;
+                }
+            }
+
+            public TagCompound SerializeData()
+            {
+                return new TagCompound
+                {
+                    ["slot"] = Slot,
+                    ["inventoryType"] = GetInventoryType(),
+                    ["context"] = Context
+                };
+            }
+
+            public static InventoryReference DeserializeData(TagCompound tag)
+            {
+                InventoryReference obj = new()
+                {
+                    Slot = tag.GetInt("slot"),
+                    Inventory = GetInventoryReference((InventoryType)tag.GetInt("inventoryType")),
+                    Context = tag.GetInt("context")
+                };
+                return obj;
+            }
+        }
+
+        public InventoryReference[] EquipmentReference { get; private set; } = Enumerable.Repeat(new InventoryReference(), KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
+        private InventoryReference[] equipmentTarget = Enumerable.Repeat(new InventoryReference(), KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
 
         private readonly int[] frameCounter = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
 
@@ -396,7 +435,8 @@ namespace AdvancedControls.Common.Players
                 if (frameCounter[i] == 1)
                 {
                     frameCounter[i] = -1;
-                    equipmentReference[i] = -1;
+                    EquipmentReference[i] = new InventoryReference();
+                    equipmentTarget[i] = new InventoryReference();
                 }
                 else if (frameCounter[i] != -1) frameCounter[i]--;
             }
@@ -404,20 +444,21 @@ namespace AdvancedControls.Common.Players
 
         public override void SaveData(TagCompound tag)
         {
-            tag.Set("equipmentReference", equipmentReference, true);
+            tag.Set("equipmentSource", EquipmentReference, true);
+            tag.Set("equipmentTarget", equipmentTarget, true);
         }
 
         public override void LoadData(TagCompound tag)
         {
-            if (tag.ContainsKey("equipmentReference"))
+            if (tag.ContainsKey("equipmentSource") && tag.ContainsKey("equipmentTarget"))
             {
-                int[] data = tag.GetIntArray("equipmentReference");
-                for (int i = 0; i < KeybindSystem.EquipmentChangeReferenceKeyBinds.Count; i++)
-                    equipmentReference[i] = data[i];
+                EquipmentReference = tag.Get<InventoryReference[]>("equipmentSource");
+                equipmentTarget = tag.Get<InventoryReference[]>("equipmentTarget");
             }
-            else for (int i = 0; i < equipmentReference.Length; i++)
+            else for (int i = 0; i < EquipmentReference.Length; i++)
                 {
-                    equipmentReference[i] = -1;
+                    EquipmentReference[i] = new InventoryReference();
+                    equipmentTarget[i] = new InventoryReference();
                 }
         }
 
@@ -429,53 +470,104 @@ namespace AdvancedControls.Common.Players
                 {
                     if (Main.playerInventory)
                     {
-                        if (equipmentReference[i] == -1 && HoverSlotPlayer.GetHoveredSlot() > -1 && HoverSlotPlayer.GetHoveredSlot() < 50)
+                        if (EquipmentReference[i].Slot == -1)
                         {
-                            Player.GetModPlayer<HoverSlotPlayer>().RemoveOtherReference(HoverSlotPlayer.GetHoveredSlot());
-                            equipmentReference[i] = HoverSlotPlayer.GetHoveredSlot();
+                            if (HoverSlotPlayer.HoveredSlot != -1 && HoverSlotPlayer.HoveredInventory == Player.inventory)
+                            {
+                                Player.GetModPlayer<HoverSlotPlayer>().RemoveOtherReference(HoverSlotPlayer.HoveredSlot);
+                                EquipmentReference[i] = new InventoryReference(HoverSlotPlayer.HoveredSlot, HoverSlotPlayer.HoveredInventory, HoverSlotPlayer.HoveredSlotContext);
+                            }
                         }
                         else frameCounter[i] = 10;
                     }
-                    else if (equipmentReference[i] != -1 && ItemSlot.Equippable(ref Player.inventory[equipmentReference[i]]))
+                    else if (equipmentTarget[i].Slot != -1)
                     {
                         EquipmentChangeAction(i);
                     }
                 }
                 else if (KeybindSystem.EquipmentChangeReferenceKeyBinds[i].JustReleased)
                 {
-                    for (int j = 0; j < KeybindSystem.EquipmentChangeReferenceKeyBinds.Count; j++)
+                    if (frameCounter[i] != -1)
                     {
-                        if (frameCounter[j] != -1)
+                        frameCounter[i] = -1;
+                        bool sameSlot = HoverSlotPlayer.HoveredSlot == EquipmentReference[i].Slot && HoverSlotPlayer.HoveredInventory == EquipmentReference[i].Inventory;
+
+                        if (equipmentTarget[i].Slot == -1 && !sameSlot && CanSlotAccept(EquipmentReference[i].Context, HoverSlotPlayer.HoveredSlotContext))
                         {
-                            frameCounter[j] = -1;
-                            EquipmentChangeAction(i);
+                            equipmentTarget[i] = new InventoryReference(HoverSlotPlayer.HoveredSlot, HoverSlotPlayer.HoveredInventory, HoverSlotPlayer.HoveredSlotContext);
+
+                            if (EquipmentReference[i].Slot > 49 && equipmentTarget[i].Slot < 49 && equipmentTarget[i].Inventory == Player.inventory) {
+                                (EquipmentReference[i], equipmentTarget[i]) = (equipmentTarget[i], EquipmentReference[i]);
+                            }
                         }
+                        else if (equipmentTarget[i].Slot != -1) EquipmentChangeAction(i);
                     }
                 }
             }
         }
 
-        private void EquipmentChangeAction(int slot)
+        private static bool CanSlotAccept(int context1, int context2)
         {
-            int mountType = Player.inventory[equipmentReference[slot]].mountType;
-
-            ItemSlot.SwapEquip(ref Player.inventory[equipmentReference[slot]]);
-            Player.inventory[equipmentReference[slot]].favorited = true;
-
-            if (Player.mount.Active && mountType != -1)
-            {
-                Player.mount.SetMount(mountType, Player);
-            }
+            if (context1 == 0 || context1 == 13 || context2 == 0 || context2 == 13)
+                return true;
+            else if (context1 == context2)
+                return true;
+            else
+                return false;
         }
 
-        public int GetReference(int slot)
+        private bool CanTransfer(int i)
         {
-            return equipmentReference[slot];
+            Item sourceItem = EquipmentReference[i].GetItem();
+            InventoryReference target = equipmentTarget[i];
+            bool inventoryTransfer = EquipmentReference[i].Context == target.Context || EquipmentReference[i].Context == 0 && target.Context == 13 || EquipmentReference[i].Context == 13 && target.Context == 0;
+            bool slotEmpty = sourceItem.IsAir;
+            
+            if (inventoryTransfer)
+                return true;
+            else if ((sourceItem.headSlot != -1 || slotEmpty) && target.Slot == 0 && target.Inventory == Player.armor)
+                return true;
+            else if ((sourceItem.bodySlot != -1 || slotEmpty) && target.Slot == 1 && target.Inventory == Player.armor)
+                return true;
+            else if ((sourceItem.legSlot != -1 || slotEmpty) && target.Slot == 2 && target.Inventory == Player.armor)
+                return true;
+            else if ((sourceItem.accessory || slotEmpty) && Math.Abs(target.Context) == 10)
+                return true;
+            else if ((sourceItem.mountType != -1 || slotEmpty) && target.Context == 17)
+                return true;
+            else if ((sourceItem.ammo != AmmoID.None || slotEmpty) && target.Context == 2)
+                return true;
+            else if ((sourceItem.IsACoin || slotEmpty) && target.GetItem().IsACoin)
+                return true;
+
+            return false;
+        }
+
+        private void EquipmentChangeAction(int slot)
+        {
+            if (CanTransfer(slot))
+            {
+                ref Item source = ref EquipmentReference[slot].GetItem(), target = ref equipmentTarget[slot].GetItem();
+
+                if (source.favorited && equipmentTarget[slot].Inventory == Player.armor || equipmentTarget[slot].Inventory == Player.miscEquips) {
+                    source.favorited = false;
+                    target.favorited = true;
+                }
+
+                (source, target) = (target, source);
+
+                Player.UpdateEquips(0);
+
+                if (equipmentTarget[slot].Context == 17 && Player.mount.Active)
+                {
+                    Player.mount.SetMount(Player.miscEquips[Player.miscSlotMount].mountType, Player);
+                }
+            }
         }
 
         public void UnbindReference(int slot)
         {
-            equipmentReference[slot] = -1;
+            EquipmentReference[slot] = new InventoryReference();
         }
     }
 
@@ -699,12 +791,12 @@ namespace AdvancedControls.Common.Players
 
         private int FindMirror()
         {
-            return Player.FindItem(new List<int>() { ItemID.Shellphone, ItemID.MagicMirror, ItemID.IceMirror });
+            return Player.FindItem([ItemID.Shellphone, ItemID.MagicMirror, ItemID.IceMirror]);
         }
 
         private int FindShellPhone()
         {
-            return Player.FindItem(new List<int>() { ItemID.Shellphone, ItemID.ShellphoneSpawn, ItemID.ShellphoneOcean, ItemID.ShellphoneHell });
+            return Player.FindItem([ItemID.Shellphone, ItemID.ShellphoneSpawn, ItemID.ShellphoneOcean, ItemID.ShellphoneHell]);
         }
 
         private int FindWishingGlass()
@@ -745,12 +837,12 @@ namespace AdvancedControls.Common.Players
             InventoryHelperPlayer.UseItem(slot);
         }
     }
-}
 
-public class Util
-{
-    public static AdvancedControlsConfig GetConfig()
+    public class Util
     {
-        return ModContent.GetInstance<AdvancedControlsConfig>();
+        public static AdvancedControlsConfig GetConfig()
+        {
+            return ModContent.GetInstance<AdvancedControlsConfig>();
+        }
     }
 }

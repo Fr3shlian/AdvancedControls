@@ -1,5 +1,5 @@
 ﻿[h1]v1.5.1[/h1]
 [list]
-[*] Added a keybind for using Potions Of Return
-[*] Added compatibility for recall buttons with Thorium Mod's Wishing Glass
+[*] Indicators for reference buttons will now properly scale and reposition with the game's UIScale
+[*] Equipment Change keybinds now allow setting both source and target for more flexibility
 [/list]

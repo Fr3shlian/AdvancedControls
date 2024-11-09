@@ -29,7 +29,7 @@ namespace AdvancedControls.Common.Configs
         [Header("Inventory")]
         [ReloadRequired]
         [DefaultValue(4)]
-        [Range(0, 10)]
+        [Range(0, 9)]
         public int dynamicHotbarCount;
 
         [ReloadRequired]

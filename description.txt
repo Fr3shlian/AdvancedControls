@@ -1,20 +1,37 @@
 Adds extra keybindings for:
 [list]
-[*] Chest actions
-[*] Dashing
-[*] Cycling all inventory slots (not just the hotbar)
-[*] Dynamic shortcuts to inventory slots ("Dynamic Hotbar" from console Terraria)
-[*] Equipment Change
-[*] Toggling rulers
-[*] Using Rod of Discord/Harmony
-[*] Using teleport items like Recall Potions and the Magic Conch
+    [*] Chest actions
+    [*] Dashing
+    [*] Cycling all inventory slots (not just the hotbar)
+    [*] Dynamic shortcuts to inventory slots ("Dynamic Hotbar" from console Terraria)
+    [*] Equipment Change
+    [*] Toggling rulers
+    [*] Using Rod of Discord/Harmony
+    [*] Using teleport items like Recall Potions and the Magic Conch
 [/list]
 
-Instruction for Dynamic Hotbar and Equipment Change:
+Instruction for Dynamic Hotbar:
 [olist]
-[*] Open your inventory
-[*] Hover over a slot
-[*] Press the keybind to bind it to that inventory slot
-[*] Press it to activate it
-[*] Hold the button for a moment in your inventory once you want to unbind it
+    [*] Open your inventory
+    [*] Hover over a slot and press the keybind to bind it to that inventory slot
+    [*] Press it again to activate it
+    [*] Hold the button for a moment while in your inventory to unbind it
+[/olist]
+
+Instruction for Equipment Change:
+[olist]
+    [*] Open your inventory
+    [*] Hover over a slot and press the keybind to define the slot as the source slot
+        [list]
+            [*] All main inventory slots (including coins and ammo) can be set as source
+        [/list]
+    [*] Hover over a second slot and press the keybind again to define that slot as the target slot
+        [list]
+            [*] Allows all slots except for vanity and dye
+        [/list]
+    [*] Press the button again to activate it
+        [list]
+            [*] When a mount is active and another one is switched in the new mount will be mounted (configurable)
+        [/list]
+    [*] Hold the button for a moment while in your inventory to unbind it
 [/olist]
