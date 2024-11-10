@@ -1,4 +1,6 @@
-Adds extra keybindings for:
+This mod adds a whole bunch of keybinds ranging from simple toggles and dashing to Recall Potion usage and better inventory navigation. It also offers some configs where relevant. If you have any suggestions for keybinds, put them into the comment section.
+
+List of keybinds:
 [list]
     [*] Chest actions
     [*] Dashing

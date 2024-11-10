@@ -508,7 +508,7 @@ namespace AdvancedControls.Common.Players
 
         private static bool CanSlotAccept(int context1, int context2)
         {
-            if (context1 == 0 || context1 == 13 || context2 == 0 || context2 == 13)
+            if (context1 == ItemSlot.Context.InventoryItem || context1 == ItemSlot.Context.HotbarItem || context2 == ItemSlot.Context.InventoryItem || context2 == ItemSlot.Context.HotbarItem)
                 return true;
             else if (context1 == context2)
                 return true;
@@ -520,7 +520,7 @@ namespace AdvancedControls.Common.Players
         {
             Item sourceItem = EquipmentReference[i].GetItem();
             InventoryReference target = equipmentTarget[i];
-            bool inventoryTransfer = EquipmentReference[i].Context == target.Context || EquipmentReference[i].Context == 0 && target.Context == 13 || EquipmentReference[i].Context == 13 && target.Context == 0;
+            bool inventoryTransfer = EquipmentReference[i].Context == target.Context || EquipmentReference[i].Context == ItemSlot.Context.InventoryItem && target.Context == ItemSlot.Context.HotbarItem || EquipmentReference[i].Context == ItemSlot.Context.HotbarItem && target.Context == ItemSlot.Context.InventoryItem;
             bool slotEmpty = sourceItem.IsAir;
             
             if (inventoryTransfer)
@@ -531,13 +531,21 @@ namespace AdvancedControls.Common.Players
                 return true;
             else if ((sourceItem.legSlot != -1 || slotEmpty) && target.Slot == 2 && target.Inventory == Player.armor)
                 return true;
-            else if ((sourceItem.accessory || slotEmpty) && Math.Abs(target.Context) == 10)
+            else if ((sourceItem.accessory || slotEmpty) && Math.Abs(target.Context) == ItemSlot.Context.EquipAccessory)
                 return true;
-            else if ((sourceItem.mountType != -1 || slotEmpty) && target.Context == 17)
+            else if (((sourceItem.buffType > 0 && Main.vanityPet[sourceItem.buffType]) || slotEmpty) && target.Context == ItemSlot.Context.EquipPet)
                 return true;
-            else if ((sourceItem.ammo != AmmoID.None || slotEmpty) && target.Context == 2)
+            else if (((sourceItem.buffType > 0 && Main.lightPet[sourceItem.buffType]) || slotEmpty) && target.Context == ItemSlot.Context.EquipLight)
                 return true;
-            else if ((sourceItem.IsACoin || slotEmpty) && target.GetItem().IsACoin)
+            else if (((sourceItem.mountType != -1 && MountID.Sets.Cart[sourceItem.mountType]) || slotEmpty) && target.Context == ItemSlot.Context.EquipMinecart)
+                return true;
+            else if (((sourceItem.mountType != -1 && !MountID.Sets.Cart[sourceItem.mountType]) || slotEmpty) && target.Context == ItemSlot.Context.EquipMount)
+                return true;
+             else if ((Main.projHook[sourceItem.shoot] || slotEmpty) && target.Context == ItemSlot.Context.EquipGrapple)
+                return true;
+            else if ((sourceItem.ammo != AmmoID.None || slotEmpty) && target.Context == ItemSlot.Context.InventoryAmmo)
+                return true;
+            else if ((sourceItem.IsACoin || slotEmpty) && target.Context == ItemSlot.Context.InventoryCoin)
                 return true;
 
             return false;
@@ -558,7 +566,7 @@ namespace AdvancedControls.Common.Players
 
                 Player.UpdateEquips(0);
 
-                if (equipmentTarget[slot].Context == 17 && Player.mount.Active)
+                if (equipmentTarget[slot].Context == ItemSlot.Context.EquipMount && Player.mount.Active)
                 {
                     Player.mount.SetMount(Player.miscEquips[Player.miscSlotMount].mountType, Player);
                 }
