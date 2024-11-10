@@ -1,5 +1,7 @@
 ﻿[h1]v1.5.1[/h1]
 [list]
-[*] Indicators for reference buttons will now properly scale and reposition with the game's UIScale
-[*] Equipment Change keybinds now allow setting both source and target for more flexibility
+    [*] Indicators for reference buttons will now properly scale and reposition with the game's UIScale
+    [*] Equipment Change keybinds now allow setting both source and target for more flexibility
+    [*] Fixed a bug that would allow setting dynamic hotbar on equipment
+    [*] Fixed a crash when trying to bind dynamic hotbar to coins/ammo
 [/list]

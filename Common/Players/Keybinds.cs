@@ -299,10 +299,13 @@ namespace AdvancedControls.Common.Players
                 {
                     if (Main.playerInventory)
                     {
-                        if (dynamicHotbar[i] == -1 && HoverSlotPlayer.HoveredSlot != -1 && HoverSlotPlayer.HoveredSlot < 50)
+                        if (dynamicHotbar[i] == -1)
                         {
-                            Player.GetModPlayer<HoverSlotPlayer>().RemoveOtherReference(HoverSlotPlayer.HoveredSlot);
-                            dynamicHotbar[i] = HoverSlotPlayer.HoveredSlot;
+                            if (HoverSlotPlayer.HoveredSlot != -1 && HoverSlotPlayer.HoveredSlot < 50 && HoverSlotPlayer.HoveredInventory == Player.inventory)
+                            {
+                                Player.GetModPlayer<HoverSlotPlayer>().RemoveOtherReference(HoverSlotPlayer.HoveredSlot);
+                                dynamicHotbar[i] = HoverSlotPlayer.HoveredSlot;
+                            }
                         }
                         else frameCounter[i] = 10;
                     }
@@ -496,7 +499,8 @@ namespace AdvancedControls.Common.Players
                         {
                             equipmentTarget[i] = new InventoryReference(HoverSlotPlayer.HoveredSlot, HoverSlotPlayer.HoveredInventory, HoverSlotPlayer.HoveredSlotContext);
 
-                            if (EquipmentReference[i].Slot > 49 && equipmentTarget[i].Slot < 49 && equipmentTarget[i].Inventory == Player.inventory) {
+                            if (EquipmentReference[i].Slot > 49 && equipmentTarget[i].Slot < 49 && equipmentTarget[i].Inventory == Player.inventory)
+                            {
                                 (EquipmentReference[i], equipmentTarget[i]) = (equipmentTarget[i], EquipmentReference[i]);
                             }
                         }
@@ -522,7 +526,7 @@ namespace AdvancedControls.Common.Players
             InventoryReference target = equipmentTarget[i];
             bool inventoryTransfer = EquipmentReference[i].Context == target.Context || EquipmentReference[i].Context == ItemSlot.Context.InventoryItem && target.Context == ItemSlot.Context.HotbarItem || EquipmentReference[i].Context == ItemSlot.Context.HotbarItem && target.Context == ItemSlot.Context.InventoryItem;
             bool slotEmpty = sourceItem.IsAir;
-            
+
             if (inventoryTransfer)
                 return true;
             else if ((sourceItem.headSlot != -1 || slotEmpty) && target.Slot == 0 && target.Inventory == Player.armor)
@@ -541,7 +545,7 @@ namespace AdvancedControls.Common.Players
                 return true;
             else if (((sourceItem.mountType != -1 && !MountID.Sets.Cart[sourceItem.mountType]) || slotEmpty) && target.Context == ItemSlot.Context.EquipMount)
                 return true;
-             else if ((Main.projHook[sourceItem.shoot] || slotEmpty) && target.Context == ItemSlot.Context.EquipGrapple)
+            else if ((Main.projHook[sourceItem.shoot] || slotEmpty) && target.Context == ItemSlot.Context.EquipGrapple)
                 return true;
             else if ((sourceItem.ammo != AmmoID.None || slotEmpty) && target.Context == ItemSlot.Context.InventoryAmmo)
                 return true;
@@ -557,7 +561,8 @@ namespace AdvancedControls.Common.Players
             {
                 ref Item source = ref EquipmentReference[slot].GetItem(), target = ref equipmentTarget[slot].GetItem();
 
-                if (source.favorited && equipmentTarget[slot].Inventory == Player.armor || equipmentTarget[slot].Inventory == Player.miscEquips) {
+                if (source.favorited && equipmentTarget[slot].Inventory == Player.armor || equipmentTarget[slot].Inventory == Player.miscEquips)
+                {
                     source.favorited = false;
                     target.favorited = true;
                 }
