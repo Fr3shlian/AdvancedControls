@@ -7,6 +7,7 @@ using ReLogic.Graphics;
 using Terraria.GameContent;
 using Microsoft.Xna.Framework;
 using AdvancedControls.Common.Configs;
+using ReLogic.Utilities;
 
 namespace AdvancedControls.Common.Systems
 {
@@ -172,25 +173,47 @@ namespace AdvancedControls.Common.Systems
             for (int i = 0; i < EquipmentChangeReferenceKeyBinds.Count; i++)
             {
                 if (erp.EquipmentReference[i].Slot != -1)
-                    Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, "E" + (i + 1), GetVectorForInventorySlot(erp.EquipmentReference[i].Slot, -12f), Color.White, 0f, Vector2.Zero, Main.UIScale, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
+                    Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, "E" + (i + 1), GetVectorForInventorySlot(erp.EquipmentReference[i].Slot, -11f), Color.White, 0f, Vector2.Zero, Main.UIScale * (erp.EquipmentReference[i].Slot < 50 ? 1f : 0.6f), Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
             }
 
             return true;
         }
 
-        //return new Vector2((int) (20f + columnCount * 56 * Main.inventoryScale) * Main.UIScale, (int) (20f + rowCount * 56 * Main.inventoryScale) * Main.UIScale);
+        //Values from Main
+        //Inventory X: (20f + columnCount * 56 * Main.inventoryScale) * Main.UIScale
+        //Inventory Y: (20f + rowCount * 56 * Main.inventoryScale) * Main.UIScale);
+        //Coins/Ammo Y: int num103 = (int)(85f + (float)(num101 * 56) * inventoryScale + 20f);
         private static Vector2 GetVectorForInventorySlot(int slot, float xAdjustment = 0f)
         {
-            int rowCount = slot / 10;
-            int columnCount = slot % 10;
+            if (slot < 50)
+            {
+                float inventoryScale = 0.75f;
+                int rowCount = slot / 10;
+                int columnCount = slot % 10;
 
-            float xFirstSlot = 52.5f + xAdjustment;
-            float yFirstSlot = 20.5f;
+                float xFirstSlot = 51.5f + xAdjustment;
+                float yFirstSlot = 21.5f;
 
-            float xAnySlot = 23.5f * columnCount * Main.inventoryScale;
-            float yAnySlot = 23f * rowCount * Main.inventoryScale;
+                float xAnySlot = 56 * columnCount * inventoryScale;
+                float yAnySlot = rowCount * 56 * inventoryScale;
 
-            return new Vector2((xFirstSlot + xAnySlot + columnCount * 56 * Main.inventoryScale) * Main.UIScale, (yFirstSlot + yAnySlot + rowCount * 56 * Main.inventoryScale) * Main.UIScale);
+                float xAnySlotAdjust = 7.5f * columnCount * inventoryScale;
+                float yAnySlotAdjust = 7f * rowCount * inventoryScale;
+
+                return new Vector2((xFirstSlot + xAnySlot + xAnySlotAdjust) * Main.UIScale, (yFirstSlot + yAnySlot + yAnySlotAdjust) * Main.UIScale);
+            }
+            else
+            {
+                float inventoryScale = 0.6f;
+                int rowCount = (slot - 50) % 4;
+                float xPosition = (slot < 54 ? 497f : 534f) + 28f + xAdjustment;
+
+                float yFirstSlot = 106f;
+                float yAnySlot = rowCount * 56 * inventoryScale;
+                float yAnySlotAdjust = rowCount * -0.5f * inventoryScale;
+
+                return new Vector2(xPosition * Main.UIScale, (yFirstSlot + yAnySlotAdjust + yAnySlot) * Main.UIScale);
+            }
         }
     }
 }
