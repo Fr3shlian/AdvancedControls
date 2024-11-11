@@ -11,6 +11,7 @@ using AdvancedControls.Common.GlobalItems;
 using Terraria.ModLoader.IO;
 using System;
 using System.Reflection;
+using Terraria.Audio;
 
 namespace AdvancedControls.Common.Players
 {
@@ -498,6 +499,7 @@ namespace AdvancedControls.Common.Players
                         if (equipmentTarget[i].Slot == -1 && !sameSlot && CanSlotAccept(EquipmentReference[i].Context, HoverSlotPlayer.HoveredSlotContext))
                         {
                             equipmentTarget[i] = new InventoryReference(HoverSlotPlayer.HoveredSlot, HoverSlotPlayer.HoveredInventory, HoverSlotPlayer.HoveredSlotContext);
+                            SoundEngine.PlaySound(SoundID.MenuTick);
 
                             if (EquipmentReference[i].Slot > 49 && equipmentTarget[i].Slot < 49 && equipmentTarget[i].Inventory == Player.inventory)
                             {
