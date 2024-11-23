@@ -7,7 +7,8 @@ using ReLogic.Graphics;
 using Terraria.GameContent;
 using Microsoft.Xna.Framework;
 using AdvancedControls.Common.Configs;
-using ReLogic.Utilities;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria.GameContent.Animations;
 
 namespace AdvancedControls.Common.Systems
 {
@@ -31,6 +32,10 @@ namespace AdvancedControls.Common.Systems
         public static List<ModKeybind> DynamicHotbarKeyBinds { get; private set; } = [];
         // --- Equipment Change Reference ---
         public static List<ModKeybind> EquipmentChangeReferenceKeyBinds { get; private set; } = [];
+        // For Equipment Change Indicator
+        private static Item item1 = null;
+        private static Item item2 = null;
+        private static float alpha = 0f;
 
         // --- Rulers ---
         public static ModKeybind RulerKeyBind { get; private set; }
@@ -139,6 +144,7 @@ namespace AdvancedControls.Common.Systems
 
         // --- For displaying which inventory slots the reference buttons are set to ---
         private LegacyGameInterfaceLayer textLayer;
+        private LegacyGameInterfaceLayer equipmentChangeLayer;
 
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
@@ -157,6 +163,27 @@ namespace AdvancedControls.Common.Systems
                     layers.Insert(inventoryLayerIndex, textLayer);
                 }
             }
+
+            inventoryLayerIndex = layers.FindIndex(layer => layer.Name == "Vanilla: Interface Logic 4");
+
+            if (inventoryLayerIndex != -1)
+            {
+                if (equipmentChangeLayer != null)
+                {
+                    layers.Remove(equipmentChangeLayer);
+                }
+
+                equipmentChangeLayer = new LegacyGameInterfaceLayer("AdvancedControls: EquipmentChangeIndicator", DrawEquipmentChangeIndicator, InterfaceScaleType.Game);
+                layers.Insert(inventoryLayerIndex, equipmentChangeLayer);
+            }
+        }
+
+        public override void UpdateUI(GameTime gameTime)
+        {
+            if (alpha != 0f)
+            {
+                alpha -= 0.02f;
+            }
         }
 
         private bool DrawInventorySlotText()
@@ -167,13 +194,13 @@ namespace AdvancedControls.Common.Systems
             for (int i = 0; i < DynamicHotbarKeyBinds.Count; i++)
             {
                 if (kbp.GetReference(i) != -1)
-                    Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, (i + 1).ToString(), GetVectorForInventorySlot(kbp.GetReference(i)), Color.White, 0f, Vector2.Zero, Main.UIScale, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
+                    Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, (i + 1).ToString(), GetVectorForInventorySlot(kbp.GetReference(i)), Color.White, 0f, Vector2.Zero, Main.UIScale, SpriteEffects.None, 0f);
             }
 
             for (int i = 0; i < EquipmentChangeReferenceKeyBinds.Count; i++)
             {
                 if (erp.EquipmentReference[i].Slot != -1)
-                    Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, "E" + (i + 1), GetVectorForInventorySlot(erp.EquipmentReference[i].Slot, -11f), Color.White, 0f, Vector2.Zero, Main.UIScale * (erp.EquipmentReference[i].Slot < 50 ? 1f : 0.6f), Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
+                    Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, "E" + (i + 1), GetVectorForInventorySlot(erp.EquipmentReference[i].Slot, -11f), Color.White, 0f, Vector2.Zero, Main.UIScale * (erp.EquipmentReference[i].Slot < 50 ? 1f : 0.6f), SpriteEffects.None, 0f);
             }
 
             return true;
@@ -214,6 +241,43 @@ namespace AdvancedControls.Common.Systems
 
                 return new Vector2(xPosition * Main.UIScale, (yFirstSlot + yAnySlotAdjust + yAnySlot) * Main.UIScale);
             }
+        }
+
+        private bool DrawEquipmentChangeIndicator()
+        {
+            if (alpha != 0f)
+            {
+                Texture2D tex1 = null, tex2 = null;
+
+                if (item1 != null)
+                {
+                    if (item1.ModItem != null) tex1 = ModContent.Request<Texture2D>(item1.ModItem.Texture).Value;
+                    else tex1 = TextureAssets.Item[item1.type].Value;
+                }
+
+                if (item2 != null)
+                {
+                    if (item2.ModItem != null) tex2 = ModContent.Request<Texture2D>(item2.ModItem.Texture).Value;
+                    else tex2 = TextureAssets.Item[item2.type].Value;
+                }
+
+                float playerCenterX = Main.screenWidth / 2;
+                float spacing = 40f;
+                float abovePlayerY = Main.screenHeight / 2 - Main.CurrentPlayer.height + 5;
+
+                if (tex1 != null) Main.spriteBatch.Draw(tex1, new Vector2(playerCenterX - spacing - tex1.Width / 2, abovePlayerY - tex1.Height / 2), Color.White * alpha);
+                if (tex2 != null) Main.spriteBatch.Draw(tex2, new Vector2(playerCenterX + spacing - tex2.Width / 2, abovePlayerY - tex2.Height / 2), Color.White * alpha);
+                if (tex1 != null || tex2 != null) Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, "->", new Vector2(playerCenterX - 17, Main.screenHeight / 2 - Main.CurrentPlayer.height * 1.2f), Color.White * alpha, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+            }
+
+            return true;
+        }
+
+        public static void SetItemRefsForIndicator(Item item1, Item item2)
+        {
+            KeybindSystem.item1 = item1;
+            KeybindSystem.item2 = item2;
+            alpha = 1f;
         }
     }
 }

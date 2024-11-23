@@ -571,6 +571,8 @@ namespace AdvancedControls.Common.Players
 
                 (source, target) = (target, source);
 
+                KeybindSystem.SetItemRefsForIndicator(source, target);
+
                 Player.UpdateEquips(0);
 
                 if (equipmentTarget[slot].Context == ItemSlot.Context.EquipMount && Player.mount.Active)
