@@ -10,10 +10,8 @@ using AdvancedControls.Common.Configs;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.Animations;
 
-namespace AdvancedControls.Common.Systems
-{
-    public class KeybindSystem : ModSystem
-    {
+namespace AdvancedControls.Common.Systems {
+    public class KeybindSystem : ModSystem {
         // --- Chest controls ---
         public static ModKeybind LootAllKeybind { get; private set; }
         public static ModKeybind DepositAllKeybind { get; private set; }
@@ -56,8 +54,7 @@ namespace AdvancedControls.Common.Systems
         public static ModKeybind TeleportRandomKeybind { get; private set; }
         public static Mod Thorium = null;
 
-        public override void Load()
-        {
+        public override void Load() {
             // --- Chest controls ---
             LootAllKeybind = KeybindLoader.RegisterKeybind(Mod, "LootAll", Microsoft.Xna.Framework.Input.Keys.Up);
             DepositAllKeybind = KeybindLoader.RegisterKeybind(Mod, "DepositAll", Microsoft.Xna.Framework.Input.Keys.None);
@@ -73,14 +70,12 @@ namespace AdvancedControls.Common.Systems
             CycleInventoryRightKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryRight", Microsoft.Xna.Framework.Input.Keys.None);
 
             // --- Inventory Reference ---
-            for (int i = 0; i < ModContent.GetInstance<AdvancedControlsConfig>().dynamicHotbarCount; i++)
-            {
+            for (int i = 0; i < ModContent.GetInstance<AdvancedControlsConfig>().dynamicHotbarCount; i++) {
                 DynamicHotbarKeyBinds.Add(KeybindLoader.RegisterKeybind(Mod, "DynamicHotbar" + (i + 1), Microsoft.Xna.Framework.Input.Keys.None));
             }
 
             // --- Equipment Change Reference ---
-            for (int i = 0; i < ModContent.GetInstance<AdvancedControlsConfig>().equipmentChangeReferenceCount; i++)
-            {
+            for (int i = 0; i < ModContent.GetInstance<AdvancedControlsConfig>().equipmentChangeReferenceCount; i++) {
                 EquipmentChangeReferenceKeyBinds.Add(KeybindLoader.RegisterKeybind(Mod, "EquipmentChangeReference" + (i + 1), Microsoft.Xna.Framework.Input.Keys.None));
             }
 
@@ -97,8 +92,7 @@ namespace AdvancedControls.Common.Systems
             RecallReturnKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallReturn", Microsoft.Xna.Framework.Input.Keys.NumPad5);
 
             // --- Thorium Mod ---
-            if (ModLoader.TryGetMod("ThoriumMod", out Mod thorium))
-            {
+            if (ModLoader.TryGetMod("ThoriumMod", out Mod thorium)) {
                 Thorium = thorium;
                 RecallDungeonKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallDungeon", Microsoft.Xna.Framework.Input.Keys.NumPad6);
                 RecallTempleKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallTemple", Microsoft.Xna.Framework.Input.Keys.NumPad7);
@@ -107,8 +101,7 @@ namespace AdvancedControls.Common.Systems
             }
         }
 
-        public override void Unload()
-        {
+        public override void Unload() {
             LootAllKeybind = null;
             DepositAllKeybind = null;
             QuickStackKeybind = null;
@@ -133,8 +126,7 @@ namespace AdvancedControls.Common.Systems
             RecallUnderworldKeyBind = null;
             RecallReturnKeyBind = null;
 
-            if (Thorium != null)
-            {
+            if (Thorium != null) {
                 RecallDungeonKeyBind = null;
                 RecallTempleKeyBind = null;
                 RecallDeathLocationKeyBind = null;
@@ -146,19 +138,15 @@ namespace AdvancedControls.Common.Systems
         private LegacyGameInterfaceLayer textLayer;
         private LegacyGameInterfaceLayer equipmentChangeLayer;
 
-        public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
-        {
+        public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers) {
             int inventoryLayerIndex = layers.FindIndex(layer => layer.Name == "Vanilla: Info Accessories Bar");
 
-            if (inventoryLayerIndex != -1)
-            {
-                if (textLayer != null)
-                {
+            if (inventoryLayerIndex != -1) {
+                if (textLayer != null) {
                     layers.Remove(textLayer);
                 }
 
-                if (Main.playerInventory)
-                {
+                if (Main.playerInventory) {
                     textLayer = new LegacyGameInterfaceLayer("AdvancedControls: ItemSlotReference", DrawInventorySlotText, InterfaceScaleType.Game);
                     layers.Insert(inventoryLayerIndex, textLayer);
                 }
@@ -166,10 +154,8 @@ namespace AdvancedControls.Common.Systems
 
             inventoryLayerIndex = layers.FindIndex(layer => layer.Name == "Vanilla: Interface Logic 4");
 
-            if (inventoryLayerIndex != -1)
-            {
-                if (equipmentChangeLayer != null)
-                {
+            if (inventoryLayerIndex != -1) {
+                if (equipmentChangeLayer != null) {
                     layers.Remove(equipmentChangeLayer);
                 }
 
@@ -178,27 +164,22 @@ namespace AdvancedControls.Common.Systems
             }
         }
 
-        public override void UpdateUI(GameTime gameTime)
-        {
-            if (alpha != 0f)
-            {
+        public override void UpdateUI(GameTime gameTime) {
+            if (alpha != 0f) {
                 alpha -= 0.02f;
             }
         }
 
-        private bool DrawInventorySlotText()
-        {
+        private bool DrawInventorySlotText() {
             DynamicHotbarKeyBindPlayer kbp = Main.CurrentPlayer.GetModPlayer<DynamicHotbarKeyBindPlayer>();
             EquipmentChangeReferenceKeyBindPlayer erp = Main.CurrentPlayer.GetModPlayer<EquipmentChangeReferenceKeyBindPlayer>();
 
-            for (int i = 0; i < DynamicHotbarKeyBinds.Count; i++)
-            {
+            for (int i = 0; i < DynamicHotbarKeyBinds.Count; i++) {
                 if (kbp.GetReference(i) != -1)
                     Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, (i + 1).ToString(), GetVectorForInventorySlot(kbp.GetReference(i)), Color.White, 0f, Vector2.Zero, Main.UIScale, SpriteEffects.None, 0f);
             }
 
-            for (int i = 0; i < EquipmentChangeReferenceKeyBinds.Count; i++)
-            {
+            for (int i = 0; i < EquipmentChangeReferenceKeyBinds.Count; i++) {
                 if (erp.EquipmentReference[i].Slot != -1)
                     Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, "E" + (i + 1), GetVectorForInventorySlot(erp.EquipmentReference[i].Slot, -11f), Color.White, 0f, Vector2.Zero, Main.UIScale * (erp.EquipmentReference[i].Slot < 50 ? 1f : 0.6f), SpriteEffects.None, 0f);
             }
@@ -210,10 +191,8 @@ namespace AdvancedControls.Common.Systems
         //Inventory X: (20f + columnCount * 56 * Main.inventoryScale) * Main.UIScale
         //Inventory Y: (20f + rowCount * 56 * Main.inventoryScale) * Main.UIScale);
         //Coins/Ammo Y: int num103 = (int)(85f + (float)(num101 * 56) * inventoryScale + 20f);
-        private static Vector2 GetVectorForInventorySlot(int slot, float xAdjustment = 0f)
-        {
-            if (slot < 50)
-            {
+        private static Vector2 GetVectorForInventorySlot(int slot, float xAdjustment = 0f) {
+            if (slot < 50) {
                 float inventoryScale = 0.75f;
                 int rowCount = slot / 10;
                 int columnCount = slot % 10;
@@ -228,9 +207,7 @@ namespace AdvancedControls.Common.Systems
                 float yAnySlotAdjust = 7f * rowCount * inventoryScale;
 
                 return new Vector2((xFirstSlot + xAnySlot + xAnySlotAdjust) * Main.UIScale, (yFirstSlot + yAnySlot + yAnySlotAdjust) * Main.UIScale);
-            }
-            else
-            {
+            } else {
                 float inventoryScale = 0.6f;
                 int rowCount = (slot - 50) % 4;
                 float xPosition = (slot < 54 ? 497f : 534f) + 28f + xAdjustment;
@@ -243,20 +220,16 @@ namespace AdvancedControls.Common.Systems
             }
         }
 
-        private bool DrawEquipmentChangeIndicator()
-        {
-            if (alpha != 0f)
-            {
+        private bool DrawEquipmentChangeIndicator() {
+            if (alpha != 0f) {
                 Texture2D tex1 = null, tex2 = null;
 
-                if (item1 != null)
-                {
+                if (item1 != null) {
                     if (item1.ModItem != null) tex1 = ModContent.Request<Texture2D>(item1.ModItem.Texture).Value;
                     else tex1 = TextureAssets.Item[item1.type].Value;
                 }
 
-                if (item2 != null)
-                {
+                if (item2 != null) {
                     if (item2.ModItem != null) tex2 = ModContent.Request<Texture2D>(item2.ModItem.Texture).Value;
                     else tex2 = TextureAssets.Item[item2.type].Value;
                 }
@@ -273,8 +246,7 @@ namespace AdvancedControls.Common.Systems
             return true;
         }
 
-        public static void SetItemRefsForIndicator(Item item1, Item item2)
-        {
+        public static void SetItemRefsForIndicator(Item item1, Item item2) {
             KeybindSystem.item1 = item1;
             KeybindSystem.item2 = item2;
             alpha = 1f;

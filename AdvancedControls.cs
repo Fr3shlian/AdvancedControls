@@ -1,8 +1,6 @@
 using Terraria.ModLoader;
 
-namespace AdvancedControls
-{
-	public class AdvancedControls : Mod
-	{
-	}
+namespace AdvancedControls {
+    public class AdvancedControls : Mod {
+    }
 }
