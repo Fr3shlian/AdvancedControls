@@ -286,7 +286,14 @@ namespace AdvancedControls.Common.Players
         {
             if (tag.ContainsKey("dynamicHotbar"))
             {
-                dynamicHotbar = tag.GetIntArray("dynamicHotbar");
+                int[] arr = tag.GetIntArray("dynamicHotbar");
+                int i;
+
+                for (i = 0; i < (arr.Length < dynamicHotbar.Length ? arr.Length : dynamicHotbar.Length); i++)
+                    dynamicHotbar[i] = arr[i];
+
+                for (i = i + 1; i < dynamicHotbar.Length; i++)
+                    dynamicHotbar[i] = -1;
             }
             else for (int i = 0; i < dynamicHotbar.Length; i++)
                     dynamicHotbar[i] = -1;
@@ -456,8 +463,19 @@ namespace AdvancedControls.Common.Players
         {
             if (tag.ContainsKey("equipmentSource") && tag.ContainsKey("equipmentTarget"))
             {
-                EquipmentReference = tag.Get<InventoryReference[]>("equipmentSource");
-                equipmentTarget = tag.Get<InventoryReference[]>("equipmentTarget");
+                InventoryReference[] src = tag.Get<InventoryReference[]>("equipmentSource");
+                InventoryReference[] trg = tag.Get<InventoryReference[]>("equipmentTarget");
+                int i;
+
+                for (i = 0; i < (src.Length < EquipmentReference.Length ? src.Length : EquipmentReference.Length); i++) {
+                    EquipmentReference[i] = src[i];
+                    equipmentTarget[i] = trg[i];
+                }
+
+                for (i = i + 1; i < EquipmentReference.Length; i++) {
+                    EquipmentReference[i] = new InventoryReference();
+                    equipmentTarget[i] = new InventoryReference();
+                }
             }
             else for (int i = 0; i < EquipmentReference.Length; i++)
                 {
