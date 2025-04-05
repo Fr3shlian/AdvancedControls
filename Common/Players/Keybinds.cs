@@ -232,7 +232,7 @@ namespace AdvancedControls.Common.Players {
                 for (i = 0; i < (arr.Length < dynamicHotbar.Length ? arr.Length : dynamicHotbar.Length); i++)
                     dynamicHotbar[i] = arr[i];
 
-                for (i = i + 1; i < dynamicHotbar.Length; i++)
+                for (++i; i < dynamicHotbar.Length; i++)
                     dynamicHotbar[i] = -1;
             } else for (int i = 0; i < dynamicHotbar.Length; i++)
                     dynamicHotbar[i] = -1;
@@ -507,18 +507,23 @@ namespace AdvancedControls.Common.Players {
         //Switch back to the prior item once the player finishes using it
         public override void PostUpdate() {
             if (priorSelectedItem != -1 && Player.itemTime <= 0) {
+                Player.ItemCheck();
                 Player.selectedItem = priorSelectedItem;
                 priorSelectedItem = -1;
             }
         }
 
-        public static void UseItem(int slot) {
+        private void _UseItem(int slot) {
             if (Main.LocalPlayer.itemTime == 0) {
                 priorSelectedItem = Main.LocalPlayer.selectedItem;
                 Main.LocalPlayer.selectedItem = slot;
-                Main.LocalPlayer.ItemCheck();
                 Main.LocalPlayer.controlUseItem = true;
+                Main.LocalPlayer.ItemCheck();
             }
+        }
+
+        public static void UseItem(int slot) {
+            Main.LocalPlayer.GetModPlayer<InventoryHelperPlayer>()._UseItem(slot);
         }
     }
 
@@ -660,7 +665,7 @@ namespace AdvancedControls.Common.Players {
         }
 
         private int FindMirror() {
-            return Player.FindItem([ItemID.Shellphone, ItemID.MagicMirror, ItemID.IceMirror]);
+            return Player.FindItem([ItemID.MagicMirror, ItemID.IceMirror]);
         }
 
         private int FindShellPhone() {
