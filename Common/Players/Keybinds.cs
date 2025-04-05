@@ -489,11 +489,7 @@ namespace AdvancedControls.Common.Players {
             if (KeybindSystem.RulerKeyBind?.JustPressed ?? false) {
                 Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] = Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] == 1 ? 0 : 1;
             }
-        }
-    }
 
-    public class MechanicalRulerKeyBindPlayer : ModPlayer {
-        public override void ProcessTriggers(TriggersSet triggersSet) {
             if (KeybindSystem.MechanicalRulerKeyBind?.JustPressed ?? false) {
                 Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerGrid] = Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerGrid] == 1 ? 0 : 1;
             }
