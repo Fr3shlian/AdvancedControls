@@ -665,7 +665,7 @@ namespace AdvancedControls.Common.Players {
         }
 
         private int FindMirror() {
-            return Player.FindItem([ItemID.MagicMirror, ItemID.IceMirror]);
+            return Player.FindItem([ItemID.MagicMirror, ItemID.IceMirror, ItemID.CellPhone]);
         }
 
         private int FindShellPhone() {
