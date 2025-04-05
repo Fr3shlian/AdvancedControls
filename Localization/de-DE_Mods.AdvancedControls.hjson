@@ -63,11 +63,6 @@ Configs: {
 			Label: Anzahl der Tastaturbelegungen für Ausrüstung wechseln
 		}
 
-		DynamicHotbarCount: {
-			Tooltip: ""
-			Label: Anzahl der Tastaturbelegungen für Dynamische Schnellleiste
-		}
-
 		preventHealthLoss: {
 			Label: Schaden von Teleportitems vermeiden
 			Tooltip: ""
@@ -84,8 +79,8 @@ Configs: {
 		}
 
 		dynamicHotbarCount: {
-			// Label: dynamic Hotbar Count
-			// Tooltip: ""
+			Label: Anzahl der Tastaturbelegungen für Dynamische Schnellleiste
+			Tooltip: ""
 		}
 	}
 

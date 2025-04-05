@@ -63,11 +63,6 @@ Configs: {
 			Label: Equipment Change Count
 		}
 
-		DynamicHotbarCount: {
-			Tooltip: ""
-			Label: Dynamic Hotbar Count
-		}
-
 		preventHealthLoss: {
 			Label: Prevent Teleport Health Loss
 			Tooltip: ""
@@ -84,7 +79,7 @@ Configs: {
 		}
 
 		dynamicHotbarCount: {
-			Label: dynamic Hotbar Count
+			Label: Dynamic Hotbar Count
 			Tooltip: ""
 		}
 	}
