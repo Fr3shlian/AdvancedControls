@@ -27,14 +27,14 @@ Keybinds: {
 	MechanicalRulerToggle.DisplayName: Mechanisches Lineal umschalten
 	RulerToggle.DisplayName: Lineal umschalten
 	UseTeleport.DisplayName: Teleportieritem verwenden
-	Recall.DisplayName: Nach Hause zurückkehren
-	RecallSpawn.DisplayName: Zum Spawn zurückkehren
-	RecallOcean.DisplayName: Zum Ozean zurückkehren
-	RecallUnderworld.DisplayName: In die Unterwelt zurückkehren
+	Recall.DisplayName: Nach Hause teleportieren
+	RecallSpawn.DisplayName: Zum Spawn teleportieren
+	RecallOcean.DisplayName: Zum Ozean teleportieren
+	RecallUnderworld.DisplayName: In die Unterwelt teleportieren
 	TeleportRandomLocation.DisplayName: An zufälligen Ort teleportiern
-	RecallTemple.DisplayName: Zum Tempel zurückkehren
-	RecallDungeon.DisplayName: Zum Verlies zurückkehren
-	RecallDeathLocation.DisplayName: Zum Todesort zurückkehren
+	RecallTemple.DisplayName: Zum Tempel teleportieren
+	RecallDungeon.DisplayName: Zum Verlies teleportieren
+	RecallDeathLocation.DisplayName: Zum Todesort teleportieren
 	RecallReturn.DisplayName: Trank der Rückkehr verwenden
 }
 
@@ -46,6 +46,7 @@ Configs: {
 			Dash: Losstürmen
 			Inventory: Inventarwerkzeuge
 			QuickUse: Itemkürzel
+			Keybinds: Tastaturbelegungen
 		}
 
 		mountDashBehaviour: {
@@ -81,6 +82,106 @@ Configs: {
 		dynamicHotbarCount: {
 			Label: Anzahl der Tastaturbelegungen für Dynamische Schnellleiste
 			Tooltip: ""
+		}
+
+		enableTeleportRandomKeybind: {
+			Tooltip: ""
+			Label: An zufälligen Ort teleportiern
+		}
+
+		enableRecallDeathLocationKeybind: {
+			Tooltip: ""
+			Label: Zum Todesort teleportieren
+		}
+
+		enableRecallTempleKeybind: {
+			Tooltip: ""
+			Label: Zum Tempel teleportieren
+		}
+
+		enableRecallDungeonKeybind: {
+			Tooltip: ""
+			Label: Zum Verlies teleportieren
+		}
+
+		enableRecallReturnKeybind: {
+			Tooltip: ""
+			Label: Trank der Rückkehr verwenden
+		}
+
+		enableRecallUnderworldKeybind: {
+			Tooltip: ""
+			Label: In die Unterwelt teleportieren
+		}
+
+		enableRecallOceanKeybind: {
+			Tooltip: ""
+			Label: Zum Ozean teleportieren
+		}
+
+		enableRecallSpawnKeybind: {
+			Tooltip: ""
+			Label: Zum Spawn teleportieren
+		}
+
+		enableRecallKeybind: {
+			Tooltip: ""
+			Label: Nach Hause teleportieren
+		}
+
+		enableTeleportKeybind: {
+			Tooltip: ""
+			Label: enable Teleport Keybind
+		}
+
+		enableMechanicalRulerKeybind: {
+			Tooltip: ""
+			Label: Mechanisches Lineal umschalten
+		}
+
+		enableRulerKeybind: {
+			Tooltip: ""
+			Label: Lineal umschalten
+		}
+
+		enableCycleInventoryRightKeybind: {
+			Tooltip: ""
+			Label: Nächster Inventarslot
+		}
+
+		enableCycleInventoryLeftKeybind: {
+			Tooltip: ""
+			Label: Vorheriger Inventarslot
+		}
+
+		enableDashRightKeybind: {
+			Tooltip: ""
+			Label: Nach rechts losstürmen
+		}
+
+		enableDashLeftKeybind: {
+			Tooltip: ""
+			Label: Nach links losstürmen
+		}
+
+		enableDashKeybind: {
+			Tooltip: ""
+			Label: Losstürmen
+		}
+
+		enableQuickStackKeybind: {
+			Tooltip: ""
+			Label: In Kiste einsortieren
+		}
+
+		enableDepositAllKeybind: {
+			Tooltip: ""
+			Label: Kiste befüllen
+		}
+
+		enableLootAllKeybind: {
+			Tooltip: ""
+			Label: Kiste ausräumen
 		}
 	}
 

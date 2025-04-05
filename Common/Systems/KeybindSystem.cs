@@ -8,7 +8,6 @@ using Terraria.GameContent;
 using Microsoft.Xna.Framework;
 using AdvancedControls.Common.Configs;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent.Animations;
 
 namespace AdvancedControls.Common.Systems {
     public class KeybindSystem : ModSystem {
@@ -55,49 +54,51 @@ namespace AdvancedControls.Common.Systems {
         public static Mod Thorium = null;
 
         public override void Load() {
+            AdvancedControlsConfig conf = ModContent.GetInstance<AdvancedControlsConfig>();
+
             // --- Chest controls ---
-            LootAllKeybind = KeybindLoader.RegisterKeybind(Mod, "LootAll", Microsoft.Xna.Framework.Input.Keys.Up);
-            DepositAllKeybind = KeybindLoader.RegisterKeybind(Mod, "DepositAll", Microsoft.Xna.Framework.Input.Keys.None);
-            QuickStackKeybind = KeybindLoader.RegisterKeybind(Mod, "QuickStack", Microsoft.Xna.Framework.Input.Keys.Down);
+            if (conf.enableLootAllKeybind) LootAllKeybind = KeybindLoader.RegisterKeybind(Mod, "LootAll", Microsoft.Xna.Framework.Input.Keys.Up);
+            if (conf.enableDepositAllKeybind) DepositAllKeybind = KeybindLoader.RegisterKeybind(Mod, "DepositAll", Microsoft.Xna.Framework.Input.Keys.None);
+            if (conf.enableQuickStackKeybind) QuickStackKeybind = KeybindLoader.RegisterKeybind(Mod, "QuickStack", Microsoft.Xna.Framework.Input.Keys.Down);
 
             // --- Dash ---
-            DashKeybind = KeybindLoader.RegisterKeybind(Mod, "Dash", Microsoft.Xna.Framework.Input.Keys.Q);
-            DashLeftKeybind = KeybindLoader.RegisterKeybind(Mod, "DashLeft", Microsoft.Xna.Framework.Input.Keys.None);
-            DashRightKeybind = KeybindLoader.RegisterKeybind(Mod, "DashRight", Microsoft.Xna.Framework.Input.Keys.None);
+            if (conf.enableDashKeybind) DashKeybind = KeybindLoader.RegisterKeybind(Mod, "Dash", Microsoft.Xna.Framework.Input.Keys.Q);
+            if (conf.enableDashLeftKeybind) DashLeftKeybind = KeybindLoader.RegisterKeybind(Mod, "DashLeft", Microsoft.Xna.Framework.Input.Keys.None);
+            if (conf.enableDashRightKeybind) DashRightKeybind = KeybindLoader.RegisterKeybind(Mod, "DashRight", Microsoft.Xna.Framework.Input.Keys.None);
 
             // --- Cycle Inventory ---
-            CycleInventoryLeftKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryLeft", Microsoft.Xna.Framework.Input.Keys.None);
-            CycleInventoryRightKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryRight", Microsoft.Xna.Framework.Input.Keys.None);
+            if (conf.enableCycleInventoryLeftKeybind) CycleInventoryLeftKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryLeft", Microsoft.Xna.Framework.Input.Keys.None);
+            if (conf.enableCycleInventoryRightKeybind) CycleInventoryRightKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryRight", Microsoft.Xna.Framework.Input.Keys.None);
 
             // --- Inventory Reference ---
-            for (int i = 0; i < ModContent.GetInstance<AdvancedControlsConfig>().dynamicHotbarCount; i++) {
+            for (int i = 0; i < conf.dynamicHotbarCount; i++) {
                 DynamicHotbarKeyBinds.Add(KeybindLoader.RegisterKeybind(Mod, "DynamicHotbar" + (i + 1), Microsoft.Xna.Framework.Input.Keys.None));
             }
 
             // --- Equipment Change Reference ---
-            for (int i = 0; i < ModContent.GetInstance<AdvancedControlsConfig>().equipmentChangeReferenceCount; i++) {
+            for (int i = 0; i < conf.equipmentChangeReferenceCount; i++) {
                 EquipmentChangeReferenceKeyBinds.Add(KeybindLoader.RegisterKeybind(Mod, "EquipmentChangeReference" + (i + 1), Microsoft.Xna.Framework.Input.Keys.None));
             }
 
             // --- Rulers ---
-            RulerKeyBind = KeybindLoader.RegisterKeybind(Mod, "RulerToggle", Microsoft.Xna.Framework.Input.Keys.K);
-            MechanicalRulerKeyBind = KeybindLoader.RegisterKeybind(Mod, "MechanicalRulerToggle", Microsoft.Xna.Framework.Input.Keys.L);
+            if (conf.enableRulerKeybind) RulerKeyBind = KeybindLoader.RegisterKeybind(Mod, "RulerToggle", Microsoft.Xna.Framework.Input.Keys.K);
+            if (conf.enableMechanicalRulerKeybind) MechanicalRulerKeyBind = KeybindLoader.RegisterKeybind(Mod, "MechanicalRulerToggle", Microsoft.Xna.Framework.Input.Keys.L);
 
             // --- QoL ---
-            TeleportKeyBind = KeybindLoader.RegisterKeybind(Mod, "UseTeleport", Microsoft.Xna.Framework.Input.Keys.G);
-            RecallKeyBind = KeybindLoader.RegisterKeybind(Mod, "Recall", Microsoft.Xna.Framework.Input.Keys.NumPad1);
-            RecallSpawnKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallSpawn", Microsoft.Xna.Framework.Input.Keys.NumPad2);
-            RecallOceanKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallOcean", Microsoft.Xna.Framework.Input.Keys.NumPad3);
-            RecallUnderworldKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallUnderworld", Microsoft.Xna.Framework.Input.Keys.NumPad4);
-            RecallReturnKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallReturn", Microsoft.Xna.Framework.Input.Keys.NumPad5);
+            if (conf.enableTeleportKeybind) TeleportKeyBind = KeybindLoader.RegisterKeybind(Mod, "UseTeleport", Microsoft.Xna.Framework.Input.Keys.G);
+            if (conf.enableRecallKeybind) RecallKeyBind = KeybindLoader.RegisterKeybind(Mod, "Recall", Microsoft.Xna.Framework.Input.Keys.NumPad1);
+            if (conf.enableRecallSpawnKeybind) RecallSpawnKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallSpawn", Microsoft.Xna.Framework.Input.Keys.NumPad2);
+            if (conf.enableRecallOceanKeybind) RecallOceanKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallOcean", Microsoft.Xna.Framework.Input.Keys.NumPad3);
+            if (conf.enableRecallUnderworldKeybind) RecallUnderworldKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallUnderworld", Microsoft.Xna.Framework.Input.Keys.NumPad4);
+            if (conf.enableRecallReturnKeybind) RecallReturnKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallReturn", Microsoft.Xna.Framework.Input.Keys.NumPad5);
 
             // --- Thorium Mod ---
             if (ModLoader.TryGetMod("ThoriumMod", out Mod thorium)) {
                 Thorium = thorium;
-                RecallDungeonKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallDungeon", Microsoft.Xna.Framework.Input.Keys.NumPad6);
-                RecallTempleKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallTemple", Microsoft.Xna.Framework.Input.Keys.NumPad7);
-                RecallDeathLocationKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallDeathLocation", Microsoft.Xna.Framework.Input.Keys.NumPad8);
-                TeleportRandomKeybind = KeybindLoader.RegisterKeybind(Mod, "TeleportRandomLocation", Microsoft.Xna.Framework.Input.Keys.NumPad9);
+                if (conf.enableRecallDungeonKeybind) RecallDungeonKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallDungeon", Microsoft.Xna.Framework.Input.Keys.NumPad6);
+                if (conf.enableRecallTempleKeybind) RecallTempleKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallTemple", Microsoft.Xna.Framework.Input.Keys.NumPad7);
+                if (conf.enableRecallDeathLocationKeybind) RecallDeathLocationKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallDeathLocation", Microsoft.Xna.Framework.Input.Keys.NumPad8);
+                if (conf.enableTeleportRandomKeybind) TeleportRandomKeybind = KeybindLoader.RegisterKeybind(Mod, "TeleportRandomLocation", Microsoft.Xna.Framework.Input.Keys.NumPad9);
             }
         }
 

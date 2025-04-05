@@ -46,6 +46,7 @@ Configs: {
 			Dash: Dash
 			Inventory: Inventory Tweaks
 			QuickUse: Quick Use
+			Keybinds: Keybinds
 		}
 
 		mountDashBehaviour: {
@@ -81,6 +82,106 @@ Configs: {
 		dynamicHotbarCount: {
 			Label: Dynamic Hotbar Count
 			Tooltip: ""
+		}
+
+		enableTeleportRandomKeybind: {
+			Tooltip: ""
+			Label: Teleport Random Location
+		}
+
+		enableRecallDeathLocationKeybind: {
+			Tooltip: ""
+			Label: Recall Death Location
+		}
+
+		enableRecallTempleKeybind: {
+			Tooltip: ""
+			Label: Recall Temple
+		}
+
+		enableRecallDungeonKeybind: {
+			Tooltip: ""
+			Label: Recall Dungeon
+		}
+
+		enableRecallReturnKeybind: {
+			Tooltip: ""
+			Label: Use Potion of Return
+		}
+
+		enableRecallUnderworldKeybind: {
+			Tooltip: ""
+			Label: Recall Underworld
+		}
+
+		enableRecallOceanKeybind: {
+			Tooltip: ""
+			Label: Recall Ocean
+		}
+
+		enableRecallSpawnKeybind: {
+			Tooltip: ""
+			Label: Recall Spawn
+		}
+
+		enableRecallKeybind: {
+			Tooltip: ""
+			Label: Recall Home
+		}
+
+		enableTeleportKeybind: {
+			Tooltip: ""
+			Label: Teleport
+		}
+
+		enableMechanicalRulerKeybind: {
+			Tooltip: ""
+			Label: Mechanical Ruler
+		}
+
+		enableRulerKeybind: {
+			Tooltip: ""
+			Label: Ruler
+		}
+
+		enableCycleInventoryRightKeybind: {
+			Tooltip: ""
+			Label: Cycle Inventory Right
+		}
+
+		enableCycleInventoryLeftKeybind: {
+			Tooltip: ""
+			Label: Cycle Inventory Left
+		}
+
+		enableDashRightKeybind: {
+			Tooltip: ""
+			Label: Dash Right
+		}
+
+		enableDashLeftKeybind: {
+			Tooltip: ""
+			Label: Dash Left
+		}
+
+		enableDashKeybind: {
+			Tooltip: ""
+			Label: Dash
+		}
+
+		enableQuickStackKeybind: {
+			Tooltip: ""
+			Label: Quick Stack
+		}
+
+		enableDepositAllKeybind: {
+			Tooltip: ""
+			Label: Deposit All
+		}
+
+		enableLootAllKeybind: {
+			Tooltip: ""
+			Label: Loot All
 		}
 	}
 
