@@ -17,7 +17,7 @@ namespace AdvancedControls.Common.Players {
     // --- Chest controls ---
     public class LootAllKeyBindPlayer : ModPlayer {
         public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.LootAllKeybind.JustPressed) {
+            if (KeybindSystem.LootAllKeybind?.JustPressed ?? false) {
                 if (Player.chest != -1) {
                     ChestUI.LootAll();
                 }
@@ -27,7 +27,7 @@ namespace AdvancedControls.Common.Players {
 
     public class DepositAllKeyBindPlayer : ModPlayer {
         public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.DepositAllKeybind.JustPressed) {
+            if (KeybindSystem.DepositAllKeybind?.JustPressed ?? false) {
                 if (Player.chest != -1) {
                     ChestUI.DepositAll(ContainerTransferContext.FromUnknown(Player));
                 }
@@ -37,7 +37,7 @@ namespace AdvancedControls.Common.Players {
 
     public class QuickStackKeyBindPlayer : ModPlayer {
         public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.QuickStackKeybind.JustPressed) {
+            if (KeybindSystem.QuickStackKeybind?.JustPressed ?? false) {
                 if (Player.chest != -1) {
                     ChestUI.QuickStack(ContainerTransferContext.FromUnknown(Player), Player.chest == -5);
                 }
@@ -64,7 +64,7 @@ namespace AdvancedControls.Common.Players {
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.DashKeybind.JustPressed) {
+            if (KeybindSystem.DashKeybind?.JustPressed ?? false) {
                 if (Player.dashDelay == 0)
                     if (Player.controlLeft == true)
                         DashLeft();
@@ -75,13 +75,13 @@ namespace AdvancedControls.Common.Players {
                     dashBuffer = Player.controlLeft ? -1 : Player.controlRight || Player.direction == 1 ? 1 : -1;
             }
 
-            if (KeybindSystem.DashLeftKeybind.JustPressed)
+            if (KeybindSystem.DashLeftKeybind?.JustPressed ?? false)
                 if (Player.dashDelay == 0)
                     DashLeft();
                 else if (Util.GetConfig().dashBuffer)
                     dashBuffer = -1;
 
-            if (KeybindSystem.DashRightKeybind.JustPressed)
+            if (KeybindSystem.DashRightKeybind?.JustPressed ?? false)
                 if (Player.dashDelay == 0)
                     DashRight();
                 else if (Util.GetConfig().dashBuffer)
@@ -147,9 +147,9 @@ namespace AdvancedControls.Common.Players {
     // --- Cycle Inventory ---
     public class CycleInventoryKeyBindPlayer : ModPlayer {
         public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.CycleInventoryLeftKeybind.JustPressed) {
+            if (KeybindSystem.CycleInventoryLeftKeybind?.JustPressed ?? false) {
                 CycleLeft();
-            } else if (KeybindSystem.CycleInventoryRightKeybind.JustPressed) {
+            } else if (KeybindSystem.CycleInventoryRightKeybind?.JustPressed ?? false) {
                 CycleRight();
             }
         }
@@ -240,7 +240,7 @@ namespace AdvancedControls.Common.Players {
 
         public override void ProcessTriggers(TriggersSet triggersSet) {
             for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++) {
-                if (KeybindSystem.DynamicHotbarKeyBinds[i].JustPressed) {
+                if (KeybindSystem.DynamicHotbarKeyBinds[i]?.JustPressed ?? false) {
                     if (Main.playerInventory) {
                         if (dynamicHotbar[i] == -1) {
                             if (HoverSlotPlayer.HoveredSlot != -1 && HoverSlotPlayer.HoveredSlot < 50 && HoverSlotPlayer.HoveredInventory == Player.inventory) {
@@ -385,7 +385,7 @@ namespace AdvancedControls.Common.Players {
 
         public override void ProcessTriggers(TriggersSet triggersSet) {
             for (int i = 0; i < KeybindSystem.EquipmentChangeReferenceKeyBinds.Count; i++) {
-                if (KeybindSystem.EquipmentChangeReferenceKeyBinds[i].JustPressed) {
+                if (KeybindSystem.EquipmentChangeReferenceKeyBinds[i]?.JustPressed ?? false) {
                     if (Main.playerInventory) {
                         if (EquipmentReference[i].Slot == -1) {
                             if (HoverSlotPlayer.HoveredSlot != -1 && HoverSlotPlayer.HoveredInventory == Player.inventory) {
@@ -486,7 +486,7 @@ namespace AdvancedControls.Common.Players {
     // --- Rulers ---
     public class RulerKeyBindPlayer : ModPlayer {
         public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.RulerKeyBind.JustPressed) {
+            if (KeybindSystem.RulerKeyBind?.JustPressed ?? false) {
                 Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] = Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] == 1 ? 0 : 1;
             }
         }
@@ -494,7 +494,7 @@ namespace AdvancedControls.Common.Players {
 
     public class MechanicalRulerKeyBindPlayer : ModPlayer {
         public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.MechanicalRulerKeyBind.JustPressed) {
+            if (KeybindSystem.MechanicalRulerKeyBind?.JustPressed ?? false) {
                 Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerGrid] = Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerGrid] == 1 ? 0 : 1;
             }
         }
@@ -529,7 +529,7 @@ namespace AdvancedControls.Common.Players {
 
     public class TeleportKeyBindPlayer : ModPlayer {
         public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.TeleportKeyBind.JustPressed) {
+            if (KeybindSystem.TeleportKeyBind?.JustPressed ?? false) {
                 int slot = Player.FindItem(ItemID.RodOfHarmony);
 
                 if (slot != -1)
@@ -566,7 +566,7 @@ namespace AdvancedControls.Common.Players {
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.RecallKeyBind.JustPressed) {
+            if (KeybindSystem.RecallKeyBind?.JustPressed ?? false) {
                 int slot;
 
                 if ((slot = FindWishingGlass()) != -1) {
@@ -594,7 +594,7 @@ namespace AdvancedControls.Common.Players {
                 }
             }
 
-            if (KeybindSystem.RecallSpawnKeyBind.JustPressed) {
+            if (KeybindSystem.RecallSpawnKeyBind?.JustPressed ?? false) {
                 int slot = FindWishingGlass();
 
                 if (slot != -1)
@@ -603,7 +603,7 @@ namespace AdvancedControls.Common.Players {
                     UseShellPhone(slot, ItemID.ShellphoneSpawn);
             }
 
-            if (KeybindSystem.RecallOceanKeyBind.JustPressed) {
+            if (KeybindSystem.RecallOceanKeyBind?.JustPressed ?? false) {
                 int slot = FindWishingGlass();
 
                 if (slot != -1)
@@ -614,7 +614,7 @@ namespace AdvancedControls.Common.Players {
                     UseShellPhone(slot, ItemID.ShellphoneOcean);
             }
 
-            if (KeybindSystem.RecallUnderworldKeyBind.JustPressed) {
+            if (KeybindSystem.RecallUnderworldKeyBind?.JustPressed ?? false) {
                 int slot = FindWishingGlass();
 
                 if (slot != -1)
@@ -625,7 +625,7 @@ namespace AdvancedControls.Common.Players {
                     UseShellPhone(slot, ItemID.ShellphoneHell);
             }
 
-            if (KeybindSystem.RecallReturnKeyBind.JustPressed) {
+            if (KeybindSystem.RecallReturnKeyBind?.JustPressed ?? false) {
                 int slot = Player.FindItem(ItemID.PotionOfReturn);
 
                 if (slot != -1)
@@ -634,25 +634,25 @@ namespace AdvancedControls.Common.Players {
 
             // --- Thorium Mod ---
             if (KeybindSystem.Thorium != null) {
-                if (KeybindSystem.RecallDeathLocationKeyBind.JustPressed) {
+                if (KeybindSystem.RecallDeathLocationKeyBind?.JustPressed ?? false) {
                     int slot = FindWishingGlass();
 
                     if (slot != -1) UseWishingGlass(slot, "DeathLocation");
                 }
 
-                if (KeybindSystem.RecallDungeonKeyBind.JustPressed) {
+                if (KeybindSystem.RecallDungeonKeyBind?.JustPressed ?? false) {
                     int slot = FindWishingGlass();
 
                     if (slot != -1) UseWishingGlass(slot, "Dungeon");
                 }
 
-                if (KeybindSystem.RecallTempleKeyBind.JustPressed) {
+                if (KeybindSystem.RecallTempleKeyBind?.JustPressed ?? false) {
                     int slot = FindWishingGlass();
 
                     if (slot != -1) UseWishingGlass(slot, "Temple");
                 }
 
-                if (KeybindSystem.TeleportRandomKeybind.JustPressed) {
+                if (KeybindSystem.TeleportRandomKeybind?.JustPressed ?? false) {
                     int slot = FindWishingGlass();
 
                     if (slot != -1) UseWishingGlass(slot, "Random");
