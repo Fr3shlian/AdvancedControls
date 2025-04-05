@@ -51,7 +51,7 @@ namespace AdvancedControls.Common.Players {
     public class DashKeyBindPlayer : ModPlayer {
         int dashBuffer = 0;
 
-        public override void PostUpdate() {
+        public override void PreUpdate() {
             if (Player.dashDelay == 0) {
                 if (dashBuffer == -1) {
                     DashLeft();
@@ -211,7 +211,7 @@ namespace AdvancedControls.Common.Players {
 
         private readonly int[] frameCounter = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
 
-        public override void PostUpdate() {
+        public override void PreUpdate() {
             for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++) {
                 if (frameCounter[i] == 1) {
                     frameCounter[i] = -1;
@@ -347,7 +347,7 @@ namespace AdvancedControls.Common.Players {
 
         private readonly int[] frameCounter = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
 
-        public override void PostUpdate() {
+        public override void PreUpdate() {
             for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++) {
                 if (frameCounter[i] == 1) {
                     frameCounter[i] = -1;
@@ -501,7 +501,7 @@ namespace AdvancedControls.Common.Players {
         private static int priorSelectedItem = -1;
 
         //Switch back to the prior item once the player finishes using it
-        public override void PostUpdate() {
+        public override void PreUpdate() {
             if (priorSelectedItem != -1 && Player.itemTime <= 0) {
                 Player.ItemCheck();
                 Player.selectedItem = priorSelectedItem;
@@ -545,7 +545,7 @@ namespace AdvancedControls.Common.Players {
         int priorSelectedItem = -1;
 
         //Switches to the correct shellphone mode, then uses it and switches back to the previous held item
-        public override void PostUpdate() {
+        public override void PreUpdate() {
             if (requiredShellPhone != -1) {
                 if (Player.inventory[Player.selectedItem].type != requiredShellPhone) {
                     ShellphoneGlobal.requiredShellPhone = requiredShellPhone;
