@@ -498,23 +498,22 @@ namespace AdvancedControls.Common.Players {
 
     // --- QoL ---
     public class InventoryHelperPlayer : ModPlayer {
-        private static int priorSelectedItem = -1;
+        private int priorSelectedItem = -1;
 
         //Switch back to the prior item once the player finishes using it
         public override void PreUpdate() {
             if (priorSelectedItem != -1 && Player.itemTime <= 0) {
-                Player.ItemCheck();
                 Player.selectedItem = priorSelectedItem;
                 priorSelectedItem = -1;
             }
         }
 
-        private void _UseItem(int slot) {
-            if (Main.LocalPlayer.itemTime == 0) {
-                priorSelectedItem = Main.LocalPlayer.selectedItem;
-                Main.LocalPlayer.selectedItem = slot;
-                Main.LocalPlayer.controlUseItem = true;
-                Main.LocalPlayer.ItemCheck();
+        public void _UseItem(int slot) {
+            if (Player.itemTime == 0) {
+                priorSelectedItem = Player.selectedItem;
+                Player.selectedItem = slot;
+                Player.controlUseItem = true;
+                Player.ItemCheck();
             }
         }
 
