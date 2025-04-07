@@ -240,7 +240,7 @@ namespace AdvancedControls.Common.Players {
 
         public override void ProcessTriggers(TriggersSet triggersSet) {
             for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++) {
-                if (KeybindSystem.DynamicHotbarKeyBinds[i]?.JustPressed ?? false) {
+                if (KeybindSystem.DynamicHotbarKeyBinds[i].JustPressed) {
                     if (Main.playerInventory) {
                         if (dynamicHotbar[i] == -1) {
                             if (HoverSlotPlayer.HoveredSlot != -1 && HoverSlotPlayer.HoveredSlot < 50 && HoverSlotPlayer.HoveredInventory == Player.inventory) {
@@ -385,7 +385,7 @@ namespace AdvancedControls.Common.Players {
 
         public override void ProcessTriggers(TriggersSet triggersSet) {
             for (int i = 0; i < KeybindSystem.EquipmentChangeReferenceKeyBinds.Count; i++) {
-                if (KeybindSystem.EquipmentChangeReferenceKeyBinds[i]?.JustPressed ?? false) {
+                if (KeybindSystem.EquipmentChangeReferenceKeyBinds[i].JustPressed) {
                     if (Main.playerInventory) {
                         if (EquipmentReference[i].Slot == -1) {
                             if (HoverSlotPlayer.HoveredSlot != -1 && HoverSlotPlayer.HoveredInventory == Player.inventory) {
