@@ -45,6 +45,8 @@ namespace AdvancedControls.Common.Systems {
         public static ModKeybind RecallOceanKeyBind { get; private set; }
         public static ModKeybind RecallUnderworldKeyBind { get; private set; }
         public static ModKeybind RecallReturnKeyBind { get; private set; }
+        public static ModKeybind PiggyBankKeybind { get; private set; }
+        public static ModKeybind VoidBagKeybind { get; private set; }
 
         // --- Thorium Mod ---
         public static ModKeybind RecallDungeonKeyBind { get; private set; }
@@ -91,6 +93,9 @@ namespace AdvancedControls.Common.Systems {
             if (conf.enableRecallOceanKeybind) RecallOceanKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallOcean", Microsoft.Xna.Framework.Input.Keys.NumPad3);
             if (conf.enableRecallUnderworldKeybind) RecallUnderworldKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallUnderworld", Microsoft.Xna.Framework.Input.Keys.NumPad4);
             if (conf.enableRecallReturnKeybind) RecallReturnKeyBind = KeybindLoader.RegisterKeybind(Mod, "RecallReturn", Microsoft.Xna.Framework.Input.Keys.NumPad5);
+            if (conf.enablePiggyBankKeybind) PiggyBankKeybind = KeybindLoader.RegisterKeybind(Mod, "PiggyBank", Microsoft.Xna.Framework.Input.Keys.None);
+            if (conf.enableVoidBagKeybind) VoidBagKeybind = KeybindLoader.RegisterKeybind(Mod, "VoidBag", Microsoft.Xna.Framework.Input.Keys.None);
+
 
             // --- Thorium Mod ---
             if (ModLoader.TryGetMod("ThoriumMod", out Mod thorium)) {

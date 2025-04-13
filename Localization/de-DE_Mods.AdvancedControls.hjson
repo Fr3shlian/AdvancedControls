@@ -36,6 +36,8 @@ Keybinds: {
 	RecallDungeon.DisplayName: Zum Verlies teleportieren
 	RecallDeathLocation.DisplayName: Zum Todesort teleportieren
 	RecallReturn.DisplayName: Trank der Rückkehr verwenden
+	PiggyBank.DisplayName: Sparschwein
+	VoidBag.DisplayName: Hohlraumbeutel
 }
 
 Configs: {
@@ -182,6 +184,16 @@ Configs: {
 		enableLootAllKeybind: {
 			Tooltip: ""
 			Label: Kiste ausräumen
+		}
+
+		enablePiggyBankKeybind: {
+			Label: Sparschwein
+			Tooltip: ""
+		}
+
+		enableVoidBagKeybind: {
+			Label: Hohlraumbeutel
+			Tooltip: ""
 		}
 	}
 

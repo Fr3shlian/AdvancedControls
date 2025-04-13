@@ -36,6 +36,8 @@ Keybinds: {
 	RecallDungeon.DisplayName: Recall Dungeon
 	RecallDeathLocation.DisplayName: Recall Death Location
 	RecallReturn.DisplayName: Use Potion of Return
+	PiggyBank.DisplayName: Piggy Bank
+	VoidBag.DisplayName: Void Bag
 }
 
 Configs: {
@@ -182,6 +184,16 @@ Configs: {
 		enableLootAllKeybind: {
 			Tooltip: ""
 			Label: Loot All
+		}
+
+		enablePiggyBankKeybind: {
+			Label: Piggy Bank
+			Tooltip: ""
+		}
+
+		enableVoidBagKeybind: {
+			Label: Void Bag
+			Tooltip: ""
 		}
 	}
 

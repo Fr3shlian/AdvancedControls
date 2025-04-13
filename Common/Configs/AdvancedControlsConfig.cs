@@ -109,6 +109,14 @@ namespace AdvancedControls.Common.Configs {
         [DefaultValue(true)]
         public bool enableRecallReturnKeybind;
 
+        [ReloadRequired]
+        [DefaultValue(true)]
+        public bool enablePiggyBankKeybind;
+
+        [ReloadRequired]
+        [DefaultValue(true)]
+        public bool enableVoidBagKeybind;
+
         //--- Thorium ---
         [ReloadRequired]
         [DefaultValue(true)]

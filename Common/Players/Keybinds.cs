@@ -12,6 +12,7 @@ using Terraria.ModLoader.IO;
 using System;
 using System.Reflection;
 using Terraria.Audio;
+using System.Collections.Generic;
 
 namespace AdvancedControls.Common.Players {
     // --- Chest controls ---
@@ -520,6 +521,24 @@ namespace AdvancedControls.Common.Players {
         public static void UseItem(int slot) {
             Main.LocalPlayer.GetModPlayer<InventoryHelperPlayer>()._UseItem(slot);
         }
+
+        public static bool FindAndUseItem(int id) {
+            int slot = Main.LocalPlayer.FindItem(id);
+
+            if (slot == -1) return false;
+
+            UseItem(slot);
+            return true;
+        }
+
+        public static bool FindAndUseItem(List<int> ids) {
+            int slot = Main.LocalPlayer.FindItem(ids);
+
+            if (slot == -1) return false;
+
+            UseItem(slot);
+            return true;
+        }
     }
 
     public class TeleportKeyBindPlayer : ModPlayer {
@@ -698,6 +717,24 @@ namespace AdvancedControls.Common.Players {
             tpDestinationField.SetValue(thoriumPlayerInstance, wishingGlassChoice.GetValue(null));
 
             InventoryHelperPlayer.UseItem(slot);
+        }
+    }
+
+    public class StorageItemKeyBindPlayer : ModPlayer {
+        public override void ProcessTriggers(TriggersSet triggersSet) {
+            if (KeybindSystem.PiggyBankKeybind?.JustPressed ?? false) {
+                if (InventoryHelperPlayer.FindAndUseItem(Terraria.ID.ItemID.MoneyTrough)) return;
+                
+                int slot = Player.FindItem(Terraria.ID.ItemID.PiggyBank);
+
+                if (slot != -1) {
+                    Player.selectedItem = slot;
+                }
+            }
+
+            if (KeybindSystem.VoidBagKeybind?. JustPressed ?? false) {
+                InventoryHelperPlayer.FindAndUseItem([Terraria.ID.ItemID.VoidLens, Terraria.ID.ItemID.ClosedVoidBag]);
+            }
         }
     }
 
