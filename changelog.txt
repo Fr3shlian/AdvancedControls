@@ -1,4 +1,6 @@
-﻿[h1]v1.6.1[/h1]
+﻿[h1]v1.6.2[/h1]
 [list]
-    [*] Fixed a bug that would crash the inventory menu UI after increasing the amount of dynamic hotbar or equipment reference keybinds in a previously visited world
+    [*] Fixed recall and teleport keybinds not switching back to the previous item in multiplayer while other players are present
+    [*] Recall keybind can now find the Cellphone
+    [*] Every keybind can now be disabled separately
 [/list]
