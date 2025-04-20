@@ -343,13 +343,13 @@ namespace AdvancedControls.Common.Players {
             }
         }
 
-        public InventoryReference[] EquipmentReference { get; private set; } = Enumerable.Repeat(new InventoryReference(), KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
-        private InventoryReference[] equipmentTarget = Enumerable.Repeat(new InventoryReference(), KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
+        public InventoryReference[] EquipmentReference { get; private set; } = Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count).ToArray();
+        private InventoryReference[] equipmentTarget = Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count).ToArray();
 
         private readonly int[] frameCounter = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
 
         public override void PreUpdate() {
-            for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++) {
+            for (int i = 0; i < KeybindSystem.EquipmentChangeReferenceKeyBinds.Count; i++) {
                 if (frameCounter[i] == 1) {
                     frameCounter[i] = -1;
                     EquipmentReference[i] = new InventoryReference();
