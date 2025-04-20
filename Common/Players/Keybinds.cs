@@ -54,17 +54,20 @@ namespace AdvancedControls.Common.Players {
 
         public override void PreUpdate() {
             if (dashBuffer != 0 && Player.dashDelay == 0) {
-                if (dashBuffer == -1) {
-                    DashLeft();
-                    dashBuffer = 0;
-                } else if (dashBuffer == 1) {
-                    DashRight();
-                    dashBuffer = 0;
-                }
+                if (dashBuffer == -1) dashBuffer = -2;
+                else if (dashBuffer == 1) dashBuffer = 2;
             }
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet) {
+            if (dashBuffer == -2) {
+                DashLeft();
+                dashBuffer = 0;
+            } else if (dashBuffer == 2) {
+                DashRight();
+                dashBuffer = 0;
+            }
+
             if (KeybindSystem.DashKeybind?.JustPressed ?? false) {
                 if (Player.dashDelay == 0)
                     if (Player.controlLeft == true)
