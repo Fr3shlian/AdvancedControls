@@ -50,10 +50,10 @@ namespace AdvancedControls.Common.Players {
 
     // --- Dash ---
     public class DashKeyBindPlayer : ModPlayer {
-        int dashBuffer = 0;
+        private int dashBuffer = 0;
 
         public override void PreUpdate() {
-            if (Player.dashDelay == 0) {
+            if (dashBuffer != 0 && Player.dashDelay == 0) {
                 if (dashBuffer == -1) {
                     DashLeft();
                     dashBuffer = 0;
@@ -73,7 +73,7 @@ namespace AdvancedControls.Common.Players {
                         DashRight();
                     else DashLeft();
                 else if (Util.GetConfig().dashBuffer)
-                    dashBuffer = Player.controlLeft ? -1 : Player.controlRight || Player.direction == 1 ? 1 : -1;
+                    dashBuffer = Player.controlLeft ? -1 : (Player.controlRight || Player.direction == 1) ? 1 : -1;
             }
 
             if (KeybindSystem.DashLeftKeybind?.JustPressed ?? false)
@@ -129,9 +129,7 @@ namespace AdvancedControls.Common.Players {
 
             if (wasMounted) Dismount();
 
-            if (Util.GetConfig().cancelHooks) {
-                Player.RemoveAllGrapplingHooks();
-            }
+            if (Util.GetConfig().cancelHooks) Player.RemoveAllGrapplingHooks();
 
             Player.controlLeft = false;
             Player.controlRight = true;
