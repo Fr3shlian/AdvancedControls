@@ -61,33 +61,33 @@ namespace AdvancedControls.Common.Players {
 
         public override void ProcessTriggers(TriggersSet triggersSet) {
             if (dashBuffer == -2) {
-                DashLeft();
+                Dash(-1);
                 dashBuffer = 0;
             } else if (dashBuffer == 2) {
-                DashRight();
+                Dash(1);
                 dashBuffer = 0;
             }
 
             if (KeybindSystem.DashKeybind?.JustPressed ?? false) {
                 if (Player.dashDelay == 0)
                     if (Player.controlLeft == true)
-                        DashLeft();
+                        Dash(-1);
                     else if (Player.controlRight == true || Player.direction == 1)
-                        DashRight();
-                    else DashLeft();
+                        Dash(1);
+                    else Dash(-1);
                 else if (Util.GetConfig().dashBuffer)
                     dashBuffer = Player.controlLeft ? -1 : (Player.controlRight || Player.direction == 1) ? 1 : -1;
             }
 
             if (KeybindSystem.DashLeftKeybind?.JustPressed ?? false)
                 if (Player.dashDelay == 0)
-                    DashLeft();
+                    Dash(-1);
                 else if (Util.GetConfig().dashBuffer)
                     dashBuffer = -1;
 
             if (KeybindSystem.DashRightKeybind?.JustPressed ?? false)
                 if (Player.dashDelay == 0)
-                    DashRight();
+                    Dash(1);
                 else if (Util.GetConfig().dashBuffer)
                     dashBuffer = 1;
         }
@@ -109,34 +109,22 @@ namespace AdvancedControls.Common.Players {
                 Player.QuickMount();
         }
 
-        private void DashLeft() {
+        private void Dash(int direction) {
             bool wasMounted = Player.mount.Active;
 
             if (wasMounted) Dismount();
 
             if (Util.GetConfig().cancelHooks) Player.RemoveAllGrapplingHooks();
 
-            Player.controlRight = false;
-            Player.controlLeft = true;
-            Player.releaseLeft = true;
-            Player.DashMovement();
-
-            if (wasMounted) {
-                Player.DashMovement();
-                Remount();
+            if (direction == -1) {
+                Player.controlRight = false;
+                Player.controlLeft = true;
+                Player.releaseLeft = true;
+            } else {
+                Player.controlLeft = false;
+                Player.controlRight = true;
+                Player.releaseRight = true;
             }
-        }
-
-        private void DashRight() {
-            bool wasMounted = Player.mount.Active;
-
-            if (wasMounted) Dismount();
-
-            if (Util.GetConfig().cancelHooks) Player.RemoveAllGrapplingHooks();
-
-            Player.controlLeft = false;
-            Player.controlRight = true;
-            Player.releaseRight = true;
             Player.DashMovement();
 
             if (wasMounted) {
