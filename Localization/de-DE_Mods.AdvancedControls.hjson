@@ -133,7 +133,7 @@ Configs: {
 
 		enableTeleportKeybind: {
 			Tooltip: ""
-			Label: enable Teleport Keybind
+			Label: Teleportieritem verwenden
 		}
 
 		enableMechanicalRulerKeybind: {
