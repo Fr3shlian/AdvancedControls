@@ -60,6 +60,10 @@ namespace AdvancedControls.Common.Players {
 
             if (conf.disableDoubleTap && secondInput == 0) {
                 Player.dashTime = 0;
+
+                //Purely for Calamity Mod
+                Player.releaseLeft = false;
+                Player.releaseRight = false;
             }
 
             switch (needRemount) {
