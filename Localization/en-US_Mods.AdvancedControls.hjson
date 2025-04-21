@@ -195,6 +195,11 @@ Configs: {
 			Label: Void Bag
 			Tooltip: ""
 		}
+
+		alwaysMount: {
+			Label: Always Mount
+			Tooltip: ""
+		}
 	}
 
 	MountDashBehaviour: {

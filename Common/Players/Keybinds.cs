@@ -52,14 +52,22 @@ namespace AdvancedControls.Common.Players {
     public class DashKeyBindPlayer : ModPlayer {
         private int secondInput = 0;
         private int dashBuffer = 0;
+        private int needRemount = 0;
         private bool wasMounted = false;
-        private bool needRemount = false;
 
         public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (needRemount) {
-                Remount();
-                needRemount = false;
+            switch (needRemount) {
+                case 1:
+                    Remount();
+                    goto case 3;
+                case 2:
+                    Player.QuickMount();
+                    goto case 3;
+                case 3:
+                    needRemount = 0;
+                    break;
             }
+
 
             switch (secondInput) {
                 case -1:
@@ -70,7 +78,8 @@ namespace AdvancedControls.Common.Players {
                     goto case 3;
                 case 3:
                     secondInput = 0;
-                    if (wasMounted) needRemount = true;
+                    if (wasMounted) needRemount = 1;
+                    else if (Util.GetConfig().alwaysMount) needRemount = 2;
                     break;
             }
 

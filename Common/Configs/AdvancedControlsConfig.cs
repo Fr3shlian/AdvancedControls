@@ -22,6 +22,9 @@ namespace AdvancedControls.Common.Configs {
         [DefaultValue(true)]
         public bool dashBuffer;
 
+        [DefaultValue(false)]
+        public bool alwaysMount;
+
 
 
         [Header("QuickUse")]
