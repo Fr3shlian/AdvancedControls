@@ -205,6 +205,11 @@ Configs: {
 			Label: Bei Doppeltipp nicht losstürmen
 			Tooltip: ""
 		}
+
+		bufferCurrentDirection: {
+			Label: Richtung für Buffer beim Losstürmen bestimmen
+			Tooltip: ""
+		}
 	}
 
 	MountDashBehaviour: {

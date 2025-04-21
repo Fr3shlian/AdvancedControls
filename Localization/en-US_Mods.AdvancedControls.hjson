@@ -205,6 +205,11 @@ Configs: {
 			Label: Disable Double Tap
 			Tooltip: ""
 		}
+
+		bufferCurrentDirection: {
+			Label: Buffer Current Direction
+			Tooltip: ""
+		}
 	}
 
 	MountDashBehaviour: {

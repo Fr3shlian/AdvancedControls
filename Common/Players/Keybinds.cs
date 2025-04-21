@@ -93,7 +93,9 @@ namespace AdvancedControls.Common.Players {
                     break;
             }
 
-            if (Player.dashDelay == 0)
+            if (dashBuffer != 0 && Player.dashDelay == 0) {
+                if (conf.bufferCurrentDirection) dashBuffer = 2;
+
                 switch (dashBuffer) {
                     case -1:
                         Dash(-1);
@@ -101,20 +103,17 @@ namespace AdvancedControls.Common.Players {
                     case 1:
                         Dash(1);
                         goto case 3;
+                    case 2:
+                        Dash(GetDashDirection());
+                        goto case 3;
                     case 3:
                         dashBuffer = 0;
                         break;
                 }
+            }
 
             if (KeybindSystem.DashKeybind?.JustPressed ?? false) {
-                int dir = 0;
-
-                if (Player.controlLeft == true)
-                    dir = -1;
-                else if (Player.controlRight == true)
-                    dir = 1;
-
-                if (dir == 0) dir = Player.direction;
+                int dir = GetDashDirection();
 
                 if (Player.dashDelay == 0)
                     Dash(dir);
@@ -133,6 +132,15 @@ namespace AdvancedControls.Common.Players {
                     Dash(1);
                 else if (conf.dashBuffer)
                     dashBuffer = 1;
+        }
+
+        private int GetDashDirection() {
+            if (Player.controlLeft == true)
+                return -1;
+            else if (Player.controlRight == true)
+                return 1;
+
+            return Player.direction;
         }
 
         private void Dismount() {
