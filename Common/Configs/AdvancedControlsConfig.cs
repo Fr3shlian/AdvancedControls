@@ -3,9 +3,9 @@ using Terraria.ModLoader.Config;
 
 namespace AdvancedControls.Common.Configs {
     public enum MountDashBehaviour {
-        DashWithMount,
+        DismountDash,
         DismountDashRemount,
-        DismountDash
+        DashWithMount
     }
 
     public class AdvancedControlsConfig : ModConfig {
@@ -13,7 +13,7 @@ namespace AdvancedControls.Common.Configs {
 
         [Header("Dash")]
 
-        [DefaultValue(MountDashBehaviour.DashWithMount)]
+        [DefaultValue(MountDashBehaviour.DismountDash)]
         public MountDashBehaviour mountDashBehaviour;
 
         [DefaultValue(true)]
