@@ -56,6 +56,12 @@ namespace AdvancedControls.Common.Players {
         private bool wasMounted = false;
 
         public override void ProcessTriggers(TriggersSet triggersSet) {
+            AdvancedControlsConfig conf = Util.GetConfig();
+
+            if (conf.disableDoubleTap && secondInput == 0) {
+                Player.dashTime = 0;
+            }
+
             switch (needRemount) {
                 case 1:
                     Remount();
@@ -79,7 +85,7 @@ namespace AdvancedControls.Common.Players {
                 case 3:
                     secondInput = 0;
                     if (wasMounted) needRemount = 1;
-                    else if (Util.GetConfig().alwaysMount) needRemount = 2;
+                    else if (conf.alwaysMount) needRemount = 2;
                     break;
             }
 
@@ -108,20 +114,20 @@ namespace AdvancedControls.Common.Players {
 
                 if (Player.dashDelay == 0)
                     Dash(dir);
-                else if (Util.GetConfig().dashBuffer)
+                else if (conf.dashBuffer)
                     dashBuffer = dir;
             }
 
             if (KeybindSystem.DashLeftKeybind?.JustPressed ?? false)
                 if (Player.dashDelay == 0)
                     Dash(-1);
-                else if (Util.GetConfig().dashBuffer)
+                else if (conf.dashBuffer)
                     dashBuffer = -1;
 
             if (KeybindSystem.DashRightKeybind?.JustPressed ?? false)
                 if (Player.dashDelay == 0)
                     Dash(1);
-                else if (Util.GetConfig().dashBuffer)
+                else if (conf.dashBuffer)
                     dashBuffer = 1;
         }
 

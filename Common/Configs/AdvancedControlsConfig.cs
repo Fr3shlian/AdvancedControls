@@ -25,6 +25,9 @@ namespace AdvancedControls.Common.Configs {
         [DefaultValue(false)]
         public bool alwaysMount;
 
+        [DefaultValue(true)]
+        public bool disableDoubleTap;
+
 
 
         [Header("QuickUse")]

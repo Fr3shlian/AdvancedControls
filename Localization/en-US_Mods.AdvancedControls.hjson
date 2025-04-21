@@ -200,6 +200,11 @@ Configs: {
 			Label: Always Mount
 			Tooltip: ""
 		}
+
+		disableDoubleTap: {
+			Label: Disable Double Tap
+			Tooltip: ""
+		}
 	}
 
 	MountDashBehaviour: {

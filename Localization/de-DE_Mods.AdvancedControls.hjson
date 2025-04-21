@@ -200,6 +200,11 @@ Configs: {
 			Label: Immer mit Reittier losstürmen
 			Tooltip: ""
 		}
+
+		disableDoubleTap: {
+			Label: Bei Doppeltipp nicht losstürmen
+			Tooltip: ""
+		}
 	}
 
 	MountDashBehaviour: {
