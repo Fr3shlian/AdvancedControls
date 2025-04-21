@@ -50,33 +50,57 @@ namespace AdvancedControls.Common.Players {
 
     // --- Dash ---
     public class DashKeyBindPlayer : ModPlayer {
+        private int secondInput = 0;
         private int dashBuffer = 0;
-
-        public override void PreUpdate() {
-            if (dashBuffer != 0 && Player.dashDelay == 0) {
-                if (dashBuffer == -1) dashBuffer = -2;
-                else if (dashBuffer == 1) dashBuffer = 2;
-            }
-        }
+        private bool wasMounted = false;
+        private bool needRemount = false;
 
         public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (dashBuffer == -2) {
-                Dash(-1);
-                dashBuffer = 0;
-            } else if (dashBuffer == 2) {
-                Dash(1);
-                dashBuffer = 0;
+            if (needRemount) {
+                Remount();
+                needRemount = false;
             }
 
-            if (KeybindSystem.DashKeybind?.JustPressed ?? false) {
-                if (Player.dashDelay == 0)
-                    if (Player.controlLeft == true)
+            switch (secondInput) {
+                case -1:
+                    InputLeft();
+                    goto case 3;
+                case 1:
+                    InputRight();
+                    goto case 3;
+                case 3:
+                    secondInput = 0;
+                    if (wasMounted) needRemount = true;
+                    break;
+            }
+
+            if (Player.dashDelay == 0)
+                switch (dashBuffer) {
+                    case -1:
                         Dash(-1);
-                    else if (Player.controlRight == true || Player.direction == 1)
+                        goto case 3;
+                    case 1:
                         Dash(1);
-                    else Dash(-1);
+                        goto case 3;
+                    case 3:
+                        dashBuffer = 0;
+                        break;
+                }
+
+            if (KeybindSystem.DashKeybind?.JustPressed ?? false) {
+                int dir = 0;
+
+                if (Player.controlLeft == true)
+                    dir = -1;
+                else if (Player.controlRight == true)
+                    dir = 1;
+
+                if (dir == 0) dir = Player.direction;
+
+                if (Player.dashDelay == 0)
+                    Dash(dir);
                 else if (Util.GetConfig().dashBuffer)
-                    dashBuffer = Player.controlLeft ? -1 : (Player.controlRight || Player.direction == 1) ? 1 : -1;
+                    dashBuffer = dir;
             }
 
             if (KeybindSystem.DashLeftKeybind?.JustPressed ?? false)
@@ -109,28 +133,29 @@ namespace AdvancedControls.Common.Players {
                 Player.QuickMount();
         }
 
+        private void InputLeft() {
+            Player.controlRight = false;
+            Player.controlLeft = true;
+            Player.releaseLeft = true;
+        }
+
+        private void InputRight() {
+            Player.controlLeft = false;
+            Player.controlRight = true;
+            Player.releaseRight = true;
+        }
+
         private void Dash(int direction) {
-            bool wasMounted = Player.mount.Active;
+            wasMounted = Player.mount.Active;
 
             if (wasMounted) Dismount();
 
             if (Util.GetConfig().cancelHooks) Player.RemoveAllGrapplingHooks();
 
-            if (direction == -1) {
-                Player.controlRight = false;
-                Player.controlLeft = true;
-                Player.releaseLeft = true;
-            } else {
-                Player.controlLeft = false;
-                Player.controlRight = true;
-                Player.releaseRight = true;
-            }
-            Player.DashMovement();
+            if (direction == -1) InputLeft();
+            else InputRight();
 
-            if (wasMounted) {
-                Player.DashMovement();
-                Remount();
-            }
+            secondInput = direction;
         }
     }
 
