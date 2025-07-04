@@ -526,8 +526,9 @@ namespace AdvancedControls.Common.Players {
                 Player.UpdateEquips(0);
                 SoundEngine.PlaySound(SoundID.MenuTick);
 
-                if (equipmentTarget[slot].Context == ItemSlot.Context.EquipMount && Player.mount.Active) {
-                    Player.mount.SetMount(Player.miscEquips[Player.miscSlotMount].mountType, Player);
+                if (Player.mount.Active) {
+                    if (equipmentTarget[slot].Context == ItemSlot.Context.EquipMinecart && MountID.Sets.Cart[Player.mount.Type]) Player.mount.SetMount(Player.miscEquips[Player.miscSlotCart].mountType, Player);
+                    else if (equipmentTarget[slot].Context == ItemSlot.Context.EquipMount && !MountID.Sets.Cart[Player.mount.Type]) Player.mount.SetMount(Player.miscEquips[Player.miscSlotMount].mountType, Player);
                 }
             }
         }
