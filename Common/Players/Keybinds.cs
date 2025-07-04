@@ -140,7 +140,7 @@ namespace AdvancedControls.Common.Players {
             else if (Player.controlRight == true)
                 return 1;
 
-            return Player.direction;
+            return Player.confused ? Player.direction * -1 : Player.direction;
         }
 
         private void Dismount() {
@@ -163,13 +163,13 @@ namespace AdvancedControls.Common.Players {
         private void InputLeft() {
             Player.controlRight = false;
             Player.controlLeft = true;
-            Player.releaseLeft = true;
+            if (Player.confused) Player.releaseRight = true; else Player.releaseLeft = true;
         }
 
         private void InputRight() {
             Player.controlLeft = false;
             Player.controlRight = true;
-            Player.releaseRight = true;
+            if (Player.confused) Player.releaseLeft = true; else Player.releaseRight = true;
         }
 
         private void Dash(int direction) {
