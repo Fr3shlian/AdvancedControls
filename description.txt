@@ -1,9 +1,9 @@
-This mod adds a whole bunch of keybinds ranging from simple toggles and dashing to Recall Potion usage and better inventory navigation. It also offers some configs where relevant. If you have any suggestions for keybinds, put them into the comment section.
+This mod adds a whole bunch of keybinds ranging from simple toggles and dashing to Recall Potion usage and better inventory navigation. It also offers some configs where relevant. If you have any suggestions, put them into the comment section.
 
 List of keybinds:
 [list]
     [*] Chest actions
-    [*] Dashing
+    [*] Dashing (compatible with Vanilla, Calamity, Fargo's Souls, ...?)
     [*] Cycling all inventory slots (not just the hotbar)
     [*] Dynamic shortcuts to inventory slots ("Dynamic Hotbar" from console Terraria)
     [*] Equipment Change
@@ -30,6 +30,7 @@ Instruction for Equipment Change:
         [/list]
     [*] Hover over a second slot and press the keybind again to define that slot as the target slot
         [list]
+            [*] Instead pressing the keybind again on the same slot will match the target based on the item in that slot (works for miscellaneous equipment and armor)
             [*] Allows all slots except for vanity and dye
         [/list]
     [*] Press the button again to activate it
@@ -38,3 +39,4 @@ Instruction for Equipment Change:
         [/list]
     [*] Hold the button for a moment while in your inventory to unbind it
 [/olist]
+Extra note: Changing mounts or minecarts while mounted also changes the active mount

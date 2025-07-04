@@ -1,9 +1,6 @@
-﻿[h1]v1.6.3[/h1]
+﻿[h1]v1.6.4[/h1]
 [list]
-    [*] Added Piggy Bank and Void Bag Keybind
-    [*] Dash keybind will now buffer regardless of holding left or right
-    [*] Added the option to buffer the dash depending on the movement during input or the current movement
-    [*] Dash keybind will now work with modded dashes (* tested with Fargo's Souls and Calamity)
-    [*] Added the option to always mount on dash
-    [*] Added the option to disable double tap dash
+    [*] Dash keybinds now work while confused
+    [*] Added auto match for Equipment Change Keybinds - Press the key again while hovering the same item slot to bind it based on its item (works for miscellaneous equipment and armor)
+    [*] Minecarts will now also be changed while riding if you use the Equipment Change keybind
 [/list]
