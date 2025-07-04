@@ -249,18 +249,8 @@ namespace AdvancedControls.Common.Players {
     // --- Inventory Reference ---
     public class DynamicHotbarKeyBindPlayer : ModPlayer {
         private int[] dynamicHotbar = [.. Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count)];
+        private readonly int[] holdTimer = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
         private int lastSelectedItem = -1;
-
-        private readonly int[] frameCounter = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
-
-        public override void PreUpdate() {
-            for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++) {
-                if (frameCounter[i] == 1) {
-                    frameCounter[i] = -1;
-                    dynamicHotbar[i] = -1;
-                } else if (frameCounter[i] != -1) frameCounter[i]--;
-            }
-        }
 
         public override void SaveData(TagCompound tag) {
             tag.Set("dynamicHotbar", dynamicHotbar, true);
@@ -289,13 +279,20 @@ namespace AdvancedControls.Common.Players {
                                 Player.GetModPlayer<HoverSlotPlayer>().RemoveOtherReference(HoverSlotPlayer.HoveredSlot);
                                 dynamicHotbar[i] = HoverSlotPlayer.HoveredSlot;
                             }
-                        } else frameCounter[i] = 10;
+                        } else holdTimer[i] = 10;
                     } else if (dynamicHotbar[i] != -1) {
                         DynamicHotbarAction(i);
                     }
-                } else if (KeybindSystem.DynamicHotbarKeyBinds[i].JustReleased) {
-                    if (frameCounter[i] != -1) {
-                        frameCounter[i] = -1;
+                }
+
+                if (KeybindSystem.DynamicHotbarKeyBinds[i].Current) {
+                    if (holdTimer[i] == 1) {
+                        holdTimer[i] = -1;
+                        dynamicHotbar[i] = -1;
+                    } else if (holdTimer[i] != -1) holdTimer[i]--;
+                } else {
+                    if (holdTimer[i] != -1) {
+                        holdTimer[i] = -1;
                         DynamicHotbarAction(i);
                     }
                 }
@@ -385,19 +382,8 @@ namespace AdvancedControls.Common.Players {
         }
 
         public InventoryReference[] EquipmentReference { get; private set; } = Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count).ToArray();
-        private InventoryReference[] equipmentTarget = Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count).ToArray();
-
+        private readonly InventoryReference[] equipmentTarget = Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count).ToArray();
         private readonly int[] frameCounter = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
-
-        public override void PreUpdate() {
-            for (int i = 0; i < KeybindSystem.EquipmentChangeReferenceKeyBinds.Count; i++) {
-                if (frameCounter[i] == 1) {
-                    frameCounter[i] = -1;
-                    EquipmentReference[i] = new InventoryReference();
-                    equipmentTarget[i] = new InventoryReference();
-                } else if (frameCounter[i] != -1) frameCounter[i]--;
-            }
-        }
 
         public override void SaveData(TagCompound tag) {
             tag.Set("equipmentSource", EquipmentReference, true);
@@ -438,7 +424,15 @@ namespace AdvancedControls.Common.Players {
                     } else if (equipmentTarget[i].Slot != -1) {
                         EquipmentChangeAction(i);
                     }
-                } else if (KeybindSystem.EquipmentChangeReferenceKeyBinds[i].JustReleased) {
+                }
+
+                if (KeybindSystem.EquipmentChangeReferenceKeyBinds[i].Current) {
+                    if (frameCounter[i] == 1) {
+                        frameCounter[i] = -1;
+                        EquipmentReference[i] = new InventoryReference();
+                        equipmentTarget[i] = new InventoryReference();
+                    } else if (frameCounter[i] != -1) frameCounter[i]--;
+                } else {
                     if (frameCounter[i] != -1) {
                         frameCounter[i] = -1;
                         bool sameSlot = HoverSlotPlayer.HoveredSlot == EquipmentReference[i].Slot && HoverSlotPlayer.HoveredInventory == EquipmentReference[i].Inventory;
