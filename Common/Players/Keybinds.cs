@@ -317,6 +317,8 @@ namespace AdvancedControls.Common.Players {
 
                 Player.selectedItem = dynamicHotbar[slot];
             }
+
+            SoundEngine.PlaySound(SoundID.MenuTick);
         }
 
         public int GetReference(int slot) {
@@ -503,6 +505,7 @@ namespace AdvancedControls.Common.Players {
                 KeybindSystem.SetItemRefsForIndicator(source, target);
 
                 Player.UpdateEquips(0);
+                SoundEngine.PlaySound(SoundID.MenuTick);
 
                 if (equipmentTarget[slot].Context == ItemSlot.Context.EquipMount && Player.mount.Active) {
                     Player.mount.SetMount(Player.miscEquips[Player.miscSlotMount].mountType, Player);
@@ -520,10 +523,12 @@ namespace AdvancedControls.Common.Players {
         public override void ProcessTriggers(TriggersSet triggersSet) {
             if (KeybindSystem.RulerKeyBind?.JustPressed ?? false) {
                 Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] = Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] == 1 ? 0 : 1;
+                SoundEngine.PlaySound(SoundID.MenuTick);
             }
 
             if (KeybindSystem.MechanicalRulerKeyBind?.JustPressed ?? false) {
                 Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerGrid] = Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerGrid] == 1 ? 0 : 1;
+                SoundEngine.PlaySound(SoundID.MenuTick);
             }
         }
     }
