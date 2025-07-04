@@ -464,32 +464,32 @@ namespace AdvancedControls.Common.Players {
         private bool CanTransfer(int i) {
             Item sourceItem = EquipmentReference[i].GetItem();
             InventoryReference target = equipmentTarget[i];
-            bool inventoryTransfer = EquipmentReference[i].Context == target.Context || EquipmentReference[i].Context == ItemSlot.Context.InventoryItem && target.Context == ItemSlot.Context.HotbarItem || EquipmentReference[i].Context == ItemSlot.Context.HotbarItem && target.Context == ItemSlot.Context.InventoryItem;
-            bool slotEmpty = sourceItem.IsAir;
+            bool inventoryTransfer = EquipmentReference[i].Context == target.Context || (EquipmentReference[i].Context == ItemSlot.Context.InventoryItem && target.Context == ItemSlot.Context.HotbarItem) || (EquipmentReference[i].Context == ItemSlot.Context.HotbarItem && target.Context == ItemSlot.Context.InventoryItem);
 
-            if (inventoryTransfer)
+            if (inventoryTransfer) return true;
+            if (sourceItem.IsAir) return true;
+
+            else if (sourceItem.headSlot != -1 && target.Slot == 0 && target.Inventory == Player.armor)
                 return true;
-            else if ((sourceItem.headSlot != -1 || slotEmpty) && target.Slot == 0 && target.Inventory == Player.armor)
+            else if (sourceItem.bodySlot != -1 && target.Slot == 1 && target.Inventory == Player.armor)
                 return true;
-            else if ((sourceItem.bodySlot != -1 || slotEmpty) && target.Slot == 1 && target.Inventory == Player.armor)
+            else if (sourceItem.legSlot != -1 && target.Slot == 2 && target.Inventory == Player.armor)
                 return true;
-            else if ((sourceItem.legSlot != -1 || slotEmpty) && target.Slot == 2 && target.Inventory == Player.armor)
+            else if (sourceItem.accessory && Math.Abs(target.Context) == ItemSlot.Context.EquipAccessory)
                 return true;
-            else if ((sourceItem.accessory || slotEmpty) && Math.Abs(target.Context) == ItemSlot.Context.EquipAccessory)
+            else if (sourceItem.buffType > 0 && Main.vanityPet[sourceItem.buffType] && target.Context == ItemSlot.Context.EquipPet)
                 return true;
-            else if (((sourceItem.buffType > 0 && Main.vanityPet[sourceItem.buffType]) || slotEmpty) && target.Context == ItemSlot.Context.EquipPet)
+            else if (sourceItem.buffType > 0 && Main.lightPet[sourceItem.buffType] && target.Context == ItemSlot.Context.EquipLight)
                 return true;
-            else if (((sourceItem.buffType > 0 && Main.lightPet[sourceItem.buffType]) || slotEmpty) && target.Context == ItemSlot.Context.EquipLight)
+            else if (sourceItem.mountType != -1 && MountID.Sets.Cart[sourceItem.mountType] && target.Context == ItemSlot.Context.EquipMinecart)
                 return true;
-            else if (((sourceItem.mountType != -1 && MountID.Sets.Cart[sourceItem.mountType]) || slotEmpty) && target.Context == ItemSlot.Context.EquipMinecart)
+            else if (sourceItem.mountType != -1 && !MountID.Sets.Cart[sourceItem.mountType] && target.Context == ItemSlot.Context.EquipMount)
                 return true;
-            else if (((sourceItem.mountType != -1 && !MountID.Sets.Cart[sourceItem.mountType]) || slotEmpty) && target.Context == ItemSlot.Context.EquipMount)
+            else if (Main.projHook[sourceItem.shoot] && target.Context == ItemSlot.Context.EquipGrapple)
                 return true;
-            else if ((Main.projHook[sourceItem.shoot] || slotEmpty) && target.Context == ItemSlot.Context.EquipGrapple)
+            else if (sourceItem.ammo != AmmoID.None && target.Context == ItemSlot.Context.InventoryAmmo)
                 return true;
-            else if ((sourceItem.ammo != AmmoID.None || slotEmpty) && target.Context == ItemSlot.Context.InventoryAmmo)
-                return true;
-            else if ((sourceItem.IsACoin || slotEmpty) && target.Context == ItemSlot.Context.InventoryCoin)
+            else if (sourceItem.IsACoin && target.Context == ItemSlot.Context.InventoryCoin)
                 return true;
 
             return false;
