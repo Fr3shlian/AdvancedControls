@@ -596,7 +596,7 @@ namespace AdvancedControls.Common.Players {
     public class RecallKeyBindPlayer : ModPlayer {
         private int requiredShellPhone = -1;
         private int priorSelectedItem = -1;
-        
+
         //Switches to the correct shellphone mode, then uses it and switches back to the previous held item
         public override void PreUpdate() {
             if (requiredShellPhone != -1) {
@@ -723,7 +723,7 @@ namespace AdvancedControls.Common.Players {
         public override void ProcessTriggers(TriggersSet triggersSet) {
             if (KeybindSystem.PiggyBankKeybind?.JustPressed ?? false) {
                 if (InventoryHelperPlayer.FindAndUseItem(ItemID.MoneyTrough)) return;
-                
+
                 int slot = Player.FindItem(ItemID.PiggyBank);
 
                 if (slot != -1) {
@@ -731,7 +731,7 @@ namespace AdvancedControls.Common.Players {
                 }
             }
 
-            if (KeybindSystem.VoidBagKeybind?. JustPressed ?? false) {
+            if (KeybindSystem.VoidBagKeybind?.JustPressed ?? false) {
                 InventoryHelperPlayer.FindAndUseItem([ItemID.VoidLens, ItemID.ClosedVoidBag]);
             }
         }
