@@ -385,7 +385,7 @@ namespace AdvancedControls.Common.Players {
 
         public InventoryReference[] EquipmentReference { get; private set; } = Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count).ToArray();
         private readonly InventoryReference[] equipmentTarget = Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count).ToArray();
-        private readonly int[] frameCounter = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
+        private readonly int[] holdTimer = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
 
         public override void SaveData(TagCompound tag) {
             tag.Set("equipmentSource", EquipmentReference, true);
@@ -422,25 +422,40 @@ namespace AdvancedControls.Common.Players {
                                 Player.GetModPlayer<HoverSlotPlayer>().RemoveOtherReference(HoverSlotPlayer.HoveredSlot);
                                 EquipmentReference[i] = new InventoryReference(HoverSlotPlayer.HoveredSlot, HoverSlotPlayer.HoveredInventory, HoverSlotPlayer.HoveredSlotContext);
                             }
-                        } else frameCounter[i] = 10;
+                        } else holdTimer[i] = 10;
                     } else if (equipmentTarget[i].Slot != -1) {
                         EquipmentChangeAction(i);
                     }
                 }
 
                 if (KeybindSystem.EquipmentChangeReferenceKeyBinds[i].Current) {
-                    if (frameCounter[i] == 1) {
-                        frameCounter[i] = -1;
+                    if (holdTimer[i] == 1) {
+                        holdTimer[i] = -1;
                         EquipmentReference[i] = new InventoryReference();
                         equipmentTarget[i] = new InventoryReference();
-                    } else if (frameCounter[i] != -1) frameCounter[i]--;
+                    } else if (holdTimer[i] != -1) holdTimer[i]--;
                 } else {
-                    if (frameCounter[i] != -1) {
-                        frameCounter[i] = -1;
+                    if (holdTimer[i] != -1) {
+                        holdTimer[i] = -1;
                         bool sameSlot = HoverSlotPlayer.HoveredSlot == EquipmentReference[i].Slot && HoverSlotPlayer.HoveredInventory == EquipmentReference[i].Inventory;
 
-                        if (equipmentTarget[i].Slot == -1 && !sameSlot && CanSlotAccept(EquipmentReference[i].Context, HoverSlotPlayer.HoveredSlotContext)) {
-                            equipmentTarget[i] = new InventoryReference(HoverSlotPlayer.HoveredSlot, HoverSlotPlayer.HoveredInventory, HoverSlotPlayer.HoveredSlotContext);
+                        if (equipmentTarget[i].Slot == -1 && CanSlotAccept(EquipmentReference[i].Context, HoverSlotPlayer.HoveredSlotContext)) {
+                            if (sameSlot) {
+                                Item sourceItem = EquipmentReference[i].GetItem();
+
+                                if (sourceItem.headSlot != -1) equipmentTarget[i] = new InventoryReference(0, Player.armor, ItemSlot.Context.EquipArmor);
+                                else if (sourceItem.bodySlot != -1) equipmentTarget[i] = new InventoryReference(1, Player.armor, ItemSlot.Context.EquipArmor);
+                                else if (sourceItem.legSlot != -1) equipmentTarget[i] = new InventoryReference(2, Player.armor, ItemSlot.Context.EquipArmor);
+                                else if (sourceItem.buffType > 0 && Main.vanityPet[sourceItem.buffType]) equipmentTarget[i] = new InventoryReference(0, Player.miscEquips, ItemSlot.Context.EquipPet);
+                                else if (sourceItem.buffType > 0 && Main.lightPet[sourceItem.buffType]) equipmentTarget[i] = new InventoryReference(1, Player.miscEquips, ItemSlot.Context.EquipLight);
+                                else if (sourceItem.mountType != -1 && MountID.Sets.Cart[sourceItem.mountType]) equipmentTarget[i] = new InventoryReference(2, Player.miscEquips, ItemSlot.Context.EquipMinecart);
+                                else if (sourceItem.mountType != -1 && !MountID.Sets.Cart[sourceItem.mountType]) equipmentTarget[i] = new InventoryReference(3, Player.miscEquips, ItemSlot.Context.EquipMount);
+                                else if (Main.projHook[sourceItem.shoot]) equipmentTarget[i] = new InventoryReference(4, Player.miscEquips, ItemSlot.Context.EquipGrapple);
+                                else return;
+                            } else {
+                                equipmentTarget[i] = new InventoryReference(HoverSlotPlayer.HoveredSlot, HoverSlotPlayer.HoveredInventory, HoverSlotPlayer.HoveredSlotContext);
+                            }
+
                             SoundEngine.PlaySound(SoundID.MenuTick);
 
                             if (EquipmentReference[i].Slot > 49 && equipmentTarget[i].Slot < 49 && equipmentTarget[i].Inventory == Player.inventory) {
