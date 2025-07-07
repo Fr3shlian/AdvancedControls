@@ -145,7 +145,7 @@ namespace AdvancedControls.Common.Players {
                 }
             }
 
-            if (KeybindSystem.DashKeybind?.JustPressed ?? false) {
+            if (KeybindSystem.DashKeybind.JustPressed) {
                 int dir = GetDashDirection();
 
                 if (player.dashDelay == 0)
