@@ -26,6 +26,8 @@ namespace AdvancedControls.Common.Players {
             if (KeybindSystem.LootAllKeybind != null) keybinds.Add(new LootAllKeyBind());
             if (KeybindSystem.DepositAllKeybind != null) keybinds.Add(new DepositAllKeyBind());
             if (KeybindSystem.QuickStackKeybind != null) keybinds.Add(new DashKeyBind());
+            if (KeybindSystem.CycleInventoryLeftKeybind != null) keybinds.Add(new CycleInventoryLeftKeyBind());
+            if (KeybindSystem.CycleInventoryRightKeybind != null) keybinds.Add(new CycleInventoryRightKeyBind());
 
             for (int i = 0; i < keybinds.Count; i++) {
                 if (keybinds[i] is IProcessTriggers triggers) processTriggerFunctions.Add(triggers.ProcessTriggers);
@@ -206,31 +208,31 @@ namespace AdvancedControls.Common.Players {
     }
 
     // --- Cycle Inventory ---
-    public class CycleInventoryKeyBindPlayer : ModPlayer {
-        public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.CycleInventoryLeftKeybind?.JustPressed ?? false) {
-                CycleLeft();
-            } else if (KeybindSystem.CycleInventoryRightKeybind?.JustPressed ?? false) {
-                CycleRight();
-            }
-        }
-
-        private void CycleLeft() {
-            if (Player.selectedItem == 0) {
-                Player.selectedItem = 49;
-            } else {
-                Player.selectedItem--;
-            }
-        }
-
-        private void CycleRight() {
-            if (Player.selectedItem > 48) {
-                Player.selectedItem = 0;
-            } else {
-                Player.selectedItem++;
+    public class CycleInventoryLeftKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.CycleInventoryLeftKeybind.JustPressed) {
+                if (modPlayer.Player.selectedItem == 0) {
+                    modPlayer.Player.selectedItem = 49;
+                } else {
+                    modPlayer.Player.selectedItem--;
+                }
             }
         }
     }
+
+    public class CycleInventoryRightKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.CycleInventoryRightKeybind.JustPressed) {
+                if (modPlayer.Player.selectedItem > 48) {
+                    modPlayer.Player.selectedItem = 0;
+                } else {
+                    modPlayer.Player.selectedItem++;
+                }
+            }
+        }
+    }
+
+
 
     // --- Helper Class for Reference Buttons ---
     public class HoverSlotPlayer : ModPlayer {
