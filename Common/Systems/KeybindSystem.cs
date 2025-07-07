@@ -68,12 +68,12 @@ namespace AdvancedControls.Common.Systems {
             if (conf.enableCycleInventoryLeftKeybind) CycleInventoryLeftKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryLeft", Microsoft.Xna.Framework.Input.Keys.None);
             if (conf.enableCycleInventoryRightKeybind) CycleInventoryRightKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryRight", Microsoft.Xna.Framework.Input.Keys.None);
 
-            // --- Inventory Reference ---
+            // --- Dynamic Hotbar ---
             for (int i = 0; i < conf.dynamicHotbarCount; i++) {
                 DynamicHotbarKeyBinds.Add(KeybindLoader.RegisterKeybind(Mod, "DynamicHotbar" + (i + 1), Microsoft.Xna.Framework.Input.Keys.None));
             }
 
-            // --- Equipment Change Reference ---
+            // --- Equipment Change ---
             for (int i = 0; i < conf.equipmentChangeReferenceCount; i++) {
                 EquipmentChangeReferenceKeyBinds.Add(KeybindLoader.RegisterKeybind(Mod, "EquipmentChangeReference" + (i + 1), Microsoft.Xna.Framework.Input.Keys.None));
             }
@@ -171,17 +171,16 @@ namespace AdvancedControls.Common.Systems {
         }
 
         private bool DrawInventorySlotText() {
-            DynamicHotbarKeyBindPlayer kbp = Main.CurrentPlayer.GetModPlayer<DynamicHotbarKeyBindPlayer>();
-            EquipmentChangeReferenceKeyBindPlayer erp = Main.CurrentPlayer.GetModPlayer<EquipmentChangeReferenceKeyBindPlayer>();
+            KeyBindPlayer kbp = Main.CurrentPlayer.GetModPlayer<KeyBindPlayer>();
 
             for (int i = 0; i < DynamicHotbarKeyBinds.Count; i++) {
-                if (kbp.GetReference(i) != -1)
-                    Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, (i + 1).ToString(), GetVectorForInventorySlot(kbp.GetReference(i)), Color.White, 0f, Vector2.Zero, Main.UIScale, SpriteEffects.None, 0f);
+                if (kbp.DynamicHotbarKb.GetReference(i) != -1)
+                    Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, (i + 1).ToString(), GetVectorForInventorySlot(kbp.DynamicHotbarKb.GetReference(i)), Color.White, 0f, Vector2.Zero, Main.UIScale, SpriteEffects.None, 0f);
             }
 
             for (int i = 0; i < EquipmentChangeReferenceKeyBinds.Count; i++) {
-                if (erp.EquipmentReference[i].Slot != -1)
-                    Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, "E" + (i + 1), GetVectorForInventorySlot(erp.EquipmentReference[i].Slot, -11f), Color.White, 0f, Vector2.Zero, Main.UIScale * (erp.EquipmentReference[i].Slot < 50 ? 1f : 0.6f), SpriteEffects.None, 0f);
+                if (kbp.EquipmentChangeKb.EquipmentReference[i].Slot != -1)
+                    Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, "E" + (i + 1), GetVectorForInventorySlot(kbp.EquipmentChangeKb.EquipmentReference[i].Slot, -11f), Color.White, 0f, Vector2.Zero, Main.UIScale * (kbp.EquipmentChangeKb.EquipmentReference[i].Slot < 50 ? 1f : 0.6f), SpriteEffects.None, 0f);
             }
 
             return true;
