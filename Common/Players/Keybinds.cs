@@ -15,35 +15,61 @@ using Terraria.Audio;
 using System.Collections.Generic;
 
 namespace AdvancedControls.Common.Players {
-    // --- Chest controls ---
-    public class LootAllKeyBindPlayer : ModPlayer {
+    public class KeyBindPlayer : ModPlayer {
+        private readonly List<IKeybind> keybinds = [];
+        private readonly List<Action<ModPlayer, TriggersSet>> processTriggerFunctions = [];
+
+        public override void Initialize() {
+            if (KeybindSystem.LootAllKeybind != null) keybinds.Add(new LootAllKeyBindPlayer());
+            if (KeybindSystem.DepositAllKeybind != null) keybinds.Add(new DepositAllKeyBindPlayer());
+            if (KeybindSystem.QuickStackKeybind != null) keybinds.Add(new QuickStackKeyBindPlayer());
+
+            for (int i = 0; i < keybinds.Count; i++) {
+                if (keybinds[i] is IProcessTriggers triggers) processTriggerFunctions.Add(triggers.ProcessTriggers);
+            }
+        }
+
         public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.LootAllKeybind?.JustPressed ?? false) {
-                if (Player.chest != -1) {
+            for (int i = 0; i < keybinds.Count; i++) {
+                processTriggerFunctions[i](this, triggersSet);
+            }
+        }
+    }
+
+    public interface IKeybind {}
+    public interface IProcessTriggers : IKeybind {
+        public void ProcessTriggers(ModPlayer modPlayer, TriggersSet triggersSet);
+    }
+
+    // --- Chest controls ---
+    public class LootAllKeyBindPlayer : IProcessTriggers {
+        public void ProcessTriggers(ModPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.LootAllKeybind.JustPressed) {
+                if (modPlayer.Player.chest != -1) {
                     ChestUI.LootAll();
                 }
             }
         }
     }
 
-    public class DepositAllKeyBindPlayer : ModPlayer {
-        public override void ProcessTriggers(TriggersSet triggersSet) {
+    public class DepositAllKeyBindPlayer : IProcessTriggers {
+        public void ProcessTriggers(ModPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.DepositAllKeybind?.JustPressed ?? false) {
-                if (Player.chest != -1) {
-                    ChestUI.DepositAll(ContainerTransferContext.FromUnknown(Player));
+                if (modPlayer.Player.chest != -1) {
+                    ChestUI.DepositAll(ContainerTransferContext.FromUnknown(modPlayer.Player));
                 }
             }
         }
     }
 
-    public class QuickStackKeyBindPlayer : ModPlayer {
-        public override void ProcessTriggers(TriggersSet triggersSet) {
+    public class QuickStackKeyBindPlayer : IProcessTriggers {
+        public void ProcessTriggers(ModPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.QuickStackKeybind?.JustPressed ?? false) {
-                if (Player.chest != -1) {
-                    ChestUI.QuickStack(ContainerTransferContext.FromUnknown(Player), Player.chest == -5);
+                if (modPlayer.Player.chest != -1) {
+                    ChestUI.QuickStack(ContainerTransferContext.FromUnknown(modPlayer.Player), modPlayer.Player.chest == -5);
                 }
 
-                Player.QuickStackAllChests();
+                modPlayer.Player.QuickStackAllChests();
             }
         }
     }
