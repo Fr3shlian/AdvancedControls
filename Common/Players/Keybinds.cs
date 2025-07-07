@@ -37,6 +37,7 @@ namespace AdvancedControls.Common.Players {
             // --- Chest controls ---
             if (KeybindSystem.LootAllKeybind != null) keybinds.Add(new LootAllKeyBind());
             if (KeybindSystem.DepositAllKeybind != null) keybinds.Add(new DepositAllKeyBind());
+            if (KeybindSystem.QuickStackKeybind != null) keybinds.Add(new QuickStackKeyBind());
 
             // --- Dash ---
             if (KeybindSystem.DashKeybind != null) keybinds.Add(new DashKeyBind());
