@@ -25,7 +25,7 @@ namespace AdvancedControls.Common.Players {
             // --- Chest controls ---
             if (KeybindSystem.LootAllKeybind != null) keybinds.Add(new LootAllKeyBind());
             if (KeybindSystem.DepositAllKeybind != null) keybinds.Add(new DepositAllKeyBind());
-            if (KeybindSystem.QuickStackKeybind != null) keybinds.Add(new QuickStackKeyBind());
+            if (KeybindSystem.QuickStackKeybind != null) keybinds.Add(new DashKeyBind());
 
             for (int i = 0; i < keybinds.Count; i++) {
                 if (keybinds[i] is IProcessTriggers triggers) processTriggerFunctions.Add(triggers.ProcessTriggers);
@@ -79,21 +79,22 @@ namespace AdvancedControls.Common.Players {
     }
 
     // --- Dash ---
-    public class DashKeyBindPlayer : ModPlayer {
+    public class DashKeyBind : IProcessTriggers {
         private int secondInput = 0;
         private int dashBuffer = 0;
         private int needRemount = 0;
         private bool wasMounted = false;
+        private Player player;
 
-        public override void ProcessTriggers(TriggersSet triggersSet) {
-            AdvancedControlsConfig conf = Util.GetConfig();
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            player = modPlayer.Player;
 
-            if (conf.disableDoubleTap && secondInput == 0) {
-                Player.dashTime = 0;
+            if (modPlayer.conf.disableDoubleTap && secondInput == 0) {
+                player.dashTime = 0;
 
                 //Purely for Calamity Mod
-                Player.releaseLeft = false;
-                Player.releaseRight = false;
+                player.releaseLeft = false;
+                player.releaseRight = false;
             }
 
             switch (needRemount) {
@@ -101,7 +102,7 @@ namespace AdvancedControls.Common.Players {
                     Remount();
                     goto case 3;
                 case 2:
-                    Player.QuickMount();
+                    player.QuickMount();
                     goto case 3;
                 case 3:
                     needRemount = 0;
@@ -119,12 +120,12 @@ namespace AdvancedControls.Common.Players {
                 case 3:
                     secondInput = 0;
                     if (wasMounted) needRemount = 1;
-                    else if (conf.alwaysMount) needRemount = 2;
+                    else if (modPlayer.conf.alwaysMount) needRemount = 2;
                     break;
             }
 
-            if (dashBuffer != 0 && Player.dashDelay == 0) {
-                if (conf.bufferCurrentDirection) dashBuffer = 2;
+            if (dashBuffer != 0 && player.dashDelay == 0) {
+                if (modPlayer.conf.bufferCurrentDirection) dashBuffer = 2;
 
                 switch (dashBuffer) {
                     case -1:
@@ -145,27 +146,27 @@ namespace AdvancedControls.Common.Players {
             if (KeybindSystem.DashKeybind?.JustPressed ?? false) {
                 int dir = GetDashDirection();
 
-                if (Player.dashDelay == 0)
+                if (player.dashDelay == 0)
                     Dash(dir);
-                else if (conf.dashBuffer)
+                else if (modPlayer.conf.dashBuffer)
                     dashBuffer = dir;
             }
         }
 
         private int GetDashDirection() {
-            if (Player.controlLeft == true)
+            if (player.controlLeft == true)
                 return -1;
-            else if (Player.controlRight == true)
+            else if (player.controlRight == true)
                 return 1;
 
-            return Player.confused ? Player.direction * -1 : Player.direction;
+            return player.confused ? player.direction * -1 : player.direction;
         }
 
         private void Dismount() {
             if (Util.GetConfig().mountDashBehaviour == MountDashBehaviour.DashWithMount) {
-                Player.mount._active = false;
+                player.mount._active = false;
             } else {
-                Player.QuickMount();
+                player.QuickMount();
             }
         }
 
@@ -173,29 +174,29 @@ namespace AdvancedControls.Common.Players {
             AdvancedControlsConfig config = Util.GetConfig();
 
             if (config.mountDashBehaviour == MountDashBehaviour.DashWithMount)
-                Player.mount._active = true;
+                player.mount._active = true;
             else if (config.mountDashBehaviour == MountDashBehaviour.DismountDashRemount)
-                Player.QuickMount();
+                player.QuickMount();
         }
 
         private void InputLeft() {
-            Player.controlRight = false;
-            Player.controlLeft = true;
-            if (Player.confused) Player.releaseRight = true; else Player.releaseLeft = true;
+            player.controlRight = false;
+            player.controlLeft = true;
+            if (player.confused) player.releaseRight = true; else player.releaseLeft = true;
         }
 
         private void InputRight() {
-            Player.controlLeft = false;
-            Player.controlRight = true;
-            if (Player.confused) Player.releaseLeft = true; else Player.releaseRight = true;
+            player.controlLeft = false;
+            player.controlRight = true;
+            if (player.confused) player.releaseLeft = true; else player.releaseRight = true;
         }
 
         private void Dash(int direction) {
-            wasMounted = Player.mount.Active;
+            wasMounted = player.mount.Active;
 
             if (wasMounted) Dismount();
 
-            if (Util.GetConfig().cancelHooks) Player.RemoveAllGrapplingHooks();
+            if (Util.GetConfig().cancelHooks) player.RemoveAllGrapplingHooks();
 
             if (direction == -1) InputLeft();
             else InputRight();
