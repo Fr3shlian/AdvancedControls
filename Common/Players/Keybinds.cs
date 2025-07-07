@@ -52,6 +52,10 @@ namespace AdvancedControls.Common.Players {
             // --- Equipment Change ---
             if (KeybindSystem.EquipmentChangeReferenceKeyBinds.Count != 0) keybinds.Add(EquipmentChangeKb = new EquipmentChangeKeyBind());
 
+            // --- Rulers ---
+            if (KeybindSystem.RulerKeyBind != null) keybinds.Add(new RulerKeyBind());
+            if (KeybindSystem.MechanicalRulerKeyBind != null) keybinds.Add(new MechanicalRulerKeyBind());
+
             for (int i = 0; i < keybinds.Count; i++) {
                 if (keybinds[i] is IProcessTriggers keybind1) processTriggerFunctions.Add(keybind1.ProcessTriggers);
                 if (keybinds[i] is ISaveData keybind2) saveDataFunctions.Add(keybind2.SaveData);
@@ -600,15 +604,19 @@ namespace AdvancedControls.Common.Players {
     }
 
     // --- Rulers ---
-    public class RulerKeyBindPlayer : ModPlayer {
-        public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.RulerKeyBind?.JustPressed ?? false) {
-                Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] = Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] == 1 ? 0 : 1;
+    public class RulerKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.RulerKeyBind.JustPressed) {
+                modPlayer.Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] = modPlayer.Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] == 1 ? 0 : 1;
                 SoundEngine.PlaySound(SoundID.MenuTick);
-            }
+            } 
+        }
+    }
 
-            if (KeybindSystem.MechanicalRulerKeyBind?.JustPressed ?? false) {
-                Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerGrid] = Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerGrid] == 1 ? 0 : 1;
+    public class MechanicalRulerKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.MechanicalRulerKeyBind.JustPressed) {
+                modPlayer.Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerGrid] = modPlayer.Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerGrid] == 1 ? 0 : 1;
                 SoundEngine.PlaySound(SoundID.MenuTick);
             }
         }
