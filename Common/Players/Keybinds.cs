@@ -7,7 +7,6 @@ using Terraria.UI;
 using Terraria.ID;
 using System.Linq;
 using AdvancedControls.Common.Configs;
-using AdvancedControls.Common.GlobalItems;
 using Terraria.ModLoader.IO;
 using System;
 using System.Reflection;
@@ -678,26 +677,6 @@ namespace AdvancedControls.Common.Players {
     }
 
     public class RecallKeyBindPlayer : ModPlayer {
-        private int requiredShellPhone = -1;
-        private int priorSelectedItem = -1;
-
-        //Switches to the correct shellphone mode, then uses it and switches back to the previous held item
-        public override void PreUpdate() {
-            if (requiredShellPhone != -1) {
-                if (Player.HeldItem.type != requiredShellPhone) {
-                    ShellphoneGlobal.requiredShellPhone = requiredShellPhone;
-                    ItemLoader.AltFunctionUse(Player.inventory[Player.selectedItem], Player);
-                } else {
-                    Player.controlUseItem = true;
-                    Player.ItemCheck();
-                    requiredShellPhone = -1;
-                }
-            } else if (priorSelectedItem != -1 && Player.itemTime <= 0) {
-                Player.selectedItem = priorSelectedItem;
-                priorSelectedItem = -1;
-            }
-        }
-
         public override void ProcessTriggers(TriggersSet triggersSet) {
             if (KeybindSystem.RecallKeyBind?.JustPressed ?? false) {
                 if (FindAndUseWishingGlass("Home")) return;
@@ -754,18 +733,13 @@ namespace AdvancedControls.Common.Players {
             }
         }
 
-        private void UseShellPhone(int slot, int shellPhoneID) {
-            if (Main.LocalPlayer.itemTime == 0) {
-                requiredShellPhone = shellPhoneID;
-                priorSelectedItem = Player.selectedItem;
-                Player.selectedItem = slot;
-            }
-        }
-
         private void FindAndUseShellPhone(int shellPhoneID) {
             int slot = Player.FindItem([ItemID.Shellphone, ItemID.ShellphoneSpawn, ItemID.ShellphoneOcean, ItemID.ShellphoneHell]);
 
-            if (slot != -1) UseShellPhone(slot, shellPhoneID);
+            if (slot != -1) {
+                Player.inventory[slot].type = shellPhoneID;
+                InventoryHelperPlayer.UseItem(slot);
+            }
         }
 
         private int FindWishingGlass() {
