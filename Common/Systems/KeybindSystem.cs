@@ -23,10 +23,12 @@ namespace AdvancedControls.Common.Systems {
         public static ModKeybind CycleInventoryLeftKeybind { get; private set; }
         public static ModKeybind CycleInventoryRightKeybind { get; private set; }
 
-        // --- Inventory Reference ---
+        // --- Dynamic Hotbar ---
         public static List<ModKeybind> DynamicHotbarKeyBinds { get; private set; } = [];
-        // --- Equipment Change Reference ---
+
+        // --- Equipment Change ---
         public static List<ModKeybind> EquipmentChangeReferenceKeyBinds { get; private set; } = [];
+
         // For Equipment Change Indicator
         private static Item item1 = null;
         private static Item item2 = null;
