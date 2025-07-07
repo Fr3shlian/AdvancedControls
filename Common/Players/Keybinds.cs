@@ -269,8 +269,8 @@ namespace AdvancedControls.Common.Players {
 
     // --- Inventory Reference ---
     public class DynamicHotbarKeyBindPlayer : ModPlayer {
-        private int[] dynamicHotbar = [.. Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count)];
-        private readonly int[] holdTimer = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
+        private readonly int[] dynamicHotbar = [.. Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count)];
+        private readonly int[] holdTimer = [.. Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count)];
         private int lastSelectedItem = -1;
 
         public override void SaveData(TagCompound tag) {
@@ -404,7 +404,7 @@ namespace AdvancedControls.Common.Players {
             }
         }
 
-        public InventoryReference[] EquipmentReference { get; private set; } = Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count).ToArray();
+        public InventoryReference[] EquipmentReference { get; private set; } = [.. Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count)];
         private readonly InventoryReference[] equipmentTarget = Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count).ToArray();
         private readonly int[] holdTimer = Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count).ToArray();
 
