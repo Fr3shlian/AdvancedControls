@@ -27,11 +27,6 @@ namespace AdvancedControls.Common.Players {
             if (KeybindSystem.DepositAllKeybind != null) keybinds.Add(new DepositAllKeyBind());
             if (KeybindSystem.QuickStackKeybind != null) keybinds.Add(new QuickStackKeyBind());
 
-            // --- Dash ---
-            if (KeybindSystem.DashKeybind != null) keybinds.Add(new QuickStackKeyBind());
-            if (KeybindSystem.DashLeftKeybind != null) keybinds.Add(new QuickStackKeyBind());
-            if (KeybindSystem.DashRightKeybind != null) keybinds.Add(new QuickStackKeyBind());
-
             for (int i = 0; i < keybinds.Count; i++) {
                 if (keybinds[i] is IProcessTriggers triggers) processTriggerFunctions.Add(triggers.ProcessTriggers);
             }
@@ -155,18 +150,6 @@ namespace AdvancedControls.Common.Players {
                 else if (conf.dashBuffer)
                     dashBuffer = dir;
             }
-
-            if (KeybindSystem.DashLeftKeybind?.JustPressed ?? false)
-                if (Player.dashDelay == 0)
-                    Dash(-1);
-                else if (conf.dashBuffer)
-                    dashBuffer = -1;
-
-            if (KeybindSystem.DashRightKeybind?.JustPressed ?? false)
-                if (Player.dashDelay == 0)
-                    Dash(1);
-                else if (conf.dashBuffer)
-                    dashBuffer = 1;
         }
 
         private int GetDashDirection() {

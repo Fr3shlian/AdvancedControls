@@ -61,14 +61,6 @@ namespace AdvancedControls.Common.Configs {
         public bool enableDashKeybind;
 
         [ReloadRequired]
-        [DefaultValue(false)]
-        public bool enableDashLeftKeybind;
-
-        [ReloadRequired]
-        [DefaultValue(false)]
-        public bool enableDashRightKeybind;
-
-        [ReloadRequired]
         [DefaultValue(true)]
         public bool enableCycleInventoryLeftKeybind;
 
