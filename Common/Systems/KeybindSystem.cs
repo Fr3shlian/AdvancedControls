@@ -235,9 +235,9 @@ namespace AdvancedControls.Common.Systems {
                 float spacing = 40f;
                 float abovePlayerY = Main.screenHeight / 2 - Main.CurrentPlayer.height + 5;
 
-                if (tex1 != null) Main.spriteBatch.Draw(tex1, new Vector2(playerCenterX - spacing - tex1.Width / 2, abovePlayerY - tex1.Height / 2), Color.White * alpha);
-                if (tex2 != null) Main.spriteBatch.Draw(tex2, new Vector2(playerCenterX + spacing - tex2.Width / 2, abovePlayerY - tex2.Height / 2), Color.White * alpha);
-                if (tex1 != null || tex2 != null) Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, "->", new Vector2(playerCenterX - 17, Main.screenHeight / 2 - Main.CurrentPlayer.height * 1.2f), Color.White * alpha, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(tex1, new Vector2(playerCenterX - spacing - tex1.Width / 2, abovePlayerY - tex1.Height / 2), Color.White * alpha);
+                Main.spriteBatch.Draw(tex2, new Vector2(playerCenterX + spacing - tex2.Width / 2, abovePlayerY - tex2.Height / 2), Color.White * alpha);
+                Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, "->", new Vector2(playerCenterX - 17, Main.screenHeight / 2 - Main.CurrentPlayer.height * 1.2f), Color.White * alpha, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
             }
 
             return true;
