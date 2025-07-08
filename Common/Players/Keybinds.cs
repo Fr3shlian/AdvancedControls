@@ -104,7 +104,7 @@ namespace AdvancedControls.Common.Players {
                         priorSelectedItem = Player.selectedItem;
                         Player.controlUseItem = true;
                     }
-                    
+
                     SoundEngine.PlaySound(SoundID.MenuTick);
                     Player.selectedItem = itemToSelect;
                     itemToSelect = -1;
@@ -410,9 +410,9 @@ namespace AdvancedControls.Common.Players {
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.CycleInventoryLeftKeybind.JustPressed) {
                 if (modPlayer.Player.selectedItem == 0) {
-                    modPlayer.Player.selectedItem = 49;
+                    modPlayer.SetItemToSelect(49, false);
                 } else {
-                    modPlayer.Player.selectedItem--;
+                    modPlayer.SetItemToSelect(modPlayer.Player.selectedItem - 1, false);
                 }
             }
         }
@@ -422,9 +422,9 @@ namespace AdvancedControls.Common.Players {
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.CycleInventoryRightKeybind.JustPressed) {
                 if (modPlayer.Player.selectedItem > 48) {
-                    modPlayer.Player.selectedItem = 0;
+                    modPlayer.SetItemToSelect(0, false);
                 } else {
-                    modPlayer.Player.selectedItem++;
+                    modPlayer.SetItemToSelect(modPlayer.Player.selectedItem + 1, false);
                 }
             }
         }
