@@ -100,14 +100,14 @@ namespace AdvancedControls.Common.Players {
                 Player.controlUseItem = false;
 
                 if (Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
-                    SoundEngine.PlaySound(SoundID.MenuTick);
-                    Player.selectedItem = itemToSelect;
-                    itemToSelect = -1;
-
                     if (useOnceAndSwitchBack) {
                         priorSelectedItem = Player.selectedItem;
                         Player.controlUseItem = true;
                     }
+                    
+                    SoundEngine.PlaySound(SoundID.MenuTick);
+                    Player.selectedItem = itemToSelect;
+                    itemToSelect = -1;
                     
                     Player.ItemCheck();
                 }
