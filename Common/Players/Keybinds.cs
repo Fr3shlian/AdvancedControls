@@ -117,7 +117,7 @@ namespace AdvancedControls.Common.Players {
         }
 
         public bool FindAndUseItem(int id) {
-            int slot = Main.LocalPlayer.FindItem(id);
+            int slot = Player.FindItem(id);
 
             if (slot == -1) return false;
 
@@ -126,7 +126,7 @@ namespace AdvancedControls.Common.Players {
         }
 
         public bool FindAndUseItem(List<int> ids) {
-            int slot = Main.LocalPlayer.FindItem(ids);
+            int slot = Player.FindItem(ids);
 
             if (slot == -1) return false;
 
@@ -168,14 +168,23 @@ namespace AdvancedControls.Common.Players {
             }
         }
 
-        public int FindWishingGlass() {
-            if (KeybindSystem.Thorium == null)
-                return -1;
-            else return Player.FindItem(KeybindSystem.Thorium.Find<ModItem>("WishingGlass").Type);
+        // --- Thorium ---
+        public int FindThoriumItem(string name) {
+            if (KeybindSystem.Thorium == null) return -1;
+            else return Player.FindItem(KeybindSystem.Thorium.Find<ModItem>(name).Type);
+        }
+
+        public bool FindAndUseThoriumItem(string name) {
+            int slot = FindThoriumItem(name);
+
+            if (slot == -1) return false;
+
+            UseItem(slot);
+            return true;
         }
 
         public bool FindAndUseWishingGlass(string destination) {
-            int slot = FindWishingGlass();
+            int slot = FindThoriumItem("WishingGlass");
 
             if (slot == -1) return false;
 
@@ -811,18 +820,11 @@ namespace AdvancedControls.Common.Players {
     }
 
     // --- Thorium ---
-    public class RecallDeathLocationKeyBind : IProcessTriggers {
-        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
-            if (KeybindSystem.RecallDeathLocationKeyBind.JustPressed) {
-                modPlayer.FindAndUseWishingGlass("DeathLocation");
-            }
-        }
-    }
-
     public class RecallDungeonKeyBind : IProcessTriggers {
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.RecallDungeonKeyBind.JustPressed) {
-                modPlayer.FindAndUseWishingGlass("Dungeon");
+                if (modPlayer.FindAndUseWishingGlass("Dungeon")) return;
+                else modPlayer.FindAndUseThoriumItem("TheseusThread");
             }
         }
     }
@@ -835,10 +837,20 @@ namespace AdvancedControls.Common.Players {
         }
     }
 
+    public class RecallDeathLocationKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.RecallDeathLocationKeyBind.JustPressed) {
+                if (modPlayer.FindAndUseWishingGlass("DeathLocation")) return;
+                else modPlayer.FindAndUseThoriumItem("DeathGazersGlass");
+            }
+        }
+    }
+
     public class TeleportRandomKeybind : IProcessTriggers {
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.TeleportRandomKeybind.JustPressed) {
-                modPlayer.FindAndUseWishingGlass("Random");
+                if (modPlayer.FindAndUseWishingGlass("Random")) return;
+                else modPlayer.FindAndUseThoriumItem("SorcerersMirror");
             }
         }
     }
