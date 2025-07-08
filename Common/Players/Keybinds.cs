@@ -702,7 +702,7 @@ namespace AdvancedControls.Common.Players {
                 KeybindSystem.SetItemRefsForIndicator(source, target);
 
                 player.UpdateEquips(0);
-                SoundEngine.PlaySound(SoundID.MenuTick);
+                SoundEngine.PlaySound(SoundID.Grab);
 
                 if (player.mount.Active) {
                     if (equipmentTarget[slot].Context == ItemSlot.Context.EquipMinecart && MountID.Sets.Cart[player.mount.Type]) player.mount.SetMount(player.miscEquips[Player.miscSlotCart].mountType, player);
