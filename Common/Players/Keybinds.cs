@@ -687,6 +687,8 @@ namespace AdvancedControls.Common.Players {
             if (CanTransfer(slot)) {
                 ref Item source = ref EquipmentReference[slot].GetItem(), target = ref equipmentTarget[slot].GetItem();
 
+                if (source.IsAir && target.IsAir) return;
+
                 if (source.favorited && equipmentTarget[slot].Inventory == player.armor || equipmentTarget[slot].Inventory == player.miscEquips) {
                     source.favorited = false;
                     target.favorited = true;
