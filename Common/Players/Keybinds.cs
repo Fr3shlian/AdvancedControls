@@ -24,8 +24,8 @@ namespace AdvancedControls.Common.Players {
 
         // --- Helpers for inventory actions ---
         private int priorSelectedItem = -1;
-        public int ItemToSelect { get; private set; } = -1;
-        private bool useItemToSelect = false;
+        private int itemToSelect = -1;
+        private bool useOnceAndSwitchBack = false;
 
         // --- Helpers for Dynamic Hotbar and Equipment Change ---
         public int HoveredSlot { get; private set; } = -1;
@@ -69,6 +69,7 @@ namespace AdvancedControls.Common.Players {
             if (KeybindSystem.RecallReturnKeyBind != null) keybinds.Add(new RecallReturnKeyBind());
             if (KeybindSystem.PiggyBankKeybind != null) keybinds.Add(new PiggyBankKeyBind());
             if (KeybindSystem.VoidBagKeybind != null) keybinds.Add(new VoidBagKeyBind());
+            if (KeybindSystem.BugNetKeyBind != null) keybinds.Add(new BugNetKeybind());
 
             // --- Thorium ---
             if (KeybindSystem.RecallDungeonKeyBind != null) keybinds.Add(new RecallDungeonKeyBind());
@@ -95,15 +96,15 @@ namespace AdvancedControls.Common.Players {
                 priorSelectedItem = -1;
             }
 
-            if (ItemToSelect != -1) {
+            if (itemToSelect != -1) {
                 Player.controlUseItem = false;
 
                 if (Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
                     SoundEngine.PlaySound(SoundID.MenuTick);
-                    Player.selectedItem = ItemToSelect;
-                    ItemToSelect = -1;
+                    Player.selectedItem = itemToSelect;
+                    itemToSelect = -1;
 
-                    if (useItemToSelect) {
+                    if (useOnceAndSwitchBack) {
                         priorSelectedItem = Player.selectedItem;
                         Player.controlUseItem = true;
                     }
@@ -126,27 +127,27 @@ namespace AdvancedControls.Common.Players {
         }
 
         // --- Helpers for inventory actions ---
-        public void SetItemToSelect(int slot, bool useItem = true) {
-            ItemToSelect = slot;
-            useItemToSelect = useItem;
+        public void SetItemToSelect(int slot, bool useOnceAndSwitchBack = true) {
+            itemToSelect = slot;
+            this.useOnceAndSwitchBack = useOnceAndSwitchBack;
             Player.controlUseItem = false;
         }
 
-        public bool FindAndUseItem(int id) {
+        public bool FindAndUseItem(int id, bool useOnceAndSwitchBack = true) {
             int slot = Player.FindItem(id);
 
             if (slot == -1) return false;
 
-            SetItemToSelect(slot);
+            SetItemToSelect(slot, useOnceAndSwitchBack);
             return true;
         }
 
-        public bool FindAndUseItem(List<int> ids) {
+        public bool FindAndUseItem(List<int> ids, bool useOnceAndSwitchBack = true) {
             int slot = Player.FindItem(ids);
 
             if (slot == -1) return false;
 
-            SetItemToSelect(slot);
+            SetItemToSelect(slot, useOnceAndSwitchBack);
             return true;
         }
 
@@ -837,6 +838,42 @@ namespace AdvancedControls.Common.Players {
             if (KeybindSystem.VoidBagKeybind.JustPressed) {
                 modPlayer.FindAndUseItem([ItemID.VoidLens, ItemID.ClosedVoidBag]);
             }
+        }
+    }
+
+    public class BugNetKeybind : IProcessTriggers {
+        int previousSlot = -1;
+        int netUsed = 0;
+
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.BugNetKeyBind.JustPressed && !IsBugNet(modPlayer.Player.HeldItem.type)) {
+                if (!modPlayer.FindAndUseItem(ItemID.GoldenBugNet, false))
+                    if (!modPlayer.FindAndUseItem(ItemID.FireproofBugNet, false))
+                        if (!modPlayer.FindAndUseItem(ItemID.BugNet, false))
+                            return;
+
+                previousSlot = modPlayer.Player.selectedItem;
+            }
+
+            if (previousSlot == -1) return;
+
+            if (!KeybindSystem.BugNetKeyBind.Current && netUsed > 1) {
+                modPlayer.SetItemToSelect(previousSlot, false);
+                previousSlot = -1;
+                netUsed = 0;
+            }
+
+            if (IsBugNet(modPlayer.Player.HeldItem.type)) {
+                netUsed++;
+                modPlayer.Player.controlUseItem = true;
+            }
+        }
+
+        private static bool IsBugNet(int id) {
+            if (id == ItemID.GoldenBugNet) return true;
+            else if (id == ItemID.FireproofBugNet) return true;
+            else if (id == ItemID.BugNet) return true;
+            else return false;
         }
     }
 

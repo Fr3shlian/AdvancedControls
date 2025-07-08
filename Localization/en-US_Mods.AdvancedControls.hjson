@@ -38,6 +38,7 @@ Keybinds: {
 	RecallReturn.DisplayName: Use Potion of Return
 	PiggyBank.DisplayName: Piggy Bank
 	VoidBag.DisplayName: Void Bag
+	BugNet.DisplayName: Use Bug Net
 }
 
 Configs: {
@@ -208,6 +209,11 @@ Configs: {
 
 		bufferCurrentDirection: {
 			Label: Buffer Current Direction
+			Tooltip: ""
+		}
+
+		enableBugNetKeybind: {
+			Label: Use Bug Net
 			Tooltip: ""
 		}
 	}

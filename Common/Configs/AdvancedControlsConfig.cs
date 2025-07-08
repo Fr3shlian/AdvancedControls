@@ -118,6 +118,10 @@ namespace AdvancedControls.Common.Configs {
         [DefaultValue(true)]
         public bool enableVoidBagKeybind;
 
+        [ReloadRequired]
+        [DefaultValue(true)]
+        public bool enableBugNetKeybind;
+
         //--- Thorium ---
         [ReloadRequired]
         [DefaultValue(true)]

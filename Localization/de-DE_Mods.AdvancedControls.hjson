@@ -38,6 +38,7 @@ Keybinds: {
 	RecallReturn.DisplayName: Trank der Rückkehr verwenden
 	PiggyBank.DisplayName: Sparschwein
 	VoidBag.DisplayName: Hohlraumbeutel
+	BugNet.DisplayName: Fliegennetz verwenden
 }
 
 Configs: {
@@ -208,6 +209,11 @@ Configs: {
 
 		bufferCurrentDirection: {
 			Label: Richtung für Buffer beim Losstürmen bestimmen
+			Tooltip: ""
+		}
+
+		enableBugNetKeybind: {
+			Label: Fliegennetz verwenden
 			Tooltip: ""
 		}
 	}
