@@ -694,6 +694,9 @@ namespace AdvancedControls.Common.Players {
 
                 (source, target) = (target, source);
 
+                if (source != null && source.ModItem == null) Main.instance.LoadItem(source.type);
+                if (target != null && source.ModItem == null) Main.instance.LoadItem(target.type);
+
                 KeybindSystem.SetItemRefsForIndicator(source, target);
 
                 player.UpdateEquips(0);
