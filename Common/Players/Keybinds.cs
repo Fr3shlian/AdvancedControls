@@ -24,6 +24,7 @@ namespace AdvancedControls.Common.Players {
 
         // --- Helpers for inventory actions ---
         private int priorSelectedItem = -1;
+        private int itemToSelect = -1;
 
         // --- Helpers for Dynamic Hotbar and Equipment Change ---
         public int HoveredSlot { get; private set; } = -1;
@@ -85,6 +86,24 @@ namespace AdvancedControls.Common.Players {
             for (int i = 0; i < processTriggerFunctions.Count; i++) {
                 processTriggerFunctions[i](this, triggersSet);
             }
+
+            // --- Helpers for Dynamic Hotbar and Equipment Change ---
+            if (priorSelectedItem != -1 && Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
+                Player.selectedItem = priorSelectedItem;
+                priorSelectedItem = -1;
+            }
+
+            if (itemToSelect != -1) {
+                Player.controlUseItem = false;
+
+                if (Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
+                    priorSelectedItem = Player.selectedItem;
+                    Player.selectedItem = itemToSelect;
+                    itemToSelect = -1;
+                    Player.controlUseItem = true;
+                    Player.ItemCheck();
+                }
+            }
         }
 
         public override void SaveData(TagCompound tag) {
@@ -99,21 +118,10 @@ namespace AdvancedControls.Common.Players {
             }
         }
 
-        // --- Helpers for inventory actions ---
-        public override void PreUpdate() {
-            if (priorSelectedItem != -1 && Player.itemTime <= 0) {
-                Player.selectedItem = priorSelectedItem;
-                priorSelectedItem = -1;
-            }
-        }
-
+        // --- Helpers for Dynamic Hotbar and Equipment Change ---
         public void UseItem(int slot) {
-            if (Player.itemTime == 0) {
-                priorSelectedItem = Player.selectedItem;
-                Player.selectedItem = slot;
-                Player.controlUseItem = true;
-                Player.ItemCheck();
-            }
+            itemToSelect = slot;
+            Player.controlUseItem = false;
         }
 
         public bool FindAndUseItem(int id) {
