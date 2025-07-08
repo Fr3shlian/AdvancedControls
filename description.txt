@@ -11,6 +11,7 @@ List of keybinds:
     [*] Using Rod of Discord/Harmony
     [*] Using teleport items like Recall Potions and the Magic Conch
     [*] Using the Money Trough and Void Bag
+    [*] Using bug nets
 [/list]
 
 Instruction for Dynamic Hotbar:

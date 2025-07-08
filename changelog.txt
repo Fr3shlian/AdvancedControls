@@ -1,6 +1,11 @@
-﻿[h1]v1.6.4[/h1]
+﻿[h1]v1.7.0 - [i]Switch[/i] to Sophistication[/h1]
 [list]
-    [*] Dash keybinds now work while confused
-    [*] Added auto match for Equipment Change Keybinds - Press the key again while hovering the same item slot to bind it based on its item (works for miscellaneous equipment and armor)
-    [*] Minecarts will now also be changed while riding if you use the Equipment Change keybind
+    [*] Keybinds that switch to an item to use it once will now interrupt current item usage instead of doing nothing
+    [*] Dynamic Hotbar will now interrupt and wait for current item usage to end before switching slots
+    [*] Mod logic that switches to items will now play a sound when doing so
+    [*] Added the Bugnet Keybind
+    [*] Equipment Change keybind will no longer play a sound when nothing is swapped
+    [*] Equipment Change keybind now uses the sound that is normally used for changing equipment... duh
+    [*] Removed specific dash direction keybinds
+    [*] Thorium teleport keybinds now work with the items used to craft the Wishing Glass as well
 [/list]
