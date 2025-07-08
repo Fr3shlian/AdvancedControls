@@ -223,17 +223,13 @@ namespace AdvancedControls.Common.Systems {
 
         private bool DrawEquipmentChangeIndicator() {
             if (alpha != 0f) {
-                Texture2D tex1 = null, tex2 = null;
+                Texture2D tex1, tex2;
 
-                if (item1 != null) {
-                    if (item1.ModItem != null) tex1 = ModContent.Request<Texture2D>(item1.ModItem.Texture).Value;
-                    else tex1 = TextureAssets.Item[item1.type].Value;
-                }
+                if (item1.ModItem != null) tex1 = ModContent.Request<Texture2D>(item1.ModItem.Texture).Value;
+                else tex1 = TextureAssets.Item[item1.type].Value;
 
-                if (item2 != null) {
-                    if (item2.ModItem != null) tex2 = ModContent.Request<Texture2D>(item2.ModItem.Texture).Value;
-                    else tex2 = TextureAssets.Item[item2.type].Value;
-                }
+                if (item2.ModItem != null) tex2 = ModContent.Request<Texture2D>(item2.ModItem.Texture).Value;
+                else tex2 = TextureAssets.Item[item2.type].Value;
 
                 float playerCenterX = Main.screenWidth / 2;
                 float spacing = 40f;
