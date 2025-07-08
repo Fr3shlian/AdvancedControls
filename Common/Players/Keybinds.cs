@@ -24,7 +24,7 @@ namespace AdvancedControls.Common.Players {
 
         // --- Helpers for inventory actions ---
         private int priorSelectedItem = -1;
-        private int itemToSelect = -1;
+        public int ItemToSelect { get; private set; } = -1;
         private bool useItemToSelect = false;
 
         // --- Helpers for Dynamic Hotbar and Equipment Change ---
@@ -95,15 +95,19 @@ namespace AdvancedControls.Common.Players {
                 priorSelectedItem = -1;
             }
 
-            if (itemToSelect != -1) {
+            if (ItemToSelect != -1) {
                 Player.controlUseItem = false;
 
                 if (Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
-                    priorSelectedItem = Player.selectedItem;
                     SoundEngine.PlaySound(SoundID.MenuTick);
-                    Player.selectedItem = itemToSelect;
-                    itemToSelect = -1;
-                    Player.controlUseItem = true;
+                    Player.selectedItem = ItemToSelect;
+                    ItemToSelect = -1;
+
+                    if (useItemToSelect) {
+                        priorSelectedItem = Player.selectedItem;
+                        Player.controlUseItem = true;
+                    }
+                    
                     Player.ItemCheck();
                 }
             }
@@ -123,7 +127,7 @@ namespace AdvancedControls.Common.Players {
 
         // --- Helpers for inventory actions ---
         public void SetItemToSelect(int slot, bool useItem = true) {
-            itemToSelect = slot;
+            ItemToSelect = slot;
             useItemToSelect = useItem;
             Player.controlUseItem = false;
         }
@@ -431,6 +435,7 @@ namespace AdvancedControls.Common.Players {
         private readonly int[] holdTimer = [.. Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count)];
         private int lastSelectedItem = -1;
         private Player player;
+        private KeyBindPlayer modPlayer;
 
         public void SaveData(KeyBindPlayer modPlayer, TagCompound tag) {
             tag.Set("dynamicHotbar", dynamicHotbar, true);
@@ -452,6 +457,7 @@ namespace AdvancedControls.Common.Players {
 
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             player = modPlayer.Player;
+            this.modPlayer = modPlayer;
 
             for (int i = 0; i < KeybindSystem.DynamicHotbarKeyBinds.Count; i++) {
                 if (KeybindSystem.DynamicHotbarKeyBinds[i].JustPressed) {
@@ -491,16 +497,14 @@ namespace AdvancedControls.Common.Players {
 
         private void DynamicHotbarAction(int slot) {
             if (player.selectedItem == dynamicHotbar[slot] && lastSelectedItem != -1) {
-                player.selectedItem = lastSelectedItem;
+                modPlayer.SetItemToSelect(lastSelectedItem, false);
                 lastSelectedItem = -1;
             } else {
                 if ((player.selectedItem < 10 && !IsItemReferenced(player.selectedItem)) || lastSelectedItem == -1)
                     lastSelectedItem = player.selectedItem;
 
-                player.selectedItem = dynamicHotbar[slot];
+                modPlayer.SetItemToSelect(dynamicHotbar[slot], false);
             }
-
-            SoundEngine.PlaySound(SoundID.MenuTick);
         }
 
         public int GetReference(int slot) {
