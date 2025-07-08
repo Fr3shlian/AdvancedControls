@@ -25,6 +25,7 @@ namespace AdvancedControls.Common.Players {
         // --- Helpers for inventory actions ---
         private int priorSelectedItem = -1;
         private int itemToSelect = -1;
+        private bool useItemToSelect = false;
 
         // --- Helpers for Dynamic Hotbar and Equipment Change ---
         public int HoveredSlot { get; private set; } = -1;
@@ -87,9 +88,10 @@ namespace AdvancedControls.Common.Players {
                 processTriggerFunctions[i](this, triggersSet);
             }
 
-            // --- Helpers for Dynamic Hotbar and Equipment Change ---
+            // --- Helpers for inventory actions ---
             if (priorSelectedItem != -1 && Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
                 Player.selectedItem = priorSelectedItem;
+                SoundEngine.PlaySound(SoundID.MenuTick);
                 priorSelectedItem = -1;
             }
 
@@ -98,6 +100,7 @@ namespace AdvancedControls.Common.Players {
 
                 if (Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
                     priorSelectedItem = Player.selectedItem;
+                    SoundEngine.PlaySound(SoundID.MenuTick);
                     Player.selectedItem = itemToSelect;
                     itemToSelect = -1;
                     Player.controlUseItem = true;
@@ -118,9 +121,10 @@ namespace AdvancedControls.Common.Players {
             }
         }
 
-        // --- Helpers for Dynamic Hotbar and Equipment Change ---
-        public void UseItem(int slot) {
+        // --- Helpers for inventory actions ---
+        public void SetItemToSelect(int slot, bool useItem = true) {
             itemToSelect = slot;
+            useItemToSelect = useItem;
             Player.controlUseItem = false;
         }
 
@@ -129,7 +133,7 @@ namespace AdvancedControls.Common.Players {
 
             if (slot == -1) return false;
 
-            UseItem(slot);
+            SetItemToSelect(slot);
             return true;
         }
 
@@ -138,7 +142,7 @@ namespace AdvancedControls.Common.Players {
 
             if (slot == -1) return false;
 
-            UseItem(slot);
+            SetItemToSelect(slot);
             return true;
         }
 
@@ -172,7 +176,7 @@ namespace AdvancedControls.Common.Players {
 
             if (slot != -1) {
                 Player.inventory[slot].type = shellPhoneID;
-                UseItem(slot);
+                SetItemToSelect(slot);
             }
         }
 
@@ -187,7 +191,7 @@ namespace AdvancedControls.Common.Players {
 
             if (slot == -1) return false;
 
-            UseItem(slot);
+            SetItemToSelect(slot);
             return true;
         }
 
@@ -216,7 +220,7 @@ namespace AdvancedControls.Common.Players {
             FieldInfo wishingGlassChoice = WishingGlassChoiceType.GetField(destination, BindingFlags.Static | BindingFlags.Public);
             tpDestinationField.SetValue(thoriumPlayerInstance, wishingGlassChoice.GetValue(null));
 
-            UseItem(slot);
+            SetItemToSelect(slot);
         }
     }
 
