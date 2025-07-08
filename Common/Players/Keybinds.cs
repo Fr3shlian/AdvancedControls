@@ -20,10 +20,12 @@ namespace AdvancedControls.Common.Players {
         private readonly List<Action<KeyBindPlayer, TagCompound>> saveDataFunctions = [];
         private readonly List<Action<KeyBindPlayer, TagCompound>> loadDataFunctions = [];
 
-        // --- Helper variables ---
         public AdvancedControlsConfig conf;
 
-        // --- Helper for Dynamic Hotbar and Equipment Change ---
+        // --- Helpers for inventory actions ---
+        private int priorSelectedItem = -1;
+
+        // --- Helpers for Dynamic Hotbar and Equipment Change ---
         public int HoveredSlot { get; private set; } = -1;
         public Item[] HoveredInventory { get; private set; } = null;
         public int HoveredSlotContext { get; private set; } = -1;
@@ -56,6 +58,9 @@ namespace AdvancedControls.Common.Players {
             if (KeybindSystem.RulerKeyBind != null) keybinds.Add(new RulerKeyBind());
             if (KeybindSystem.MechanicalRulerKeyBind != null) keybinds.Add(new MechanicalRulerKeyBind());
 
+            // --- QoL ---
+            if (KeybindSystem.TeleportKeyBind != null) keybinds.Add(new TeleportKeyBind());
+
             for (int i = 0; i < keybinds.Count; i++) {
                 if (keybinds[i] is IProcessTriggers keybind1) processTriggerFunctions.Add(keybind1.ProcessTriggers);
                 if (keybinds[i] is ISaveData keybind2) saveDataFunctions.Add(keybind2.SaveData);
@@ -79,6 +84,41 @@ namespace AdvancedControls.Common.Players {
             for (int i = 0; i < loadDataFunctions.Count; i++) {
                 loadDataFunctions[i](this, tag);
             }
+        }
+
+        // --- Helpers for inventory actions ---
+        public override void PreUpdate() {
+            if (priorSelectedItem != -1 && Player.itemTime <= 0) {
+                Player.selectedItem = priorSelectedItem;
+                priorSelectedItem = -1;
+            }
+        }
+
+        public void UseItem(int slot) {
+            if (Player.itemTime == 0) {
+                priorSelectedItem = Player.selectedItem;
+                Player.selectedItem = slot;
+                Player.controlUseItem = true;
+                Player.ItemCheck();
+            }
+        }
+
+        public bool FindAndUseItem(int id) {
+            int slot = Main.LocalPlayer.FindItem(id);
+
+            if (slot == -1) return false;
+
+            UseItem(slot);
+            return true;
+        }
+
+        public bool FindAndUseItem(List<int> ids) {
+            int slot = Main.LocalPlayer.FindItem(ids);
+
+            if (slot == -1) return false;
+
+            UseItem(slot);
+            return true;
         }
 
         // --- Helpers for Dynamic Hotbar and Equipment Change ---
@@ -666,12 +706,12 @@ namespace AdvancedControls.Common.Players {
         }
     }
 
-    public class TeleportKeyBindPlayer : ModPlayer {
-        public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.TeleportKeyBind?.JustPressed ?? false) {
-                if (InventoryHelperPlayer.FindAndUseItem(ItemID.RodOfHarmony)) return;
+    public class TeleportKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.TeleportKeyBind.JustPressed) {
+                if (modPlayer.FindAndUseItem(ItemID.RodOfHarmony)) return;
 
-                if (Util.GetConfig().preventHealthLoss && !Player.creativeGodMode && Player.HasBuff(BuffID.ChaosState)) return;
+                if (Util.GetConfig().preventHealthLoss && !modPlayer.Player.creativeGodMode && modPlayer.Player.HasBuff(BuffID.ChaosState)) return;
                 InventoryHelperPlayer.FindAndUseItem(ItemID.RodofDiscord);
             }
         }
