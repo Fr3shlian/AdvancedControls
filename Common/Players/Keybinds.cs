@@ -60,6 +60,19 @@ namespace AdvancedControls.Common.Players {
 
             // --- QoL ---
             if (KeybindSystem.TeleportKeyBind != null) keybinds.Add(new TeleportKeyBind());
+            if (KeybindSystem.RecallKeyBind != null) keybinds.Add(new RecallKeyBind());
+            if (KeybindSystem.RecallSpawnKeyBind != null) keybinds.Add(new RecallSpawnKeyBind());
+            if (KeybindSystem.RecallOceanKeyBind != null) keybinds.Add(new RecallOceanKeyBind());
+            if (KeybindSystem.RecallUnderworldKeyBind != null) keybinds.Add(new RecallUnderworldKeyBind());
+            if (KeybindSystem.RecallReturnKeyBind != null) keybinds.Add(new RecallReturnKeyBind());
+            if (KeybindSystem.PiggyBankKeybind != null) keybinds.Add(new PiggyBankKeyBind());
+            if (KeybindSystem.VoidBagKeybind != null) keybinds.Add(new VoidBagKeyBind());
+
+            // --- Thorium ---
+            if (KeybindSystem.RecallDungeonKeyBind != null) keybinds.Add(new RecallDungeonKeyBind());
+            if (KeybindSystem.RecallTempleKeyBind != null) keybinds.Add(new RecallTempleKeyBind());
+            if (KeybindSystem.RecallDeathLocationKeyBind != null) keybinds.Add(new RecallDeathLocationKeyBind());
+            if (KeybindSystem.TeleportRandomKeybind != null) keybinds.Add(new TeleportRandomKeybind());
 
             for (int i = 0; i < keybinds.Count; i++) {
                 if (keybinds[i] is IProcessTriggers keybind1) processTriggerFunctions.Add(keybind1.ProcessTriggers);
@@ -144,6 +157,50 @@ namespace AdvancedControls.Common.Players {
                 }
             }
         }
+
+        // --- Helpers for recall keybinds ---
+        public void FindAndUseShellPhone(int shellPhoneID) {
+            int slot = Player.FindItem([ItemID.Shellphone, ItemID.ShellphoneSpawn, ItemID.ShellphoneOcean, ItemID.ShellphoneHell]);
+
+            if (slot != -1) {
+                Player.inventory[slot].type = shellPhoneID;
+                UseItem(slot);
+            }
+        }
+
+        public int FindWishingGlass() {
+            if (KeybindSystem.Thorium == null)
+                return -1;
+            else return Player.FindItem(KeybindSystem.Thorium.Find<ModItem>("WishingGlass").Type);
+        }
+
+        public bool FindAndUseWishingGlass(string destination) {
+            int slot = FindWishingGlass();
+
+            if (slot == -1) return false;
+
+            UseWishingGlass(slot, destination);
+            return true;
+        }
+
+        public object GetThoriumPlayer() {
+            Type ThoriumPlayerHelperType = KeybindSystem.Thorium.Code.GetType("ThoriumMod.Utilities.PlayerHelper");
+            MethodInfo getThoriumPlayerMethod = ThoriumPlayerHelperType.GetMethod("GetThoriumPlayer", BindingFlags.Static | BindingFlags.Public);
+            return getThoriumPlayerMethod.Invoke(null, [Player]);
+        }
+
+        public void UseWishingGlass(int slot, string destination) {
+            object thoriumPlayerInstance = GetThoriumPlayer();
+
+            Type ThoriumPlayerType = KeybindSystem.Thorium.Code.GetType("ThoriumMod.ThoriumPlayer");
+            FieldInfo tpDestinationField = ThoriumPlayerType.GetField("itemWishingGlassChoice", BindingFlags.Instance | BindingFlags.Public);
+
+            Type WishingGlassChoiceType = KeybindSystem.Thorium.Code.GetType("ThoriumMod.UI.ResourceBars.WishingGlassChoice");
+            FieldInfo wishingGlassChoice = WishingGlassChoiceType.GetField(destination, BindingFlags.Static | BindingFlags.Public);
+            tpDestinationField.SetValue(thoriumPlayerInstance, wishingGlassChoice.GetValue(null));
+
+            UseItem(slot);
+        }
     }
 
     public interface IKeybind { }
@@ -200,9 +257,11 @@ namespace AdvancedControls.Common.Players {
         private int needRemount = 0;
         private bool wasMounted = false;
         private Player player;
+        private KeyBindPlayer modPlayer;
 
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             player = modPlayer.Player;
+            this.modPlayer = modPlayer;
 
             if (modPlayer.conf.disableDoubleTap && secondInput == 0) {
                 player.dashTime = 0;
@@ -278,7 +337,7 @@ namespace AdvancedControls.Common.Players {
         }
 
         private void Dismount() {
-            if (Util.GetConfig().mountDashBehaviour == MountDashBehaviour.DashWithMount) {
+            if (modPlayer.conf.mountDashBehaviour == MountDashBehaviour.DashWithMount) {
                 player.mount._active = false;
             } else {
                 player.QuickMount();
@@ -286,7 +345,7 @@ namespace AdvancedControls.Common.Players {
         }
 
         private void Remount() {
-            AdvancedControlsConfig config = Util.GetConfig();
+            AdvancedControlsConfig config = modPlayer.conf;
 
             if (config.mountDashBehaviour == MountDashBehaviour.DashWithMount)
                 player.mount._active = true;
@@ -311,7 +370,7 @@ namespace AdvancedControls.Common.Players {
 
             if (wasMounted) Dismount();
 
-            if (Util.GetConfig().cancelHooks) player.RemoveAllGrapplingHooks();
+            if (modPlayer.conf.cancelHooks) player.RemoveAllGrapplingHooks();
 
             if (direction == -1) InputLeft();
             else InputRight();
@@ -486,7 +545,7 @@ namespace AdvancedControls.Common.Players {
         }
 
         public InventoryReference[] EquipmentReference { get; private set; } = [.. Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count)];
-        private readonly InventoryReference[] equipmentTarget = Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count).ToArray();
+        private readonly InventoryReference[] equipmentTarget = [.. Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count)];
         private readonly int[] holdTimer = [.. Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count)];
         private Player player;
 
@@ -649,7 +708,7 @@ namespace AdvancedControls.Common.Players {
             if (KeybindSystem.RulerKeyBind.JustPressed) {
                 modPlayer.Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] = modPlayer.Player.builderAccStatus[Player.BuilderAccToggleIDs.RulerLine] == 1 ? 0 : 1;
                 SoundEngine.PlaySound(SoundID.MenuTick);
-            } 
+            }
         }
     }
 
@@ -663,182 +722,124 @@ namespace AdvancedControls.Common.Players {
     }
 
     // --- QoL ---
-    public class InventoryHelperPlayer : ModPlayer {
-        private int priorSelectedItem = -1;
-
-        //Switch back to the prior item once the player finishes using it
-        public override void PreUpdate() {
-            if (priorSelectedItem != -1 && Player.itemTime <= 0) {
-                Player.selectedItem = priorSelectedItem;
-                priorSelectedItem = -1;
-            }
-        }
-
-        public void _UseItem(int slot) {
-            if (Player.itemTime == 0) {
-                priorSelectedItem = Player.selectedItem;
-                Player.selectedItem = slot;
-                Player.controlUseItem = true;
-                Player.ItemCheck();
-            }
-        }
-
-        public static void UseItem(int slot) {
-            Main.LocalPlayer.GetModPlayer<InventoryHelperPlayer>()._UseItem(slot);
-        }
-
-        public static bool FindAndUseItem(int id) {
-            int slot = Main.LocalPlayer.FindItem(id);
-
-            if (slot == -1) return false;
-
-            UseItem(slot);
-            return true;
-        }
-
-        public static bool FindAndUseItem(List<int> ids) {
-            int slot = Main.LocalPlayer.FindItem(ids);
-
-            if (slot == -1) return false;
-
-            UseItem(slot);
-            return true;
-        }
-    }
-
     public class TeleportKeyBind : IProcessTriggers {
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.TeleportKeyBind.JustPressed) {
                 if (modPlayer.FindAndUseItem(ItemID.RodOfHarmony)) return;
 
-                if (Util.GetConfig().preventHealthLoss && !modPlayer.Player.creativeGodMode && modPlayer.Player.HasBuff(BuffID.ChaosState)) return;
-                InventoryHelperPlayer.FindAndUseItem(ItemID.RodofDiscord);
+                if (modPlayer.conf.preventHealthLoss && !modPlayer.Player.creativeGodMode && modPlayer.Player.HasBuff(BuffID.ChaosState)) return;
+                modPlayer.FindAndUseItem(ItemID.RodofDiscord);
             }
         }
     }
 
-    public class RecallKeyBindPlayer : ModPlayer {
-        public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.RecallKeyBind?.JustPressed ?? false) {
-                if (FindAndUseWishingGlass("Home")) return;
+    public class RecallKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.RecallKeyBind.JustPressed) {
+                if (modPlayer.FindAndUseWishingGlass("Home")) return;
 
-                if (Util.GetConfig().prioritizeRecallPotions) {
-                    if (InventoryHelperPlayer.FindAndUseItem(ItemID.RecallPotion)) return;
-                    if (InventoryHelperPlayer.FindAndUseItem([ItemID.MagicMirror, ItemID.IceMirror, ItemID.CellPhone])) return;
+                if (modPlayer.conf.prioritizeRecallPotions) {
+                    if (modPlayer.FindAndUseItem(ItemID.RecallPotion)) return;
+                    if (modPlayer.FindAndUseItem([ItemID.MagicMirror, ItemID.IceMirror, ItemID.CellPhone])) return;
                 } else {
-                    if (InventoryHelperPlayer.FindAndUseItem([ItemID.MagicMirror, ItemID.IceMirror, ItemID.CellPhone, ItemID.RecallPotion])) return;
+                    if (modPlayer.FindAndUseItem([ItemID.MagicMirror, ItemID.IceMirror, ItemID.CellPhone, ItemID.RecallPotion])) return;
                 }
 
-                FindAndUseShellPhone(ItemID.Shellphone);
+                modPlayer.FindAndUseShellPhone(ItemID.Shellphone);
             }
-
-            if (KeybindSystem.RecallSpawnKeyBind?.JustPressed ?? false) {
-                if (FindAndUseWishingGlass("Spawn")) return;
-
-                FindAndUseShellPhone(ItemID.ShellphoneSpawn);
-            }
-
-            if (KeybindSystem.RecallOceanKeyBind?.JustPressed ?? false) {
-                if (FindAndUseWishingGlass("Beach")) return;
-                if (InventoryHelperPlayer.FindAndUseItem(ItemID.MagicConch)) return;
-                FindAndUseShellPhone(ItemID.ShellphoneOcean);
-            }
-
-            if (KeybindSystem.RecallUnderworldKeyBind?.JustPressed ?? false) {
-                if (FindAndUseWishingGlass("Underworld")) return;
-                if (InventoryHelperPlayer.FindAndUseItem(ItemID.DemonConch)) return;
-                FindAndUseShellPhone(ItemID.ShellphoneHell);
-            }
-
-            if (KeybindSystem.RecallReturnKeyBind?.JustPressed ?? false) {
-                InventoryHelperPlayer.FindAndUseItem(ItemID.PotionOfReturn);
-            }
-
-            // --- Thorium Mod ---
-            if (KeybindSystem.Thorium != null) {
-                if (KeybindSystem.RecallDeathLocationKeyBind?.JustPressed ?? false) {
-                    FindAndUseWishingGlass("DeathLocation");
-                }
-
-                if (KeybindSystem.RecallDungeonKeyBind?.JustPressed ?? false) {
-                    FindAndUseWishingGlass("Dungeon");
-                }
-
-                if (KeybindSystem.RecallTempleKeyBind?.JustPressed ?? false) {
-                    FindAndUseWishingGlass("Temple");
-                }
-
-                if (KeybindSystem.TeleportRandomKeybind?.JustPressed ?? false) {
-                    FindAndUseWishingGlass("Random");
-                }
-            }
-        }
-
-        private void FindAndUseShellPhone(int shellPhoneID) {
-            int slot = Player.FindItem([ItemID.Shellphone, ItemID.ShellphoneSpawn, ItemID.ShellphoneOcean, ItemID.ShellphoneHell]);
-
-            if (slot != -1) {
-                Player.inventory[slot].type = shellPhoneID;
-                InventoryHelperPlayer.UseItem(slot);
-            }
-        }
-
-        private int FindWishingGlass() {
-            if (KeybindSystem.Thorium == null)
-                return -1;
-            else return Player.FindItem(KeybindSystem.Thorium.Find<ModItem>("WishingGlass").Type);
-        }
-
-        private bool FindAndUseWishingGlass(string destination) {
-            int slot = FindWishingGlass();
-
-            if (slot == -1) return false;
-
-            UseWishingGlass(slot, destination);
-            return true;
-        }
-
-        private object GetThoriumPlayer() {
-            Type ThoriumPlayerHelperType = KeybindSystem.Thorium.Code.GetType("ThoriumMod.Utilities.PlayerHelper");
-            MethodInfo getThoriumPlayerMethod = ThoriumPlayerHelperType.GetMethod("GetThoriumPlayer", BindingFlags.Static | BindingFlags.Public);
-            return getThoriumPlayerMethod.Invoke(null, [Player]);
-        }
-
-        private void UseWishingGlass(int slot, string destination) {
-            object thoriumPlayerInstance = GetThoriumPlayer();
-
-            Type ThoriumPlayerType = KeybindSystem.Thorium.Code.GetType("ThoriumMod.ThoriumPlayer");
-            FieldInfo tpDestinationField = ThoriumPlayerType.GetField("itemWishingGlassChoice", BindingFlags.Instance | BindingFlags.Public);
-
-            Type WishingGlassChoiceType = KeybindSystem.Thorium.Code.GetType("ThoriumMod.UI.ResourceBars.WishingGlassChoice");
-            FieldInfo wishingGlassChoice = WishingGlassChoiceType.GetField(destination, BindingFlags.Static | BindingFlags.Public);
-            tpDestinationField.SetValue(thoriumPlayerInstance, wishingGlassChoice.GetValue(null));
-
-            InventoryHelperPlayer.UseItem(slot);
         }
     }
 
-    public class StorageItemKeyBindPlayer : ModPlayer {
-        public override void ProcessTriggers(TriggersSet triggersSet) {
-            if (KeybindSystem.PiggyBankKeybind?.JustPressed ?? false) {
-                if (InventoryHelperPlayer.FindAndUseItem(ItemID.MoneyTrough)) return;
+    public class RecallSpawnKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.RecallSpawnKeyBind.JustPressed) {
+                if (modPlayer.FindAndUseWishingGlass("Spawn")) return;
 
-                int slot = Player.FindItem(ItemID.PiggyBank);
+                modPlayer.FindAndUseShellPhone(ItemID.ShellphoneSpawn);
+            }
+        }
+    }
+
+    public class RecallOceanKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.RecallOceanKeyBind.JustPressed) {
+                if (modPlayer.FindAndUseWishingGlass("Beach")) return;
+                if (modPlayer.FindAndUseItem(ItemID.MagicConch)) return;
+                modPlayer.FindAndUseShellPhone(ItemID.ShellphoneOcean);
+            }
+        }
+    }
+
+    public class RecallUnderworldKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.RecallUnderworldKeyBind.JustPressed) {
+                if (modPlayer.FindAndUseWishingGlass("Underworld")) return;
+                if (modPlayer.FindAndUseItem(ItemID.DemonConch)) return;
+                modPlayer.FindAndUseShellPhone(ItemID.ShellphoneHell);
+            }
+        }
+    }
+
+    public class RecallReturnKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.RecallReturnKeyBind.JustPressed) {
+                modPlayer.FindAndUseItem(ItemID.PotionOfReturn);
+            }
+        }
+    }
+
+    public class PiggyBankKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.PiggyBankKeybind.JustPressed) {
+                if (modPlayer.FindAndUseItem(ItemID.MoneyTrough)) return;
+
+                int slot = modPlayer.Player.FindItem(ItemID.PiggyBank);
 
                 if (slot != -1) {
-                    Player.selectedItem = slot;
+                    modPlayer.Player.selectedItem = slot;
                 }
-            }
-
-            if (KeybindSystem.VoidBagKeybind?.JustPressed ?? false) {
-                InventoryHelperPlayer.FindAndUseItem([ItemID.VoidLens, ItemID.ClosedVoidBag]);
             }
         }
     }
 
-    public class Util {
-        public static AdvancedControlsConfig GetConfig() {
-            return ModContent.GetInstance<AdvancedControlsConfig>();
+    public class VoidBagKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.VoidBagKeybind.JustPressed) {
+                modPlayer.FindAndUseItem([ItemID.VoidLens, ItemID.ClosedVoidBag]);
+            }
+        }
+    }
+
+    // --- Thorium ---
+    public class RecallDeathLocationKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.RecallDeathLocationKeyBind.JustPressed) {
+                modPlayer.FindAndUseWishingGlass("DeathLocation");
+            }
+        }
+    }
+
+    public class RecallDungeonKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.RecallDungeonKeyBind.JustPressed) {
+                modPlayer.FindAndUseWishingGlass("Dungeon");
+            }
+        }
+    }
+
+    public class RecallTempleKeyBind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.RecallTempleKeyBind.JustPressed) {
+                modPlayer.FindAndUseWishingGlass("Temple");
+            }
+        }
+    }
+
+    public class TeleportRandomKeybind : IProcessTriggers {
+        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
+            if (KeybindSystem.TeleportRandomKeybind.JustPressed) {
+                modPlayer.FindAndUseWishingGlass("Random");
+            }
         }
     }
 }
