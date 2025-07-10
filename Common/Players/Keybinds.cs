@@ -149,7 +149,7 @@ namespace AdvancedControls.Common.Players {
             if (!Main.inFancyUI && !Main.ingameOptionsWindow)
                 theorheticalOffset += PlayerInput.ScrollWheelDelta / -120;
 
-            if (!conf.scrollDuringItemUse || theorheticalOffset == 0 || Main.playerInventory) {
+            if (!conf.scrollDuringItemUse || !Player.controlUseItem || theorheticalOffset == 0 || Main.playerInventory) {
                 valuesChanged = false;
                 return;
             }
