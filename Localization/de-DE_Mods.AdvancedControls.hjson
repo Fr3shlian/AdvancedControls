@@ -203,6 +203,11 @@ Configs: {
 			Label: Während ein Item verwendet wird scrollen
 			Tooltip: ""
 		}
+
+		disableWallClimb: {
+			Tooltip: ""
+			Label: Nicht an Wände hängen
+		}
 	}
 
 	MountDashBehaviour: {

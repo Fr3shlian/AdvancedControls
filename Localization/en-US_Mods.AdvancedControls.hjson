@@ -203,6 +203,11 @@ Configs: {
 			Label: Scroll During Item Usage
 			Tooltip: ""
 		}
+
+		disableWallClimb: {
+			Tooltip: ""
+			Label: Disable Wall Climb
+		}
 	}
 
 	MountDashBehaviour: {

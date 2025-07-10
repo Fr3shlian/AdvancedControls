@@ -8,6 +8,11 @@ namespace AdvancedControls {
     public class AdvancedControls : Mod {
         public override void Load() {
             On_Player.ScrollHotbar += On_Player_ScrollHotBar;
+            On_Player.WallslideMovement += On_Player_WallslideMovement;
+        }
+
+        private void On_Player_WallslideMovement(On_Player.orig_WallslideMovement orig, Player self) {
+            if (!ModContent.GetInstance<AdvancedControlsConfig>().disableWallClimb) orig(self);
         }
 
         private void On_Player_ScrollHotBar(On_Player.orig_ScrollHotbar orig, Player self, int Offset) {

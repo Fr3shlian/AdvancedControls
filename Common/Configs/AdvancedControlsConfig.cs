@@ -51,6 +51,8 @@ namespace AdvancedControls.Common.Configs {
         [DefaultValue(true)]
         public bool scrollDuringItemUse;
 
+        [DefaultValue(false)]
+        public bool disableWallClimb;
 
 
         [Header("Keybinds")]
