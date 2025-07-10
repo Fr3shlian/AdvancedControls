@@ -24,7 +24,7 @@ namespace AdvancedControls.Common.Players {
 
         // --- Helpers for inventory actions ---
         private int priorSelectedItem = -1;
-        private int itemToSelect = -1;
+        public int ItemToSelect { get; private set; } = -1;
         private bool useOnceAndSwitchBack = false;
         private bool playSound = false;
 
@@ -101,7 +101,7 @@ namespace AdvancedControls.Common.Players {
                 priorSelectedItem = -1;
             }
 
-            if (itemToSelect != -1) {
+            if (ItemToSelect != -1) {
                 Player.controlUseItem = false;
 
                 if (Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
@@ -110,15 +110,15 @@ namespace AdvancedControls.Common.Players {
                         Player.controlUseItem = true;
                     }
 
-                    if (itemToSelect == Player.selectedItem) {
-                        itemToSelect = -1;
+                    if (ItemToSelect == Player.selectedItem) {
+                        ItemToSelect = -1;
                         priorSelectedItem = -1;
                         return;
                     }
 
                     if (playSound) SoundEngine.PlaySound(SoundID.MenuTick);
-                    Player.selectedItem = itemToSelect;
-                    itemToSelect = -1;
+                    Player.selectedItem = ItemToSelect;
+                    ItemToSelect = -1;
 
                     Player.ItemCheck();
                 }
@@ -183,7 +183,7 @@ namespace AdvancedControls.Common.Players {
 
         // --- Helpers for inventory actions ---
         public void SetItemToSelect(int slot, bool useOnceAndSwitchBack = true, bool playSound = true) {
-            itemToSelect = slot;
+            ItemToSelect = slot;
             this.playSound = playSound;
             this.useOnceAndSwitchBack = useOnceAndSwitchBack;
             Player.controlUseItem = false;
@@ -877,7 +877,7 @@ namespace AdvancedControls.Common.Players {
         int netUsed = 0;
 
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
-            if (KeybindSystem.BugNetKeyBind.JustPressed && !IsBugNet(modPlayer.Player.HeldItem.type)) {
+            if (KeybindSystem.BugNetKeyBind.JustPressed && previousSlot == -1 && modPlayer.ItemToSelect == -1) {
                 if (!modPlayer.FindAndUseItem(ItemID.GoldenBugNet, false))
                     if (!modPlayer.FindAndUseItem(ItemID.FireproofBugNet, false))
                         if (!modPlayer.FindAndUseItem(ItemID.BugNet, false))
@@ -892,6 +892,7 @@ namespace AdvancedControls.Common.Players {
                 modPlayer.SetItemToSelect(previousSlot, false);
                 previousSlot = -1;
                 netUsed = 0;
+                return;
             }
 
             if (IsBugNet(modPlayer.Player.HeldItem.type)) {
