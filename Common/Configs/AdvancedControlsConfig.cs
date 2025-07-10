@@ -72,14 +72,6 @@ namespace AdvancedControls.Common.Configs {
         public bool enableDashKeybind;
 
         [ReloadRequired]
-        [DefaultValue(true)]
-        public bool enableCycleInventoryLeftKeybind;
-
-        [ReloadRequired]
-        [DefaultValue(true)]
-        public bool enableCycleInventoryRightKeybind;
-
-        [ReloadRequired]
         [DefaultValue(4)]
         [Range(0, 9)]
         public int dynamicHotbarCount;

@@ -19,10 +19,6 @@ namespace AdvancedControls.Common.Systems {
         // --- Dash ---
         public static ModKeybind DashKeybind { get; private set; }
 
-        // --- Cycle Inventory ---
-        public static ModKeybind CycleInventoryLeftKeybind { get; private set; }
-        public static ModKeybind CycleInventoryRightKeybind { get; private set; }
-
         // --- Dynamic Hotbar ---
         public static List<ModKeybind> DynamicHotbarKeyBinds { get; private set; } = [];
 
@@ -67,10 +63,6 @@ namespace AdvancedControls.Common.Systems {
             // --- Dash ---
             if (conf.enableDashKeybind) DashKeybind = KeybindLoader.RegisterKeybind(Mod, "Dash", Microsoft.Xna.Framework.Input.Keys.Q);
 
-            // --- Cycle Inventory ---
-            if (conf.enableCycleInventoryLeftKeybind) CycleInventoryLeftKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryLeft", Microsoft.Xna.Framework.Input.Keys.None);
-            if (conf.enableCycleInventoryRightKeybind) CycleInventoryRightKeybind = KeybindLoader.RegisterKeybind(Mod, "CycleInventoryRight", Microsoft.Xna.Framework.Input.Keys.None);
-
             // --- Dynamic Hotbar ---
             for (int i = 0; i < conf.dynamicHotbarCount; i++) {
                 DynamicHotbarKeyBinds.Add(KeybindLoader.RegisterKeybind(Mod, "DynamicHotbar" + (i + 1), Microsoft.Xna.Framework.Input.Keys.None));
@@ -112,9 +104,6 @@ namespace AdvancedControls.Common.Systems {
             QuickStackKeybind = null;
 
             DashKeybind = null;
-
-            CycleInventoryLeftKeybind = null;
-            CycleInventoryRightKeybind = null;
 
             DynamicHotbarKeyBinds.Clear();
             EquipmentChangeReferenceKeyBinds.Clear();

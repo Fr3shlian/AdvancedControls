@@ -55,10 +55,6 @@ namespace AdvancedControls.Common.Players {
             // --- Dash ---
             if (KeybindSystem.DashKeybind != null) keybinds.Add(new DashKeyBind());
 
-            // --- Cycle Inventory ---
-            if (KeybindSystem.CycleInventoryLeftKeybind != null) keybinds.Add(new CycleInventoryLeftKeyBind());
-            if (KeybindSystem.CycleInventoryRightKeybind != null) keybinds.Add(new CycleInventoryRightKeyBind());
-
             // --- Dynamic Hotbar ---
             if (KeybindSystem.DynamicHotbarKeyBinds.Count != 0) keybinds.Add(DynamicHotbarKb = new DynamicHotbarKeyBind());
 
@@ -462,31 +458,6 @@ namespace AdvancedControls.Common.Players {
             else InputRight();
 
             secondInput = direction;
-        }
-    }
-
-    // --- Cycle Inventory ---
-    public class CycleInventoryLeftKeyBind : IProcessTriggers {
-        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
-            if (KeybindSystem.CycleInventoryLeftKeybind.JustPressed) {
-                if (modPlayer.Player.selectedItem == 0) {
-                    modPlayer.SetItemToSelect(49, false);
-                } else {
-                    modPlayer.SetItemToSelect(modPlayer.Player.selectedItem - 1, false);
-                }
-            }
-        }
-    }
-
-    public class CycleInventoryRightKeyBind : IProcessTriggers {
-        public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
-            if (KeybindSystem.CycleInventoryRightKeybind.JustPressed) {
-                if (modPlayer.Player.selectedItem > 48) {
-                    modPlayer.SetItemToSelect(0, false);
-                } else {
-                    modPlayer.SetItemToSelect(modPlayer.Player.selectedItem + 1, false);
-                }
-            }
         }
     }
 
