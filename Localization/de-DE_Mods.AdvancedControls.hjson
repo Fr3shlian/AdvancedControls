@@ -2,8 +2,6 @@
 
 Keybinds: {
 	QuickStack.DisplayName: In Kiste Einsortieren
-	DashLeft.DisplayName: Nach links losstürmen
-	DashRight.DisplayName: Nach rechts losstürmen
 	Dash.DisplayName: Losstürmen
 	LootAll.DisplayName: Kiste Ausräumen
 	DepositAll.DisplayName: Kiste befüllen
@@ -22,8 +20,6 @@ Keybinds: {
 	EquipmentChangeReference3.DisplayName: Ausrüstung wechseln 3
 	EquipmentChangeReference2.DisplayName: Ausrüstung wechseln 2
 	EquipmentChangeReference1.DisplayName: Ausrüstung wechseln 1
-	CycleInventoryLeft.DisplayName: Vorheriger Inventarslot
-	CycleInventoryRight.DisplayName: Nächster Inventarslot
 	MechanicalRulerToggle.DisplayName: Mechanisches Lineal umschalten
 	RulerToggle.DisplayName: Lineal umschalten
 	UseTeleport.DisplayName: Teleportieritem verwenden
@@ -146,26 +142,6 @@ Configs: {
 		enableRulerKeybind: {
 			Tooltip: ""
 			Label: Lineal umschalten
-		}
-
-		enableCycleInventoryRightKeybind: {
-			Tooltip: ""
-			Label: Nächster Inventarslot
-		}
-
-		enableCycleInventoryLeftKeybind: {
-			Tooltip: ""
-			Label: Vorheriger Inventarslot
-		}
-
-		enableDashRightKeybind: {
-			Tooltip: ""
-			Label: Nach rechts losstürmen
-		}
-
-		enableDashLeftKeybind: {
-			Tooltip: ""
-			Label: Nach links losstürmen
 		}
 
 		enableDashKeybind: {

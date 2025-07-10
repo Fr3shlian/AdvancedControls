@@ -2,8 +2,6 @@
 
 Keybinds: {
 	QuickStack.DisplayName: Quick Stack
-	DashLeft.DisplayName: Dash Left
-	DashRight.DisplayName: Dash Right
 	Dash.DisplayName: Dash
 	LootAll.DisplayName: Loot All
 	DepositAll.DisplayName: Deposit All
@@ -22,8 +20,6 @@ Keybinds: {
 	EquipmentChangeReference3.DisplayName: Equipment Change 3
 	EquipmentChangeReference2.DisplayName: Equipment Change 2
 	EquipmentChangeReference1.DisplayName: Equipment Change 1
-	CycleInventoryLeft.DisplayName: Cycle Inventory Left
-	CycleInventoryRight.DisplayName: Cycle Inventory Right
 	MechanicalRulerToggle.DisplayName: Mechanical Ruler Toggle
 	RulerToggle.DisplayName: Ruler Toggle
 	UseTeleport.DisplayName: Use Teleport Item
@@ -146,26 +142,6 @@ Configs: {
 		enableRulerKeybind: {
 			Tooltip: ""
 			Label: Ruler
-		}
-
-		enableCycleInventoryRightKeybind: {
-			Tooltip: ""
-			Label: Cycle Inventory Right
-		}
-
-		enableCycleInventoryLeftKeybind: {
-			Tooltip: ""
-			Label: Cycle Inventory Left
-		}
-
-		enableDashRightKeybind: {
-			Tooltip: ""
-			Label: Dash Right
-		}
-
-		enableDashLeftKeybind: {
-			Tooltip: ""
-			Label: Dash Left
 		}
 
 		enableDashKeybind: {
