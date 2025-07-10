@@ -31,10 +31,10 @@ Keybinds: {
 	RecallSpawn.DisplayName: Zum Spawn teleportieren
 	RecallOcean.DisplayName: Zum Ozean teleportieren
 	RecallUnderworld.DisplayName: In die Unterwelt teleportieren
-	TeleportRandomLocation.DisplayName: An zufälligen Ort teleportiern
-	RecallTemple.DisplayName: Zum Tempel teleportieren
-	RecallDungeon.DisplayName: Zum Verlies teleportieren
-	RecallDeathLocation.DisplayName: Zum Todesort teleportieren
+	TeleportRandomLocation.DisplayName: An zufälligen Ort teleportiern (Thorium Mod)
+	RecallTemple.DisplayName: Zum Tempel teleportieren (Thorium Mod)
+	RecallDungeon.DisplayName: Zum Verlies teleportieren (Thorium Mod)
+	RecallDeathLocation.DisplayName: Zum Todesort teleportieren (Thorium Mod)
 	RecallReturn.DisplayName: Trank der Rückkehr verwenden
 	PiggyBank.DisplayName: Sparschwein
 	VoidBag.DisplayName: Hohlraumbeutel
@@ -90,22 +90,22 @@ Configs: {
 
 		enableTeleportRandomKeybind: {
 			Tooltip: ""
-			Label: An zufälligen Ort teleportiern
+			Label: An zufälligen Ort teleportiern (Thorium Mod)
 		}
 
 		enableRecallDeathLocationKeybind: {
 			Tooltip: ""
-			Label: Zum Todesort teleportieren
+			Label: Zum Todesort teleportieren (Thorium Mod)
 		}
 
 		enableRecallTempleKeybind: {
 			Tooltip: ""
-			Label: Zum Tempel teleportieren
+			Label: Zum Tempel teleportieren (Thorium Mod)
 		}
 
 		enableRecallDungeonKeybind: {
 			Tooltip: ""
-			Label: Zum Verlies teleportieren
+			Label: Zum Verlies teleportieren (Thorium Mod)
 		}
 
 		enableRecallReturnKeybind: {

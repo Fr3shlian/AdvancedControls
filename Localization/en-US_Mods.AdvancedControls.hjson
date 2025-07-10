@@ -31,10 +31,10 @@ Keybinds: {
 	RecallSpawn.DisplayName: Recall Spawn
 	RecallOcean.DisplayName: Recall Ocean
 	RecallUnderworld.DisplayName: Recall Underworld
-	TeleportRandomLocation.DisplayName: Teleport Random Location
-	RecallTemple.DisplayName: Recall Temple
-	RecallDungeon.DisplayName: Recall Dungeon
-	RecallDeathLocation.DisplayName: Recall Death Location
+	TeleportRandomLocation.DisplayName: Teleport Random Location (Thorium Mod)
+	RecallTemple.DisplayName: Recall Temple (Thorium Mod)
+	RecallDungeon.DisplayName: Recall Dungeon (Thorium Mod)
+	RecallDeathLocation.DisplayName: Recall Death Location (Thorium Mod)
 	RecallReturn.DisplayName: Use Potion of Return
 	PiggyBank.DisplayName: Piggy Bank
 	VoidBag.DisplayName: Void Bag
@@ -90,22 +90,22 @@ Configs: {
 
 		enableTeleportRandomKeybind: {
 			Tooltip: ""
-			Label: Teleport Random Location
+			Label: Teleport Random Location (Thorium Mod)
 		}
 
 		enableRecallDeathLocationKeybind: {
 			Tooltip: ""
-			Label: Recall Death Location
+			Label: Recall Death Location (Thorium Mod)
 		}
 
 		enableRecallTempleKeybind: {
 			Tooltip: ""
-			Label: Recall Temple
+			Label: Recall Temple (Thorium Mod)
 		}
 
 		enableRecallDungeonKeybind: {
 			Tooltip: ""
-			Label: Recall Dungeon
+			Label: Recall Dungeon (Thorium Mod)
 		}
 
 		enableRecallReturnKeybind: {
