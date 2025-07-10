@@ -189,7 +189,7 @@ namespace AdvancedControls.Common.Players {
             Player.controlUseItem = false;
         }
 
-        public bool FindAndUseItem(int id, bool useOnceAndSwitchBack = true) {
+        public bool FindAndSetItemToSelect(int id, bool useOnceAndSwitchBack = true) {
             int slot = Player.FindItem(id);
 
             if (slot == -1) return false;
@@ -198,7 +198,7 @@ namespace AdvancedControls.Common.Players {
             return true;
         }
 
-        public bool FindAndUseItem(List<int> ids, bool useOnceAndSwitchBack = true) {
+        public bool FindAndSetItemToSelect(List<int> ids, bool useOnceAndSwitchBack = true) {
             int slot = Player.FindItem(ids);
 
             if (slot == -1) return false;
@@ -787,10 +787,10 @@ namespace AdvancedControls.Common.Players {
     public class TeleportKeyBind : IProcessTriggers {
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.TeleportKeyBind.JustPressed) {
-                if (modPlayer.FindAndUseItem(ItemID.RodOfHarmony)) return;
+                if (modPlayer.FindAndSetItemToSelect(ItemID.RodOfHarmony)) return;
 
                 if (modPlayer.conf.preventHealthLoss && !modPlayer.Player.creativeGodMode && modPlayer.Player.HasBuff(BuffID.ChaosState)) return;
-                modPlayer.FindAndUseItem(ItemID.RodofDiscord);
+                modPlayer.FindAndSetItemToSelect(ItemID.RodofDiscord);
             }
         }
     }
@@ -801,10 +801,10 @@ namespace AdvancedControls.Common.Players {
                 if (modPlayer.FindAndUseWishingGlass("Home")) return;
 
                 if (modPlayer.conf.prioritizeRecallPotions) {
-                    if (modPlayer.FindAndUseItem(ItemID.RecallPotion)) return;
-                    if (modPlayer.FindAndUseItem([ItemID.MagicMirror, ItemID.IceMirror, ItemID.CellPhone])) return;
+                    if (modPlayer.FindAndSetItemToSelect(ItemID.RecallPotion)) return;
+                    if (modPlayer.FindAndSetItemToSelect([ItemID.MagicMirror, ItemID.IceMirror, ItemID.CellPhone])) return;
                 } else {
-                    if (modPlayer.FindAndUseItem([ItemID.MagicMirror, ItemID.IceMirror, ItemID.CellPhone, ItemID.RecallPotion])) return;
+                    if (modPlayer.FindAndSetItemToSelect([ItemID.MagicMirror, ItemID.IceMirror, ItemID.CellPhone, ItemID.RecallPotion])) return;
                 }
 
                 modPlayer.FindAndUseShellPhone(ItemID.Shellphone);
@@ -826,7 +826,7 @@ namespace AdvancedControls.Common.Players {
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.RecallOceanKeyBind.JustPressed) {
                 if (modPlayer.FindAndUseWishingGlass("Beach")) return;
-                if (modPlayer.FindAndUseItem(ItemID.MagicConch)) return;
+                if (modPlayer.FindAndSetItemToSelect(ItemID.MagicConch)) return;
                 modPlayer.FindAndUseShellPhone(ItemID.ShellphoneOcean);
             }
         }
@@ -836,7 +836,7 @@ namespace AdvancedControls.Common.Players {
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.RecallUnderworldKeyBind.JustPressed) {
                 if (modPlayer.FindAndUseWishingGlass("Underworld")) return;
-                if (modPlayer.FindAndUseItem(ItemID.DemonConch)) return;
+                if (modPlayer.FindAndSetItemToSelect(ItemID.DemonConch)) return;
                 modPlayer.FindAndUseShellPhone(ItemID.ShellphoneHell);
             }
         }
@@ -845,7 +845,7 @@ namespace AdvancedControls.Common.Players {
     public class RecallReturnKeyBind : IProcessTriggers {
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.RecallReturnKeyBind.JustPressed) {
-                modPlayer.FindAndUseItem(ItemID.PotionOfReturn);
+                modPlayer.FindAndSetItemToSelect(ItemID.PotionOfReturn);
             }
         }
     }
@@ -853,7 +853,7 @@ namespace AdvancedControls.Common.Players {
     public class PiggyBankKeyBind : IProcessTriggers {
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.PiggyBankKeybind.JustPressed) {
-                if (modPlayer.FindAndUseItem(ItemID.MoneyTrough)) return;
+                if (modPlayer.FindAndSetItemToSelect(ItemID.MoneyTrough)) return;
 
                 int slot = modPlayer.Player.FindItem(ItemID.PiggyBank);
 
@@ -867,7 +867,7 @@ namespace AdvancedControls.Common.Players {
     public class VoidBagKeyBind : IProcessTriggers {
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.VoidBagKeybind.JustPressed) {
-                modPlayer.FindAndUseItem([ItemID.VoidLens, ItemID.ClosedVoidBag]);
+                modPlayer.FindAndSetItemToSelect([ItemID.VoidLens, ItemID.ClosedVoidBag]);
             }
         }
     }
@@ -878,9 +878,9 @@ namespace AdvancedControls.Common.Players {
 
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             if (KeybindSystem.BugNetKeyBind.JustPressed && previousSlot == -1 && modPlayer.ItemToSelect == -1) {
-                if (!modPlayer.FindAndUseItem(ItemID.GoldenBugNet, false))
-                    if (!modPlayer.FindAndUseItem(ItemID.FireproofBugNet, false))
-                        if (!modPlayer.FindAndUseItem(ItemID.BugNet, false))
+                if (!modPlayer.FindAndSetItemToSelect(ItemID.GoldenBugNet, false))
+                    if (!modPlayer.FindAndSetItemToSelect(ItemID.FireproofBugNet, false))
+                        if (!modPlayer.FindAndSetItemToSelect(ItemID.BugNet, false))
                             return;
 
                 previousSlot = modPlayer.Player.selectedItem;
