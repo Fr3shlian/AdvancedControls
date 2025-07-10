@@ -14,6 +14,9 @@ namespace AdvancedControls {
             AdvancedControlsConfig conf = ModContent.GetInstance<AdvancedControlsConfig>();
             KeyBindPlayer kbp = Main.CurrentPlayer.GetModPlayer<KeyBindPlayer>();
 
+            if (!conf.scrollEntireInventory && self.selectedItem >= 10)
+			    return;
+
             //Restore original values
             if (kbp.valuesChanged) {
                 self.selectedItem = kbp.origSelectedItem;
@@ -31,7 +34,7 @@ namespace AdvancedControls {
                     while (Offset < 0) {
                         Offset += 10;
                     }
-                }
+            }
 
             int itemToSelect = self.selectedItem;
 
