@@ -26,6 +26,15 @@ namespace AdvancedControls.Common.Players {
         private int priorSelectedItem = -1;
         private int itemToSelect = -1;
         private bool useOnceAndSwitchBack = false;
+        private bool playSound = false;
+
+        // --- Helpers for hotbar scrolling tweaks ---
+        public int origSelectedItem = -1;
+        public int origItemAnimation = -1;
+        public int origItemTime = -1;
+        public int origReuseDelay = -1;
+        public bool origHotbar1 = false;
+        public bool valuesChanged = false;
 
         // --- Helpers for Dynamic Hotbar and Equipment Change ---
         public int HoveredSlot { get; private set; } = -1;
@@ -105,13 +114,63 @@ namespace AdvancedControls.Common.Players {
                         Player.controlUseItem = true;
                     }
 
-                    SoundEngine.PlaySound(SoundID.MenuTick);
+                    if (itemToSelect == Player.selectedItem) {
+                        itemToSelect = -1;
+                        priorSelectedItem = -1;
+                        return;
+                    }
+
+                    if (playSound) SoundEngine.PlaySound(SoundID.MenuTick);
                     Player.selectedItem = itemToSelect;
                     itemToSelect = -1;
-                    
+
                     Player.ItemCheck();
                 }
             }
+        }
+
+        // --- Helper for hotbar scrolling tweaks ---
+        public override void SetControls() {
+            //Mock offset calculation to check whether the player is scrolling
+            int num = PlayerInput.Triggers.Current.HotbarPlus.ToInt() - PlayerInput.Triggers.Current.HotbarMinus.ToInt();
+            int theorheticalScrollCD = PlayerInput.Triggers.Current.HotbarScrollCD;
+            int theorheticalOffset = Player.HotbarOffset;
+
+            if (PlayerInput.CurrentProfile.HotbarAllowsRadial && num != 0 && PlayerInput.Triggers.Current.HotbarHoldTime > PlayerInput.CurrentProfile.HotbarRadialHoldTimeRequired && PlayerInput.CurrentProfile.HotbarRadialHoldTimeRequired != -1) {
+                theorheticalScrollCD = 2;
+            }
+
+            if (PlayerInput.CurrentProfile.HotbarRadialHoldTimeRequired != -1) {
+                num = PlayerInput.Triggers.JustReleased.HotbarPlus.ToInt() - PlayerInput.Triggers.JustReleased.HotbarMinus.ToInt();
+                if (theorheticalScrollCD == 1 && num != 0)
+                    num = 0;
+            }
+
+            if (theorheticalScrollCD == 0 && num != 0) {
+                theorheticalOffset += num;
+            }
+
+            if (!Main.inFancyUI && !Main.ingameOptionsWindow)
+                theorheticalOffset += PlayerInput.ScrollWheelDelta / -120;
+
+            if (!conf.scrollDuringItemUse || theorheticalOffset == 0 || Main.playerInventory) {
+                valuesChanged = false;
+                return;
+            }
+
+            //Store original values
+            origSelectedItem = Player.selectedItem;
+            origItemAnimation = Player.itemAnimation;
+            origItemTime = Player.itemTime;
+            origReuseDelay = Player.reuseDelay;
+            origHotbar1 = PlayerInput.Triggers.Current.Hotbar1;
+
+            //Set a hotbar trigger to true and itemAnimation, itemTime and reuseDelay to 0, so HandleHotbar is always entered
+            PlayerInput.Triggers.Current.Hotbar1 = true;
+            Player.itemAnimation = 0;
+            Player.itemTime = 0;
+            Player.reuseDelay = 0;
+            valuesChanged = true;
         }
 
         public override void SaveData(TagCompound tag) {
@@ -127,8 +186,9 @@ namespace AdvancedControls.Common.Players {
         }
 
         // --- Helpers for inventory actions ---
-        public void SetItemToSelect(int slot, bool useOnceAndSwitchBack = true) {
+        public void SetItemToSelect(int slot, bool useOnceAndSwitchBack = true, bool playSound = true) {
             itemToSelect = slot;
+            this.playSound = playSound;
             this.useOnceAndSwitchBack = useOnceAndSwitchBack;
             Player.controlUseItem = false;
         }

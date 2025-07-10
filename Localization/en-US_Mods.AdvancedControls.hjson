@@ -50,6 +50,7 @@ Configs: {
 			Inventory: Inventory Tweaks
 			QuickUse: Quick Use
 			Keybinds: Keybinds
+			Tweaks: Tweaks
 		}
 
 		mountDashBehaviour: {
@@ -214,6 +215,16 @@ Configs: {
 
 		enableBugNetKeybind: {
 			Label: Use Bug Net
+			Tooltip: ""
+		}
+
+		scrollEntireInventory: {
+			Label: Scroll Entire Inventory
+			Tooltip: ""
+		}
+
+		scrollDuringItemUse: {
+			Label: Scroll During Item Usage
 			Tooltip: ""
 		}
 	}

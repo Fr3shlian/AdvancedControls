@@ -50,6 +50,7 @@ Configs: {
 			Inventory: Inventarwerkzeuge
 			QuickUse: Itemkürzel
 			Keybinds: Tastaturbelegungen
+			Tweaks: Tweaks
 		}
 
 		mountDashBehaviour: {
@@ -214,6 +215,16 @@ Configs: {
 
 		enableBugNetKeybind: {
 			Label: Fliegennetz verwenden
+			Tooltip: ""
+		}
+
+		scrollEntireInventory: {
+			Label: Ganzes Inventar durchscrollen
+			Tooltip: ""
+		}
+
+		scrollDuringItemUse: {
+			Label: Während ein Item verwendet wird scrollen
 			Tooltip: ""
 		}
 	}

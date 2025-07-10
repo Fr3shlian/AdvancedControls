@@ -42,6 +42,17 @@ namespace AdvancedControls.Common.Configs {
         public bool prioritizeRecallPotions;
 
 
+
+        [Header("Tweaks")]
+
+        [DefaultValue(false)]
+        public bool scrollEntireInventory;
+
+        [DefaultValue(true)]
+        public bool scrollDuringItemUse;
+
+
+
         [Header("Keybinds")]
 
         [ReloadRequired]
