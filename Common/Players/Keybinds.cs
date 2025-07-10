@@ -12,6 +12,7 @@ using System;
 using System.Reflection;
 using Terraria.Audio;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace AdvancedControls.Common.Players {
     public class KeyBindPlayer : ModPlayer {
@@ -183,6 +184,8 @@ namespace AdvancedControls.Common.Players {
 
         // --- Helpers for inventory actions ---
         public void SetItemToSelect(int slot, bool useOnceAndSwitchBack = true, bool playSound = true) {
+            if (PlayerInput.Triggers.Current.SmartSelect) return;
+
             ItemToSelect = slot;
             this.playSound = playSound;
             this.useOnceAndSwitchBack = useOnceAndSwitchBack;
@@ -190,6 +193,8 @@ namespace AdvancedControls.Common.Players {
         }
 
         public bool FindAndSetItemToSelect(int id, bool useOnceAndSwitchBack = true) {
+            if (PlayerInput.Triggers.Current.SmartSelect) return false;
+
             int slot = Player.FindItem(id);
 
             if (slot == -1) return false;
@@ -199,6 +204,8 @@ namespace AdvancedControls.Common.Players {
         }
 
         public bool FindAndSetItemToSelect(List<int> ids, bool useOnceAndSwitchBack = true) {
+            if (PlayerInput.Triggers.Current.SmartSelect) return false;
+
             int slot = Player.FindItem(ids);
 
             if (slot == -1) return false;
