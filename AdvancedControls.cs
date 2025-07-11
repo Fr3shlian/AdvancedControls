@@ -69,7 +69,8 @@ namespace AdvancedControls {
             }
 
             bool shouldPlaySound = kbp.origSelectedItem == 0 || !kbp.valuesChanged;
-            if (itemToSelect != self.selectedItem && !PlayerInput.Triggers.Current.SmartCursor) kbp.SetItemToSelect(itemToSelect, false, shouldPlaySound);
+            //Checking for smart select here is necessary because... it somehow changes its value between the if and the call to the function that also checks it???
+            if (itemToSelect != self.selectedItem && !PlayerInput.Triggers.Current.SmartSelect) kbp.SetItemToSelect(itemToSelect, false, shouldPlaySound);
         }
     }
 }
