@@ -2,6 +2,7 @@ using AdvancedControls.Common.Configs;
 using AdvancedControls.Common.Players;
 using Terraria;
 using Terraria.GameInput;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace AdvancedControls {
@@ -14,6 +15,23 @@ namespace AdvancedControls {
             On_Player.ScrollHotbar += On_Player_ScrollHotBar;
             On_Player.WallslideMovement += On_Player_WallslideMovement;
             On_Player.SmartSelect_GetToolStrategy += On_Player_SmartSelect_GetToolStrategy;
+            On_Player.SmartSelect_PickToolForStrategy += On_Player_SmartSelect_PickToolForStrategy;
+        }
+
+        private void On_Player_SmartSelect_PickToolForStrategy(On_Player.orig_SmartSelect_PickToolForStrategy orig, Player self, int tX, int tY, int toolStrategy, bool wetTile) {
+            if (conf.autoSelectRegrowthItem && toolStrategy == 3 && Main.tileAlch[Main.tile[tX, tY].TileType]) {
+                int slot = self.FindItem([ItemID.StaffofRegrowth, ItemID.AcornAxe]);
+
+                if (slot != -1) {
+                    if (self.nonTorch == -1)
+                    self.nonTorch = self.selectedItem;
+
+                    self.selectedItem = slot;
+                    return;
+                }
+            }
+
+            orig(self, tX, tY, toolStrategy, wetTile);
         }
 
         private void On_Player_SmartSelect_GetToolStrategy(On_Player.orig_SmartSelect_GetToolStrategy orig, Player self, int tX, int tY, out int toolStrategy, out bool wetTile) {

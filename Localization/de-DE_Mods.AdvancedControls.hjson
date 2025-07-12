@@ -210,8 +210,13 @@ Configs: {
 		}
 
 		altAutoSelectHammer: {
-			Tooltip: "Während automatische Auswahl wird durch halten von Alt ein Hammer ausgewählt"
+			Tooltip: Während automatischer Auswahl wird durch halten von Alt ein Hammer ausgewählt
 			Label: Hammer automatisch auswählen (Alt)
+		}
+
+		autoSelectRegrowthItem: {
+			Tooltip: Während automatischer Auswahl wird bei Alchemiepflanzen ein passendes Item gewählt
+			Label: Item für Alchemiepflanzen automatisch auswählen
 		}
 	}
 

@@ -210,8 +210,13 @@ Configs: {
 		}
 
 		altAutoSelectHammer: {
-			Tooltip: "Auto select a hammer while holding Alt"
+			Tooltip: Auto select a hammer while holding Alt
 			Label: Auto Select Hammer (Alt)
+		}
+
+		autoSelectRegrowthItem: {
+			Tooltip: Auto select a regrowth item while hovering an alchemy plant
+			Label: Auto Select Regrowth Item
 		}
 	}
 

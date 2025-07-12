@@ -57,6 +57,10 @@ namespace AdvancedControls.Common.Configs {
         [DefaultValue(true)]
         public bool altAutoSelectHammer;
 
+        [DefaultValue(true)]
+        public bool autoSelectRegrowthItem;
+
+
         [Header("Keybinds")]
 
         [ReloadRequired]
