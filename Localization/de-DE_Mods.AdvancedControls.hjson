@@ -208,6 +208,11 @@ Configs: {
 			Tooltip: ""
 			Label: Nicht an Wände hängen
 		}
+
+		altAutoSelectHammer: {
+			Tooltip: "Während automatische Auswahl wird durch halten von Alt ein Hammer ausgewählt"
+			Label: Hammer automatisch auswählen (Alt)
+		}
 	}
 
 	MountDashBehaviour: {

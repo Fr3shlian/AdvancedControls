@@ -208,6 +208,11 @@ Configs: {
 			Tooltip: ""
 			Label: Disable Wall Climb
 		}
+
+		altAutoSelectHammer: {
+			Tooltip: "Auto select a hammer while holding Alt"
+			Label: Auto Select Hammer (Alt)
+		}
 	}
 
 	MountDashBehaviour: {

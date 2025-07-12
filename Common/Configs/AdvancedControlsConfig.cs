@@ -54,6 +54,8 @@ namespace AdvancedControls.Common.Configs {
         [DefaultValue(false)]
         public bool disableWallClimb;
 
+        [DefaultValue(true)]
+        public bool altAutoSelectHammer;
 
         [Header("Keybinds")]
 

@@ -6,9 +6,27 @@ using Terraria.ModLoader;
 
 namespace AdvancedControls {
     public class AdvancedControls : Mod {
+        AdvancedControlsConfig conf;
+
         public override void Load() {
+            conf = ModContent.GetInstance<AdvancedControlsConfig>();
+
             On_Player.ScrollHotbar += On_Player_ScrollHotBar;
             On_Player.WallslideMovement += On_Player_WallslideMovement;
+            On_Player.SmartSelect_GetToolStrategy += On_Player_SmartSelect_GetToolStrategy;
+        }
+
+        private void On_Player_SmartSelect_GetToolStrategy(On_Player.orig_SmartSelect_GetToolStrategy orig, Player self, int tX, int tY, out int toolStrategy, out bool wetTile) {
+            if (conf.altAutoSelectHammer && Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt))
+                for (int i = 0; i < 50; i++) {
+                    if (self.inventory[i].hammer > 0) {
+                        toolStrategy = 1;
+                        wetTile = false;
+                        return;
+                    }
+                }
+
+            orig(self, tX, tY, out toolStrategy, out wetTile);
         }
 
         private void On_Player_WallslideMovement(On_Player.orig_WallslideMovement orig, Player self) {
@@ -16,7 +34,6 @@ namespace AdvancedControls {
         }
 
         private void On_Player_ScrollHotBar(On_Player.orig_ScrollHotbar orig, Player self, int Offset) {
-            AdvancedControlsConfig conf = ModContent.GetInstance<AdvancedControlsConfig>();
             KeyBindPlayer kbp = Main.CurrentPlayer.GetModPlayer<KeyBindPlayer>();
 
             if (!conf.scrollEntireInventory && self.selectedItem >= 10)
