@@ -12,7 +12,6 @@ using System;
 using System.Reflection;
 using Terraria.Audio;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 
 namespace AdvancedControls.Common.Players {
     public class KeyBindPlayer : ModPlayer {

@@ -37,7 +37,7 @@ namespace AdvancedControls {
             KeyBindPlayer kbp = Main.CurrentPlayer.GetModPlayer<KeyBindPlayer>();
 
             if (!conf.scrollEntireInventory && self.selectedItem >= 10)
-			    return;
+                return;
 
             //Restore original values
             if (kbp.valuesChanged) {
@@ -49,13 +49,13 @@ namespace AdvancedControls {
             }
 
             if (!conf.scrollEntireInventory) {
-                    while (Offset > 9) {
-                        Offset -= 10;
-                    }
+                while (Offset > 9) {
+                    Offset -= 10;
+                }
 
-                    while (Offset < 0) {
-                        Offset += 10;
-                    }
+                while (Offset < 0) {
+                    Offset += 10;
+                }
             }
 
             int itemToSelect = self.selectedItem;
