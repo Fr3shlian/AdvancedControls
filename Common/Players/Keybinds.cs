@@ -150,7 +150,7 @@ namespace AdvancedControls.Common.Players {
             if (!Main.inFancyUI && !Main.ingameOptionsWindow)
                 theorheticalOffset += PlayerInput.ScrollWheelDelta / -120;
 
-            if (!conf.scrollDuringItemUse || !Player.controlUseItem || theorheticalOffset == 0 || Main.playerInventory) {
+            if (!conf.scrollDuringItemUse || !Player.controlUseItem || theorheticalOffset == 0 || Main.playerInventory || Main.mapFullscreen) {
                 valuesChanged = false;
                 return;
             }
@@ -184,7 +184,7 @@ namespace AdvancedControls.Common.Players {
 
         // --- Helpers for inventory actions ---
         public void SetItemToSelect(int slot, bool useOnceAndSwitchBack = true, bool playSound = true) {
-            if (PlayerInput.Triggers.Current.SmartSelect) return;
+            if (PlayerInput.Triggers.Current.SmartSelect || Player.selectedItem == 58) return;
 
             ItemToSelect = slot;
             this.playSound = playSound;
@@ -193,7 +193,7 @@ namespace AdvancedControls.Common.Players {
         }
 
         public bool FindAndSetItemToSelect(int id, bool useOnceAndSwitchBack = true) {
-            if (PlayerInput.Triggers.Current.SmartSelect) return false;
+            if (PlayerInput.Triggers.Current.SmartSelect || Player.selectedItem == 58) return false;
 
             int slot = Player.FindItem(id);
 
@@ -204,7 +204,7 @@ namespace AdvancedControls.Common.Players {
         }
 
         public bool FindAndSetItemToSelect(List<int> ids, bool useOnceAndSwitchBack = true) {
-            if (PlayerInput.Triggers.Current.SmartSelect) return false;
+            if (PlayerInput.Triggers.Current.SmartSelect || Player.selectedItem == 58) return false;
 
             int slot = Player.FindItem(ids);
 
