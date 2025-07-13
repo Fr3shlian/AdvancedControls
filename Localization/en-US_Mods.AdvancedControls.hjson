@@ -221,12 +221,12 @@ Configs: {
 
 		autoSelectPlanterSeeds: {
 			Label: Auto Select Planter Seeds
-			Tooltip: "Auto select alchemy plant seeds while hovering over a planter"
+			Tooltip: Auto select alchemy plant seeds while hovering over a planter
 		}
 
-		matchPlanterWithSeeds: {
+		matchSeedsWithPlanter: {
+			Tooltip: Attempt to choose alchemy plant seeds based on the type of planter
 			Label: Match Seeds With Planter
-			Tooltip: "Attempt to choose alchemy plant seeds based on the type of planter"
 		}
 	}
 

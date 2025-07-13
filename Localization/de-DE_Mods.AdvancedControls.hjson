@@ -221,12 +221,12 @@ Configs: {
 
 		autoSelectPlanterSeeds: {
 			Label: Alchemiepflanzensamen automatisch auswählen
-			Tooltip: "Wenn die Maus bei automatischer Auswahl über einem Pflanzkasten ist, werden Samen von Alchemiepflanzen ausgewählt"
+			Tooltip: Wenn die Maus bei automatischer Auswahl über einem Pflanzkasten ist, werden Samen von Alchemiepflanzen ausgewählt
 		}
 
-		matchPlanterWithSeeds: {
+		matchSeedsWithPlanter: {
+			Tooltip: Wenn Alchemiepflanzensamen ausgewählt werden, wird zuerst ein Samen passend zum Pflanzenkasten gesucht
 			Label: Passende Alchemiepflanzensamen auswählen
-			Tooltip: "Wenn Alchemiepflanzensamen ausgewählt werden, wird zuerst ein Samen passend zum Pflanzenkasten gesucht"
 		}
 	}
 
