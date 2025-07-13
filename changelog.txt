@@ -1,4 +1,14 @@
-﻿[h1]v1.7.0.1 - I forgot one
+﻿[h1]v1.8.0 - Now featuring: Tweaks
 [list]
-    [*] Cycle inventory keybinds now also use better switching logic
+    [*] Added a tweak to allow scrolling through the entire inventory
+    [*] Added a tweak to allow scrolling the inventory during item usage
+    [*] Added a tweak to disable wall climb from climbing gear
+    [*] Added a tweak to select hammers using auto select when Alt is held
+    [*] Added a tweak to select a regrowth item when hovering an alchemy plant (this works with modded plants if they are registered in Main.tileAlch)
+    [*] Added a tweak to select alchemy plants seeds when hovering over a planter box (only works with vanilla planters and seeds)
+    [*] Removed cycle inventory keybinds since the existing ones serve the same purpose now
+    [*] Item switching will no longer make a sound when the slot that is switched to is already selected
+    [*] Item switching will no longer be attempted when autoselect is being held down
+    [*] Item switching will no longer be attempted when an item is on the cursor
+    [*] Fixed bugnet keybind not working when a bugnet is already selected
 [/list]

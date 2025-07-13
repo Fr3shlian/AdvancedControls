@@ -1,4 +1,5 @@
-This mod adds a whole bunch of keybinds ranging from simple toggles and dashing to Recall Potion usage and better inventory navigation. It also offers some configs where relevant. If you have any suggestions, put them into the comment section.
+This mod adds a whole bunch of keybinds ranging from simple toggles and dashing to Recall Potion usage and better inventory navigation. Next to keybinds some tweaks, such as scrolling the inventory while using an item, are also added. Configs are offered where relevant.
+If you have any suggestions, put them into the comment section.
 
 List of keybinds:
 [list]
@@ -9,9 +10,19 @@ List of keybinds:
     [*] Equipment Change
     [*] Toggling rulers
     [*] Using Rod of Discord/Harmony
-    [*] Using teleport items like Recall Potions and the Magic Conch
+    [*] Using teleport items like Recall Potions and the Magic Conch (including teleport items from the Thorium Mod)
     [*] Using the Money Trough and Void Bag
     [*] Using bug nets
+[/list]
+
+List of tweaks (all can be disabled separately in the configs):
+[list]
+    [*] Allow the mousewheel to scroll through the entire inventory
+    [*] Allow the mousewheel to scroll through the inventory during item usage
+    [*] Disable wall climb from climbing gear
+    [*] Select a hammer with auto select while holding Alt
+    [*] Select a regrowth item when hovering an alchemy plant (this works with modded plants if they are registered in Main.tileAlch)
+    [*] Select alchemy plants seeds when hovering over a planter box (only works with vanilla planters and seeds)
 [/list]
 
 Instruction for Dynamic Hotbar:
