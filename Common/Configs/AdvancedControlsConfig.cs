@@ -60,6 +60,13 @@ namespace AdvancedControls.Common.Configs {
         [DefaultValue(true)]
         public bool autoSelectRegrowthItem;
 
+        [DefaultValue(true)]
+        public bool autoSelectPlanterSeeds;
+
+        [DefaultValue(true)]
+        public bool matchSeedsWithPlanter;
+
+
 
         [Header("Keybinds")]
 

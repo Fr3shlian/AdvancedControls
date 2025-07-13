@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AdvancedControls.Common.Configs;
 using AdvancedControls.Common.Players;
 using Terraria;
@@ -19,15 +20,80 @@ namespace AdvancedControls {
         }
 
         private void On_Player_SmartSelect_PickToolForStrategy(On_Player.orig_SmartSelect_PickToolForStrategy orig, Player self, int tX, int tY, int toolStrategy, bool wetTile) {
-            if (conf.autoSelectRegrowthItem && toolStrategy == 3 && Main.tileAlch[Main.tile[tX, tY].TileType]) {
-                int slot = self.FindItem([ItemID.StaffofRegrowth, ItemID.AcornAxe]);
+            bool enterAutoRegrowth = conf.autoSelectRegrowthItem && Main.tileAlch[Main.tile[tX, tY].TileType];
+            Tile tile = Main.tile[tX, tY + 1];
+            bool enterAutoSeed = conf.autoSelectPlanterSeeds && tile.TileType == TileID.PlanterBox;
 
-                if (slot != -1) {
-                    if (self.nonTorch == -1)
-                    self.nonTorch = self.selectedItem;
+            if (enterAutoRegrowth || enterAutoSeed) {
+                //Copied from SmartSelect_GetToolStrategy to determine whether the player is in range
+                int num = 0;
+                int num2 = 0;
+                if (self.position.X / 16f >= tX)
+                    num = (int)(self.position.X / 16f) - tX;
 
-                    self.selectedItem = slot;
-                    return;
+                if ((self.position.X + self.width) / 16f <= tX)
+                    num = tX - (int)((self.position.X + self.width) / 16f);
+
+                if (self.position.Y / 16f >= tY)
+                    num2 = (int)(self.position.Y / 16f) - tY;
+
+                if ((self.position.Y + self.height) / 16f <= tY)
+                    num2 = tY - (int)((self.position.Y + self.height) / 16f);
+
+                if (num <= Player.tileRangeX && num2 <= Player.tileRangeY) {
+                    if (enterAutoRegrowth) {
+                        int slot = self.FindItem([ItemID.StaffofRegrowth, ItemID.AcornAxe]);
+
+                        if (slot != -1) {
+                            if (self.nonTorch == -1)
+                                self.nonTorch = self.selectedItem;
+
+                            self.selectedItem = slot;
+                            return;
+                        }
+                    } else if (enterAutoSeed) {
+                        List<int> seedsToFind = [];
+
+                        if (conf.matchSeedsWithPlanter)
+                            switch (tile.TileFrameY) {
+                                case 0:
+                                    seedsToFind.Add(ItemID.DaybloomSeeds);
+                                    break;
+                                case 18:
+                                    seedsToFind.Add(ItemID.MoonglowSeeds);
+                                    break;
+                                case 36:
+                                case 54:
+                                    seedsToFind.Add(ItemID.DeathweedSeeds);
+                                    break;
+                                case 72:
+                                    seedsToFind.Add(ItemID.BlinkrootSeeds);
+                                    break;
+                                case 90:
+                                    seedsToFind.Add(ItemID.WaterleafSeeds);
+                                    break;
+                                case 108:
+                                    seedsToFind.Add(ItemID.ShiverthornSeeds);
+                                    break;
+                                case 126:
+                                    seedsToFind.Add(ItemID.FireblossomSeeds);
+                                    break;
+                            }
+
+                        int slot = -1;
+
+                        if (seedsToFind.Count == 1) slot = self.FindItem(seedsToFind[0]);
+
+                        if (slot == -1) slot = self.FindItem([ItemID.DaybloomSeeds, ItemID.BlinkrootSeeds, ItemID.WaterleafSeeds, ItemID.ShiverthornSeeds, ItemID.MoonglowSeeds, ItemID.DeathweedSeeds, ItemID.FireblossomSeeds]);
+
+                        if (slot != -1) {
+                            if (self.nonTorch == -1)
+                                self.nonTorch = self.selectedItem;
+
+                            self.selectedItem = slot;
+                            return;
+                        }
+                    }
                 }
             }
 

@@ -218,6 +218,16 @@ Configs: {
 			Tooltip: Auto select a regrowth item while hovering an alchemy plant
 			Label: Auto Select Regrowth Item
 		}
+
+		autoSelectPlanterSeeds: {
+			Label: Auto Select Planter Seeds
+			Tooltip: "Auto select alchemy plant seeds while hovering over a planter"
+		}
+
+		matchPlanterWithSeeds: {
+			Label: Match Seeds With Planter
+			Tooltip: "Attempt to choose alchemy plant seeds based on the type of planter"
+		}
 	}
 
 	MountDashBehaviour: {
