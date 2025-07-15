@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AdvancedControls.Common.Configs;
 using AdvancedControls.Common.Players;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -132,6 +133,8 @@ namespace AdvancedControls {
                 PlayerInput.Triggers.Current.Hotbar1 = kbp.origHotbar1;
             }
 
+            bool noItem = self.itemAnimation == 0 && self.ItemTimeIsZero && self.reuseDelay == 0;
+
             if (!conf.scrollEntireInventory) {
                 while (Offset > 9) {
                     Offset -= 10;
@@ -146,6 +149,7 @@ namespace AdvancedControls {
 
             itemToSelect += Offset;
             if (Offset != 0) {
+                if (noItem) SoundEngine.PlaySound(SoundID.MenuTick);
                 int num = itemToSelect - Offset;
                 self.DpadRadial.ChangeSelection(-1);
                 self.CircularRadial.ChangeSelection(-1);
@@ -154,6 +158,9 @@ namespace AdvancedControls {
             }
 
             if (self.changeItem >= 0) {
+                if (noItem && itemToSelect != self.changeItem)
+				    SoundEngine.PlaySound(SoundID.MenuTick);
+
                 itemToSelect = self.changeItem;
                 self.changeItem = -1;
             }
@@ -169,9 +176,12 @@ namespace AdvancedControls {
                 }
             }
 
-            bool shouldPlaySound = kbp.origSelectedItem == 0 || !kbp.valuesChanged;
             //Checking for smart select here is necessary because... it somehow changes its value between the if and the call to the function that also checks it???
-            if (itemToSelect != self.selectedItem && !PlayerInput.Triggers.Current.SmartSelect) kbp.SetItemToSelect(itemToSelect, false, shouldPlaySound);
+            if (noItem) self.selectedItem = itemToSelect;
+            else if (!PlayerInput.Triggers.Current.SmartSelect) {
+                bool shouldPlaySound = kbp.origSelectedItem == 0 || !kbp.valuesChanged;
+                kbp.SetItemToSelect(itemToSelect, false, shouldPlaySound);
+            }
         }
     }
 }
