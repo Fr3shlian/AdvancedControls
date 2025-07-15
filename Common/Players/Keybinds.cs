@@ -209,7 +209,7 @@ namespace AdvancedControls.Common.Players {
 
         //--- Helper for Dynamic Hotbar ---
         public void ClearDynamicHotbarMemory() {
-            DynamicHotbarKb.ClearLastSelectedItem();
+            DynamicHotbarKb?.ClearLastSelectedItem();
         }
 
         // --- Helpers for Dynamic Hotbar and Equipment Change ---
