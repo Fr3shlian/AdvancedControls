@@ -155,7 +155,7 @@ namespace AdvancedControls.Common.Players {
             if (!Main.inFancyUI && !Main.ingameOptionsWindow)
                 theorheticalOffset += PlayerInput.ScrollWheelDelta / -120;
 
-            if (!conf.scrollDuringItemUse || !Player.controlUseItem || theorheticalOffset == 0 || Main.playerInventory || Main.mapFullscreen) {
+            if (!conf.scrollDuringItemUse || (Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) || theorheticalOffset == 0 || Main.playerInventory || Main.mapFullscreen) {
                 valuesChanged = false;
                 return;
             }
