@@ -93,8 +93,22 @@ namespace AdvancedControls.Common.Players {
             for (int i = 0; i < processTriggerFunctions.Count; i++) {
                 processTriggerFunctions[i](this, triggersSet);
             }
+        }
 
-            // --- Helpers for inventory actions ---
+        public override void SaveData(TagCompound tag) {
+            for (int i = 0; i < saveDataFunctions.Count; i++) {
+                saveDataFunctions[i](this, tag);
+            }
+        }
+
+        public override void LoadData(TagCompound tag) {
+            for (int i = 0; i < loadDataFunctions.Count; i++) {
+                loadDataFunctions[i](this, tag);
+            }
+        }
+
+        // --- Helper for inventory actions ---
+        public override void SetControls() {
             if (priorSelectedItem != -1 && Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
                 Player.selectedItem = priorSelectedItem;
                 SoundEngine.PlaySound(SoundID.MenuTick);
@@ -102,31 +116,23 @@ namespace AdvancedControls.Common.Players {
             }
 
             if (ItemToSelect != -1) {
-                Player.controlUseItem = false;
-
-                if (Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
-                    if (useOnceAndSwitchBack) {
-                        priorSelectedItem = Player.selectedItem;
-                        Player.controlUseItem = true;
-                    }
-
-                    if (ItemToSelect == Player.selectedItem) {
-                        ItemToSelect = -1;
-                        priorSelectedItem = -1;
-                        return;
-                    }
-
-                    if (playSound) SoundEngine.PlaySound(SoundID.MenuTick);
-                    Player.selectedItem = ItemToSelect;
-                    ItemToSelect = -1;
-
-                    Player.ItemCheck();
+                if (useOnceAndSwitchBack) {
+                    priorSelectedItem = Player.selectedItem;
+                    Player.controlUseItem = true;
                 }
-            }
-        }
 
-        // --- Helper for hotbar scrolling tweaks ---
-        public override void SetControls() {
+                if (ItemToSelect == Player.selectedItem) {
+                    ItemToSelect = -1;
+                    priorSelectedItem = -1;
+                    return;
+                }
+
+                if (playSound) SoundEngine.PlaySound(SoundID.MenuTick);
+                Player.nonTorch = ItemToSelect;
+                Player.selectItemOnNextUse = true;
+                ItemToSelect = -1;
+            }
+
             //Mock offset calculation to check whether the player is scrolling
             int num = PlayerInput.Triggers.Current.HotbarPlus.ToInt() - PlayerInput.Triggers.Current.HotbarMinus.ToInt();
             int theorheticalScrollCD = PlayerInput.Triggers.Current.HotbarScrollCD;
@@ -169,26 +175,12 @@ namespace AdvancedControls.Common.Players {
             valuesChanged = true;
         }
 
-        public override void SaveData(TagCompound tag) {
-            for (int i = 0; i < saveDataFunctions.Count; i++) {
-                saveDataFunctions[i](this, tag);
-            }
-        }
-
-        public override void LoadData(TagCompound tag) {
-            for (int i = 0; i < loadDataFunctions.Count; i++) {
-                loadDataFunctions[i](this, tag);
-            }
-        }
-
-        // --- Helpers for inventory actions ---
         public void SetItemToSelect(int slot, bool useOnceAndSwitchBack = true, bool playSound = true) {
             if (PlayerInput.Triggers.Current.SmartSelect || Player.selectedItem == 58) return;
 
             ItemToSelect = slot;
             this.playSound = playSound;
             this.useOnceAndSwitchBack = useOnceAndSwitchBack;
-            Player.controlUseItem = false;
         }
 
         public bool FindAndSetItemToSelect(int id, bool useOnceAndSwitchBack = true) {
