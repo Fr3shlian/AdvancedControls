@@ -130,13 +130,14 @@ namespace AdvancedControls {
                 PlayerInput.Triggers.Current.Hotbar1 = kbp.origHotbar1;
             }
 
-            if (!conf.scrollEntireInventory && self.selectedItem >= 10)
+            bool shouldScrollEntireInventory = conf.ShouldScrollEntireInventory();
+            if (!shouldScrollEntireInventory && self.selectedItem >= 10)
                 return;
 
             bool noItem = self.itemAnimation == 0 && self.ItemTimeIsZero && self.reuseDelay == 0;
             if (noItem && Offset != 0) kbp.ClearDynamicHotbarMemory();
 
-            if (!conf.scrollEntireInventory) {
+            if (!shouldScrollEntireInventory) {
                 while (Offset > 9) {
                     Offset -= 10;
                 }
@@ -166,7 +167,7 @@ namespace AdvancedControls {
                 self.changeItem = -1;
             }
 
-            int clampVal = conf.scrollEntireInventory ? 50 : 10;
+            int clampVal = shouldScrollEntireInventory ? 50 : 10;
             if (itemToSelect != 58) {
                 while (itemToSelect > 9) {
                     itemToSelect -= clampVal;

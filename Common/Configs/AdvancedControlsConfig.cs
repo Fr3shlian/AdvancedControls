@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Terraria;
 using Terraria.ModLoader.Config;
 
 namespace AdvancedControls.Common.Configs {
@@ -8,8 +9,18 @@ namespace AdvancedControls.Common.Configs {
         DashWithMount
     }
 
+    public enum InventoryScroll {
+        Normal,
+        EntireInventorySafe,
+        EntireInventory
+    }
+
     public class AdvancedControlsConfig : ModConfig {
         public override ConfigScope Mode => ConfigScope.ClientSide;
+
+        public bool ShouldScrollEntireInventory() {
+            return inventoryScroll == InventoryScroll.EntireInventory || (inventoryScroll == InventoryScroll.EntireInventorySafe && Main.LocalPlayer.selectedItem >= 10);
+        }
 
         [Header("Dash")]
 
@@ -45,8 +56,8 @@ namespace AdvancedControls.Common.Configs {
 
         [Header("Tweaks")]
 
-        [DefaultValue(false)]
-        public bool scrollEntireInventory;
+        [DefaultValue(InventoryScroll.Normal)]
+        public InventoryScroll inventoryScroll;
 
         [DefaultValue(true)]
         public bool scrollDuringItemUse;

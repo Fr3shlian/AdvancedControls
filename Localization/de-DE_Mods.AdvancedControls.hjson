@@ -194,11 +194,6 @@ Configs: {
 			Tooltip: ""
 		}
 
-		scrollEntireInventory: {
-			Label: Ganzes Inventar durchscrollen
-			Tooltip: ""
-		}
-
 		scrollDuringItemUse: {
 			Label: Während ein Item verwendet wird scrollen
 			Tooltip: ""
@@ -228,6 +223,11 @@ Configs: {
 			Tooltip: Wenn Alchemiepflanzensamen ausgewählt werden, wird zuerst ein Samen passend zum Pflanzenkasten gesucht
 			Label: Passende Alchemiepflanzensamen auswählen
 		}
+
+		inventoryScroll: {
+			Label: Scroll-Reichweite
+			Tooltip: Ändert die Scroll-Reichweite - "Gesamtes Inventar (Sicher)" lässt einen nur Slots nach der Hotbar auswählen, wenn bereits einer ausgewählt ist
+		}
 	}
 
 	MountDashBehaviour: {
@@ -235,5 +235,12 @@ Configs: {
 		DashWithMount.Label: Mit Reittier losstürmen
 		DismountDashRemount.Label: Absatteln und wieder aufsatteln
 		DismountDash.Label: Absatteln und losstürmen
+	}
+
+	InventoryScroll: {
+		Normal.Label: Normal
+		EntireInventorySafe.Label: Gesamtes Inventar (Sicher)
+		EntireInventory.Label: Gesamtes Inventar
+		Tooltip: ""
 	}
 }

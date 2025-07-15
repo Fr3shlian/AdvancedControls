@@ -194,11 +194,6 @@ Configs: {
 			Tooltip: ""
 		}
 
-		scrollEntireInventory: {
-			Label: Scroll Entire Inventory
-			Tooltip: ""
-		}
-
 		scrollDuringItemUse: {
 			Label: Scroll During Item Usage
 			Tooltip: ""
@@ -228,6 +223,11 @@ Configs: {
 			Tooltip: Attempt to choose alchemy plant seeds based on the type of planter
 			Label: Match Seeds With Planter
 		}
+
+		inventoryScroll: {
+			Label: Inventory Scrolling Range
+			Tooltip: Changes scrolling range - "Entiry Inventory Safe" only allows scrolling through slots past the hotbar when already past the hotbar
+		}
 	}
 
 	MountDashBehaviour: {
@@ -235,5 +235,12 @@ Configs: {
 		DashWithMount.Label: Dash with mount
 		DismountDashRemount.Label: Dismount, dash and remount
 		DismountDash.Label: Dismount and dash
+	}
+
+	InventoryScroll: {
+		Normal.Label: Normal
+		EntireInventorySafe.Label: Entire Inventory Safe
+		EntireInventory.Label: Entire Inventory
+		Tooltip: ""
 	}
 }
