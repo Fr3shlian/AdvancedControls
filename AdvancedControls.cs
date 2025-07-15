@@ -134,6 +134,7 @@ namespace AdvancedControls {
             }
 
             bool noItem = self.itemAnimation == 0 && self.ItemTimeIsZero && self.reuseDelay == 0;
+            if (noItem && Offset != 0) kbp.ClearDynamicHotbarMemory();
 
             if (!conf.scrollEntireInventory) {
                 while (Offset > 9) {
@@ -181,6 +182,7 @@ namespace AdvancedControls {
             else if (!PlayerInput.Triggers.Current.SmartSelect) {
                 bool shouldPlaySound = kbp.origSelectedItem == 0 || !kbp.valuesChanged;
                 kbp.SetItemToSelect(itemToSelect, false, shouldPlaySound);
+                if (itemToSelect != self.selectedItem) kbp.ClearDynamicHotbarMemory();
             }
         }
     }

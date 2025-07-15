@@ -109,6 +109,8 @@ namespace AdvancedControls.Common.Players {
 
         // --- Helper for inventory actions ---
         public override void SetControls() {
+            if (PlayerInput.Triggers.Current.Hotbar1 || PlayerInput.Triggers.Current.Hotbar2 || PlayerInput.Triggers.Current.Hotbar3 || PlayerInput.Triggers.Current.Hotbar4 || PlayerInput.Triggers.Current.Hotbar5 || PlayerInput.Triggers.Current.Hotbar6 || PlayerInput.Triggers.Current.Hotbar7 || PlayerInput.Triggers.Current.Hotbar8 || PlayerInput.Triggers.Current.Hotbar9 || PlayerInput.Triggers.Current.Hotbar10) ClearDynamicHotbarMemory();
+
             if (priorSelectedItem != -1 && Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
                 Player.selectedItem = priorSelectedItem;
                 SoundEngine.PlaySound(SoundID.MenuTick);
@@ -203,6 +205,11 @@ namespace AdvancedControls.Common.Players {
 
             SetItemToSelect(slot, useOnceAndSwitchBack);
             return true;
+        }
+
+        //--- Helper for Dynamic Hotbar ---
+        public void ClearDynamicHotbarMemory() {
+            DynamicHotbarKb.ClearLastSelectedItem();
         }
 
         // --- Helpers for Dynamic Hotbar and Equipment Change ---
@@ -528,7 +535,6 @@ namespace AdvancedControls.Common.Players {
         private void DynamicHotbarAction(int slot) {
             if (player.selectedItem == dynamicHotbar[slot] && lastSelectedItem != -1) {
                 modPlayer.SetItemToSelect(lastSelectedItem, false);
-                lastSelectedItem = -1;
             } else {
                 if (!IsItemReferenced(player.selectedItem))
                     lastSelectedItem = player.selectedItem;
@@ -543,6 +549,10 @@ namespace AdvancedControls.Common.Players {
 
         public void UnbindReference(int slot) {
             dynamicHotbar[slot] = -1;
+        }
+
+        public void ClearLastSelectedItem() {
+            lastSelectedItem = -1;
         }
     }
 
