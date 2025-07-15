@@ -130,6 +130,8 @@ namespace AdvancedControls {
                 PlayerInput.Triggers.Current.Hotbar1 = kbp.origHotbar1;
             }
 
+            if (PlayerInput.Triggers.Current.SmartSelect) return;
+
             bool shouldScrollEntireInventory = conf.ShouldScrollEntireInventory();
             if (!shouldScrollEntireInventory && self.selectedItem >= 10)
                 return;
@@ -161,7 +163,7 @@ namespace AdvancedControls {
 
             if (self.changeItem >= 0) {
                 if (noItem && itemToSelect != self.changeItem)
-				    SoundEngine.PlaySound(SoundID.MenuTick);
+                    SoundEngine.PlaySound(SoundID.MenuTick);
 
                 itemToSelect = self.changeItem;
                 self.changeItem = -1;
@@ -178,9 +180,8 @@ namespace AdvancedControls {
                 }
             }
 
-            //Checking for smart select here is necessary because... it somehow changes its value between the if and the call to the function that also checks it???
             if (noItem) self.selectedItem = itemToSelect;
-            else if (!PlayerInput.Triggers.Current.SmartSelect) {
+            else {
                 bool shouldPlaySound = kbp.origSelectedItem == 0 || !kbp.valuesChanged;
                 kbp.SetItemToSelect(itemToSelect, false, shouldPlaySound);
                 if (itemToSelect != self.selectedItem) kbp.ClearDynamicHotbarMemory();
