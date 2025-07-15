@@ -121,9 +121,6 @@ namespace AdvancedControls {
         private void On_Player_ScrollHotBar(On_Player.orig_ScrollHotbar orig, Player self, int Offset) {
             KeyBindPlayer kbp = Main.CurrentPlayer.GetModPlayer<KeyBindPlayer>();
 
-            if (!conf.scrollEntireInventory && self.selectedItem >= 10)
-                return;
-
             //Restore original values
             if (kbp.valuesChanged) {
                 self.selectedItem = kbp.origSelectedItem;
@@ -132,6 +129,9 @@ namespace AdvancedControls {
                 self.reuseDelay = kbp.origReuseDelay;
                 PlayerInput.Triggers.Current.Hotbar1 = kbp.origHotbar1;
             }
+
+            if (!conf.scrollEntireInventory && self.selectedItem >= 10)
+                return;
 
             bool noItem = self.itemAnimation == 0 && self.ItemTimeIsZero && self.reuseDelay == 0;
             if (noItem && Offset != 0) kbp.ClearDynamicHotbarMemory();
