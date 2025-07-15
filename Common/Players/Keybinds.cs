@@ -530,7 +530,7 @@ namespace AdvancedControls.Common.Players {
                 modPlayer.SetItemToSelect(lastSelectedItem, false);
                 lastSelectedItem = -1;
             } else {
-                if ((player.selectedItem < 10 && !IsItemReferenced(player.selectedItem)) || lastSelectedItem == -1)
+                if (!IsItemReferenced(player.selectedItem))
                     lastSelectedItem = player.selectedItem;
 
                 modPlayer.SetItemToSelect(dynamicHotbar[slot], false);
