@@ -10,6 +10,7 @@ using Terraria.ModLoader;
 namespace AdvancedControls {
     public class AdvancedControls : Mod {
         AdvancedControlsConfig conf;
+        bool altOverride = false;
 
         public override void Load() {
             conf = ModContent.GetInstance<AdvancedControlsConfig>();
@@ -25,7 +26,7 @@ namespace AdvancedControls {
             Tile tile = Main.tile[tX, tY + 1];
             bool enterAutoSeed = conf.autoSelectPlanterSeeds && tile.TileType == TileID.PlanterBox;
 
-            if (enterAutoRegrowth || enterAutoSeed) {
+            if (!altOverride && (enterAutoRegrowth || enterAutoSeed)) {
                 //Copied from SmartSelect_GetToolStrategy to determine whether the player is in range
                 int num = 0;
                 int num2 = 0;
@@ -107,10 +108,12 @@ namespace AdvancedControls {
                     if (self.inventory[i].hammer > 0) {
                         toolStrategy = 1;
                         wetTile = false;
+                        altOverride = true;
                         return;
                     }
                 }
 
+            altOverride = false;
             orig(self, tX, tY, out toolStrategy, out wetTile);
         }
 
