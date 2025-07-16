@@ -21,10 +21,18 @@ namespace AdvancedControls {
             On_Player.SmartSelect_PickToolForStrategy += On_Player_SmartSelect_PickToolForStrategy;
         }
 
+        private static void SmartSelect_SelectItem(Player self, int slot) {
+            if (self.nonTorch == -1)
+                self.nonTorch = self.selectedItem;
+
+            self.selectedItem = slot;
+        }
+
         private void On_Player_SmartSelect_PickToolForStrategy(On_Player.orig_SmartSelect_PickToolForStrategy orig, Player self, int tX, int tY, int toolStrategy, bool wetTile) {
-            bool enterAutoRegrowth = conf.autoSelectRegrowthItem && Main.tileAlch[Main.tile[tX, tY].TileType];
-            Tile tile = Main.tile[tX, tY + 1];
-            bool enterAutoSeed = conf.autoSelectPlanterSeeds && tile.TileType == TileID.PlanterBox;
+            Tile curTile = Main.tile[tX, tY];
+            bool enterAutoRegrowth = conf.autoSelectRegrowthItem && Main.tileAlch[curTile.TileType];
+            Tile nextTile = Main.tile[tX, tY + 1];
+            bool enterAutoSeed = conf.autoSelectPlanterSeeds && nextTile.TileType == TileID.PlanterBox;
 
             if (!altOverride && (enterAutoRegrowth || enterAutoSeed)) {
                 //Copied from SmartSelect_GetToolStrategy to determine whether the player is in range
@@ -47,52 +55,79 @@ namespace AdvancedControls {
                         int slot = self.FindItem([ItemID.StaffofRegrowth, ItemID.AcornAxe]);
 
                         if (slot != -1) {
-                            if (self.nonTorch == -1)
-                                self.nonTorch = self.selectedItem;
+                            SmartSelect_SelectItem(self, slot);
+                            return;
+                        }
 
-                            self.selectedItem = slot;
+                        int seedsToFind = -1;
+
+                        switch (curTile.TileFrameX) {
+                            case 0:
+                                seedsToFind = ItemID.DaybloomSeeds;
+                                break;
+                            case 18:
+                                seedsToFind = ItemID.MoonglowSeeds;
+                                break;
+                            case 36:
+                                seedsToFind = ItemID.BlinkrootSeeds;
+                                break;
+                            case 54:
+                                seedsToFind = ItemID.DeathweedSeeds;
+                                break;
+                            case 72:
+                                seedsToFind = ItemID.WaterleafSeeds;
+                                break;
+                            case 90:
+                                seedsToFind = ItemID.FireblossomSeeds;
+                                break;
+                            case 108:
+                                seedsToFind = ItemID.ShiverthornSeeds;
+                                break;
+                        }
+
+                        slot = self.FindItem(seedsToFind);
+
+                        if (slot != -1) {
+                            SmartSelect_SelectItem(self, slot);
                             return;
                         }
                     } else if (enterAutoSeed) {
-                        List<int> seedsToFind = [];
+                        int seedsToFind = -1;
 
                         if (conf.matchSeedsWithPlanter)
-                            switch (tile.TileFrameY) {
+                            switch (nextTile.TileFrameY) {
                                 case 0:
-                                    seedsToFind.Add(ItemID.DaybloomSeeds);
+                                    seedsToFind = ItemID.DaybloomSeeds;
                                     break;
                                 case 18:
-                                    seedsToFind.Add(ItemID.MoonglowSeeds);
+                                    seedsToFind = ItemID.MoonglowSeeds;
                                     break;
                                 case 36:
                                 case 54:
-                                    seedsToFind.Add(ItemID.DeathweedSeeds);
+                                    seedsToFind = ItemID.DeathweedSeeds;
                                     break;
                                 case 72:
-                                    seedsToFind.Add(ItemID.BlinkrootSeeds);
+                                    seedsToFind = ItemID.BlinkrootSeeds;
                                     break;
                                 case 90:
-                                    seedsToFind.Add(ItemID.WaterleafSeeds);
+                                    seedsToFind = ItemID.WaterleafSeeds;
                                     break;
                                 case 108:
-                                    seedsToFind.Add(ItemID.ShiverthornSeeds);
+                                    seedsToFind = ItemID.ShiverthornSeeds;
                                     break;
                                 case 126:
-                                    seedsToFind.Add(ItemID.FireblossomSeeds);
+                                    seedsToFind = ItemID.FireblossomSeeds;
                                     break;
                             }
 
                         int slot = -1;
 
-                        if (seedsToFind.Count == 1) slot = self.FindItem(seedsToFind[0]);
+                        if (seedsToFind != -1) slot = self.FindItem(seedsToFind);
 
                         if (slot == -1) slot = self.FindItem([ItemID.DaybloomSeeds, ItemID.BlinkrootSeeds, ItemID.WaterleafSeeds, ItemID.ShiverthornSeeds, ItemID.MoonglowSeeds, ItemID.DeathweedSeeds, ItemID.FireblossomSeeds]);
 
                         if (slot != -1) {
-                            if (self.nonTorch == -1)
-                                self.nonTorch = self.selectedItem;
-
-                            self.selectedItem = slot;
+                            SmartSelect_SelectItem(self, slot);
                             return;
                         }
                     }

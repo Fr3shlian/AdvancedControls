@@ -210,7 +210,7 @@ Configs: {
 		}
 
 		autoSelectRegrowthItem: {
-			Tooltip: Auto select a regrowth item while hovering an alchemy plant
+			Tooltip: Auto select a fitting item while hovering an alchemy plant
 			Label: Auto Select Regrowth Item
 		}
 
