@@ -3,7 +3,7 @@
 Keybinds: {
 	QuickStack.DisplayName: In Kiste Einsortieren
 	Dash.DisplayName: Losstürmen
-	LootAll.DisplayName: Kiste Ausräumen
+	LootAll.DisplayName: Kiste ausräumen
 	DepositAll.DisplayName: Kiste befüllen
 	DynamicHotbar1.DisplayName: Dynamische Schnellleiste 1
 	DynamicHotbar2.DisplayName: Dynamische Schnellleiste 2
@@ -14,7 +14,6 @@ Keybinds: {
 	DynamicHotbar7.DisplayName: Dynamische Schnellleiste 7
 	DynamicHotbar8.DisplayName: Dynamische Schnellleiste 8
 	DynamicHotbar9.DisplayName: Dynamische Schnellleiste 9
-	DynamicHotbar10.DisplayName: Dynamische Schnellleiste 10
 	EquipmentChangeReference5.DisplayName: Ausrüstung wechseln 5
 	EquipmentChangeReference4.DisplayName: Ausrüstung wechseln 4
 	EquipmentChangeReference3.DisplayName: Ausrüstung wechseln 3
@@ -22,7 +21,7 @@ Keybinds: {
 	EquipmentChangeReference1.DisplayName: Ausrüstung wechseln 1
 	MechanicalRulerToggle.DisplayName: Mechanisches Lineal umschalten
 	RulerToggle.DisplayName: Lineal umschalten
-	UseTeleport.DisplayName: Teleportieritem verwenden
+	UseTeleport.DisplayName: Teleportationsitem verwenden
 	Recall.DisplayName: Nach Hause teleportieren
 	RecallSpawn.DisplayName: Zum Spawn teleportieren
 	RecallOcean.DisplayName: Zum Ozean teleportieren
@@ -42,17 +41,17 @@ Configs: {
 		DisplayName: Advanced Controls Einstellungen
 
 		Headers: {
-			Dash: Losstürmen
-			Inventory: Inventarwerkzeuge
-			QuickUse: Itemkürzel
+			Dash: Losstürmen (Tastaturkürzel)
 			Keybinds: Tastaturbelegungen
 			Tweaks: Tweaks
-			EquipmentChange: Ausrüstung wechseln Tastaturkürzel
+			EquipmentChange: Ausrüstung wechseln (Tastaturkürzel)
+			UseTeleport: Teleportationsitem verwenden (Tastaturkürzel)
+			RecallHome: Nach Hause teleportieren (Tastaturkürzel)
 		}
 
 		mountDashBehaviour: {
 			Label: Während dem Reiten
-			Tooltip: ""
+			Tooltip: Was der Tastaturkürzel tut, wenn ein Reittier aktiv ist
 		}
 
 		cancelHooks: {
@@ -66,7 +65,7 @@ Configs: {
 		}
 
 		preventHealthLoss: {
-			Label: Schaden von Teleportitems vermeiden
+			Label: Schaden von Teleportationsitems vermeiden
 			Tooltip: ""
 		}
 
@@ -77,7 +76,7 @@ Configs: {
 
 		dashBuffer: {
 			Label: Losstürmen buffern
-			Tooltip: ""
+			Tooltip: Wenn der Charakter noch nicht erneut losstürmen kann, soll es wenn nächstmöglich passieren
 		}
 
 		dynamicHotbarCount: {
@@ -177,17 +176,17 @@ Configs: {
 
 		alwaysMount: {
 			Label: Immer mit Reittier losstürmen
-			Tooltip: ""
+			Tooltip: Nach dem losstürmen soll immer das Reittier aufgesattelt werden
 		}
 
 		disableDoubleTap: {
 			Label: Bei Doppeltipp nicht losstürmen
-			Tooltip: ""
+			Tooltip: Es soll nur mit dem Tastaturkürzel möglich sein loszustürmen
 		}
 
 		bufferCurrentDirection: {
 			Label: Richtung für Buffer beim Losstürmen bestimmen
-			Tooltip: ""
+			Tooltip: Wenn losstürmen gebuffert wurde, soll die Bewegungsrichtung kurz vor dem losstürmen basierend auf der Eingabe neu bestimmt werden
 		}
 
 		enableBugNetKeybind: {
@@ -201,7 +200,7 @@ Configs: {
 		}
 
 		disableWallClimb: {
-			Tooltip: ""
+			Tooltip: Sperrt die Fähigkeit mancher Accessories, sich an Wände zu hängen
 			Label: Nicht an Wände hängen
 		}
 

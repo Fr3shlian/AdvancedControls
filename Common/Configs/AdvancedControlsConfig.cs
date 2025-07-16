@@ -54,10 +54,14 @@ namespace AdvancedControls.Common.Configs {
 
 
 
-        [Header("QuickUse")]
+        [Header("UseTeleport")]
 
         [DefaultValue(false)]
         public bool preventHealthLoss;
+
+
+
+        [Header("RecallHome")]
 
         [DefaultValue(false)]
         public bool prioritizeRecallPotions;

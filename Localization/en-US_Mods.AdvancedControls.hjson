@@ -14,7 +14,6 @@ Keybinds: {
 	DynamicHotbar7.DisplayName: Dynamic Hotbar 7
 	DynamicHotbar8.DisplayName: Dynamic Hotbar 8
 	DynamicHotbar9.DisplayName: Dynamic Hotbar 9
-	DynamicHotbar10.DisplayName: Dynamic Hotbar 10
 	EquipmentChangeReference5.DisplayName: Equipment Change 5
 	EquipmentChangeReference4.DisplayName: Equipment Change 4
 	EquipmentChangeReference3.DisplayName: Equipment Change 3
@@ -42,17 +41,17 @@ Configs: {
 		DisplayName: Advanced Controls Config
 
 		Headers: {
-			Dash: Dash
-			Inventory: Inventory Tweaks
-			QuickUse: Quick Use
+			Dash: Dash Keybind
 			Keybinds: Keybinds
 			Tweaks: Tweaks
 			EquipmentChange: Equipment Change Keybind
+			UseTeleport: Use Teleport Item Keybind
+			RecallHome: Recall Home Keybind
 		}
 
 		mountDashBehaviour: {
 			Label: While mounted
-			Tooltip: ""
+			Tooltip: Defines the behaviour of the keybind when a mount is active
 		}
 
 		cancelHooks: {
@@ -77,7 +76,7 @@ Configs: {
 
 		dashBuffer: {
 			Label: Dash Buffer
-			Tooltip: ""
+			Tooltip: Performs the next dash when possible if dashing is currently on cooldown
 		}
 
 		dynamicHotbarCount: {
@@ -177,17 +176,17 @@ Configs: {
 
 		alwaysMount: {
 			Label: Always Mount
-			Tooltip: ""
+			Tooltip: Activates the mount after the dash is initiated
 		}
 
 		disableDoubleTap: {
 			Label: Disable Double Tap
-			Tooltip: ""
+			Tooltip: Only allow dashing via the keybind
 		}
 
 		bufferCurrentDirection: {
 			Label: Buffer Current Direction
-			Tooltip: ""
+			Tooltip: Redefine the dash direction right before dashing based on input
 		}
 
 		enableBugNetKeybind: {
@@ -201,7 +200,7 @@ Configs: {
 		}
 
 		disableWallClimb: {
-			Tooltip: ""
+			Tooltip: Disables the ability to climb (granted by some accessories)
 			Label: Disable Wall Climb
 		}
 
