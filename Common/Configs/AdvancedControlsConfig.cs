@@ -44,6 +44,16 @@ namespace AdvancedControls.Common.Configs {
 
 
 
+        [Header("EquipmentChange")]
+
+        [DefaultValue(true)]
+        public bool changeMount;
+
+        [DefaultValue(true)]
+        public bool showChangeIndicator;
+
+
+
         [Header("QuickUse")]
 
         [DefaultValue(false)]

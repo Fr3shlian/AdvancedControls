@@ -47,6 +47,7 @@ Configs: {
 			QuickUse: Itemkürzel
 			Keybinds: Tastaturbelegungen
 			Tweaks: Tweaks
+			EquipmentChange: Ausrüstung wechseln Tastaturkürzel
 		}
 
 		mountDashBehaviour: {
@@ -227,6 +228,16 @@ Configs: {
 		inventoryScroll: {
 			Label: Scroll-Reichweite
 			Tooltip: Ändert die Scroll-Reichweite - "Gesamtes Inventar (Sicher)" lässt einen nur Slots nach der Hotbar auswählen, wenn bereits einer ausgewählt ist
+		}
+
+		showChangeIndicator: {
+			Tooltip: Beim Wechseln von Items soll kurz ein Indikator erscheinen
+			Label: Änderungsindikator einblenden
+		}
+
+		changeMount: {
+			Tooltip: Wenn das augerüstete Reittier gewechselt wird, soll auch das aktive Reittier gewechselt werden (zählt auch für die Lore)
+			Label: Reittier wechseln
 		}
 	}
 

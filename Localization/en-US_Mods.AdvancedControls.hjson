@@ -47,6 +47,7 @@ Configs: {
 			QuickUse: Quick Use
 			Keybinds: Keybinds
 			Tweaks: Tweaks
+			EquipmentChange: Equipment Change Keybind
 		}
 
 		mountDashBehaviour: {
@@ -227,6 +228,16 @@ Configs: {
 		inventoryScroll: {
 			Label: Inventory Scrolling Range
 			Tooltip: Changes scrolling range - "Entiry Inventory Safe" only allows scrolling through slots past the hotbar when already past the hotbar
+		}
+
+		showChangeIndicator: {
+			Tooltip: Show an indicator when items are swapped
+			Label: Change Indicator
+		}
+
+		changeMount: {
+			Tooltip: Changing the equipped mount will also change the active mount (also counts for the minecart)
+			Label: Change Active Mount
 		}
 	}
 

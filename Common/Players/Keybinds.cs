@@ -613,6 +613,7 @@ namespace AdvancedControls.Common.Players {
         private readonly InventoryReference[] equipmentTarget = [.. Enumerable.Repeat(new InventoryReference(), KeybindSystem.EquipmentChangeReferenceKeyBinds.Count)];
         private readonly int[] holdTimer = [.. Enumerable.Repeat(-1, KeybindSystem.DynamicHotbarKeyBinds.Count)];
         private Player player;
+        private KeyBindPlayer modPlayer;
 
         public void SaveData(KeyBindPlayer modPlayer, TagCompound tag) {
             tag.Set("equipmentSource", EquipmentReference, true);
@@ -642,6 +643,7 @@ namespace AdvancedControls.Common.Players {
 
         public void ProcessTriggers(KeyBindPlayer modPlayer, TriggersSet triggersSet) {
             player = modPlayer.Player;
+            this.modPlayer = modPlayer;
 
             for (int i = 0; i < KeybindSystem.EquipmentChangeReferenceKeyBinds.Count; i++) {
                 if (KeybindSystem.EquipmentChangeReferenceKeyBinds[i].JustPressed) {
@@ -755,12 +757,12 @@ namespace AdvancedControls.Common.Players {
                 if (source != null && source.ModItem == null) Main.instance.LoadItem(source.type);
                 if (target != null && source.ModItem == null) Main.instance.LoadItem(target.type);
 
-                KeybindSystem.SetItemRefsForIndicator(source, target);
+                if (modPlayer.conf.showChangeIndicator) KeybindSystem.SetItemRefsForIndicator(source, target);
 
                 player.UpdateEquips(0);
                 SoundEngine.PlaySound(SoundID.Grab);
 
-                if (player.mount.Active) {
+                if (player.mount.Active && modPlayer.conf.changeMount) {
                     if (equipmentTarget[slot].Context == ItemSlot.Context.EquipMinecart && MountID.Sets.Cart[player.mount.Type]) player.mount.SetMount(player.miscEquips[Player.miscSlotCart].mountType, player);
                     else if (equipmentTarget[slot].Context == ItemSlot.Context.EquipMount && !MountID.Sets.Cart[player.mount.Type]) player.mount.SetMount(player.miscEquips[Player.miscSlotMount].mountType, player);
                 }
