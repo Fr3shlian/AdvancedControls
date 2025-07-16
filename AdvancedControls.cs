@@ -85,7 +85,7 @@ namespace AdvancedControls {
                                 break;
                         }
 
-                        slot = self.FindItem(seedsToFind);
+                        if (seedsToFind != -1) slot = self.FindItem(seedsToFind);
 
                         if (slot != -1) {
                             SmartSelect_SelectItem(self, slot);
