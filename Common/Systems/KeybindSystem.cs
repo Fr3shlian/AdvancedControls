@@ -217,19 +217,25 @@ namespace AdvancedControls.Common.Systems {
         private bool DrawEquipmentChangeIndicator() {
             if (alpha != 0f) {
                 Texture2D tex1, tex2;
+                Rectangle tex1Rect = new(), tex2Rect = new();
 
-                if (item1.ModItem != null) tex1 = ModContent.Request<Texture2D>(item1.ModItem.Texture).Value;
+                if (Main.itemAnimations[item1.type] != null) Main.GetItemDrawFrame(item1.type, out tex1, out tex1Rect);
+                else if (item1.ModItem != null) tex1 = ModContent.Request<Texture2D>(item1.ModItem.Texture).Value;
                 else tex1 = TextureAssets.Item[item1.type].Value;
 
-                if (item2.ModItem != null) tex2 = ModContent.Request<Texture2D>(item2.ModItem.Texture).Value;
+                if (Main.itemAnimations[item2.type] != null) Main.GetItemDrawFrame(item2.type, out tex2, out tex2Rect);
+                else if (item2.ModItem != null) tex2 = ModContent.Request<Texture2D>(item2.ModItem.Texture).Value;
                 else tex2 = TextureAssets.Item[item2.type].Value;
+
+                if (tex1Rect.IsEmpty) tex1Rect = tex1.Frame(); if (tex2Rect.IsEmpty) tex2Rect = tex2.Frame();
 
                 float playerCenterX = Main.screenWidth / 2;
                 float spacing = 40f;
                 float abovePlayerY = Main.screenHeight / 2 - Main.CurrentPlayer.height + 5;
 
-                Main.spriteBatch.Draw(tex1, new Vector2(playerCenterX - spacing - tex1.Width / 2, abovePlayerY - tex1.Height / 2), Color.White * alpha);
-                Main.spriteBatch.Draw(tex2, new Vector2(playerCenterX + spacing - tex2.Width / 2, abovePlayerY - tex2.Height / 2), Color.White * alpha);
+                Main.spriteBatch.Draw(tex1, new Vector2(playerCenterX - spacing - tex1.Width / 2, abovePlayerY - tex1Rect.Height / 2), tex1Rect, Color.White * alpha);
+                Main.spriteBatch.Draw(tex2, new Vector2(playerCenterX + spacing - tex2.Width / 2, abovePlayerY - tex2Rect.Height / 2), tex2Rect, Color.White * alpha);
+
                 Main.spriteBatch.DrawString((DynamicSpriteFont)FontAssets.ItemStack, "->", new Vector2(playerCenterX - 17, Main.screenHeight / 2 - Main.CurrentPlayer.height * 1.2f), Color.White * alpha, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
             }
 
