@@ -112,15 +112,24 @@ namespace AdvancedControls.Common.Players {
             if (PlayerInput.Triggers.Current.Hotbar1 || PlayerInput.Triggers.Current.Hotbar2 || PlayerInput.Triggers.Current.Hotbar3 || PlayerInput.Triggers.Current.Hotbar4 || PlayerInput.Triggers.Current.Hotbar5 || PlayerInput.Triggers.Current.Hotbar6 || PlayerInput.Triggers.Current.Hotbar7 || PlayerInput.Triggers.Current.Hotbar8 || PlayerInput.Triggers.Current.Hotbar9 || PlayerInput.Triggers.Current.Hotbar10) ClearDynamicHotbarMemory();
 
             if (priorSelectedItem != -1 && Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
-                Player.selectedItem = priorSelectedItem;
-                SoundEngine.PlaySound(SoundID.MenuTick);
-                priorSelectedItem = -1;
+                if (useOnceAndSwitchBack) {
+                    Player.controlUseItem = true;
+                    useOnceAndSwitchBack = false;
+                } else {
+                    Player.selectedItem = priorSelectedItem;
+                    SoundEngine.PlaySound(SoundID.MenuTick);
+                    priorSelectedItem = -1;
+                }
             }
 
             if (ItemToSelect != -1) {
                 if (useOnceAndSwitchBack) {
                     priorSelectedItem = Player.selectedItem;
-                    Player.controlUseItem = true;
+
+                    if (Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
+                        Player.controlUseItem = true;
+                        useOnceAndSwitchBack = false;
+                    }
                 }
 
                 if (ItemToSelect == Player.selectedItem) {
