@@ -124,7 +124,7 @@ namespace AdvancedControls.Common.Players {
 
             if (ItemToSelect != -1) {
                 if (useOnceAndSwitchBack) {
-                    priorSelectedItem = Player.selectedItem;
+                    if (priorSelectedItem == -1) priorSelectedItem = Player.selectedItem;
 
                     if (Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
                         Player.controlUseItem = true;
@@ -134,7 +134,6 @@ namespace AdvancedControls.Common.Players {
 
                 if (ItemToSelect == Player.selectedItem) {
                     ItemToSelect = -1;
-                    priorSelectedItem = -1;
                     return;
                 }
 
@@ -192,6 +191,7 @@ namespace AdvancedControls.Common.Players {
             ItemToSelect = slot;
             this.playSound = playSound;
             this.useOnceAndSwitchBack = useOnceAndSwitchBack;
+            if (!useOnceAndSwitchBack) priorSelectedItem = -1;
         }
 
         public bool FindAndSetItemToSelect(int id, bool useOnceAndSwitchBack = true) {
@@ -251,7 +251,11 @@ namespace AdvancedControls.Common.Players {
 
             if (slot != -1) {
                 Player.inventory[slot].type = shellPhoneID;
-                SetItemToSelect(slot);
+
+                bool holdingShellphone = Player.HeldItem.type == ItemID.Shellphone || Player.HeldItem.type == ItemID.ShellphoneSpawn || Player.HeldItem.type == ItemID.ShellphoneOcean || Player.HeldItem.type == ItemID.ShellphoneHell;
+                bool usingItem = !(Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0);
+
+                if (!(usingItem && holdingShellphone)) SetItemToSelect(slot);
             }
         }
 
