@@ -76,6 +76,9 @@ namespace AdvancedControls.Common.Configs {
         [DefaultValue(true)]
         public bool scrollDuringItemUse;
 
+        [DefaultValue(true)]
+        public bool cancelChannellingItems;
+
         [DefaultValue(false)]
         public bool disableWallClimb;
 

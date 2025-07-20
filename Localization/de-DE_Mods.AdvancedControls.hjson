@@ -238,6 +238,11 @@ Configs: {
 			Tooltip: Wenn das augerüstete Reittier gewechselt wird, soll auch das aktive Reittier gewechselt werden (zählt auch für die Lore)
 			Label: Reittier wechseln
 		}
+
+		cancelChannellingItems: {
+			Label: Item Fokus abbrechen
+			Tooltip: Die Verwendung von Items mit Fokus (z.B. Jojos) durch wechseln des ausgewählten Items abbrechen
+		}
 	}
 
 	MountDashBehaviour: {

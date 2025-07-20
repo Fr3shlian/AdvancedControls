@@ -109,9 +109,11 @@ namespace AdvancedControls.Common.Players {
 
         // --- Helper for inventory actions ---
         public override void SetControls() {
+            bool noItem = Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0;
+
             if (PlayerInput.Triggers.Current.Hotbar1 || PlayerInput.Triggers.Current.Hotbar2 || PlayerInput.Triggers.Current.Hotbar3 || PlayerInput.Triggers.Current.Hotbar4 || PlayerInput.Triggers.Current.Hotbar5 || PlayerInput.Triggers.Current.Hotbar6 || PlayerInput.Triggers.Current.Hotbar7 || PlayerInput.Triggers.Current.Hotbar8 || PlayerInput.Triggers.Current.Hotbar9 || PlayerInput.Triggers.Current.Hotbar10) ClearDynamicHotbarMemory();
 
-            if (priorSelectedItem != -1 && Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
+            if (priorSelectedItem != -1 && noItem) {
                 if (useOnceAndSwitchBack) {
                     Player.controlUseItem = true;
                     useOnceAndSwitchBack = false;
@@ -122,22 +124,19 @@ namespace AdvancedControls.Common.Players {
                 }
             }
 
+            if (conf.cancelChannellingItems && Player.HeldItem.channel && !noItem && (ItemToSelect != -1 || Player.nonTorch != -1)) Player.controlUseItem = false;
+
             if (ItemToSelect != -1) {
                 if (useOnceAndSwitchBack) {
                     if (priorSelectedItem == -1) priorSelectedItem = Player.selectedItem;
 
-                    if (Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) {
+                    if (noItem) {
                         Player.controlUseItem = true;
                         useOnceAndSwitchBack = false;
                     }
                 }
 
-                if (ItemToSelect == Player.selectedItem) {
-                    ItemToSelect = -1;
-                    return;
-                }
-
-                if (playSound) SoundEngine.PlaySound(SoundID.MenuTick);
+                if (playSound && ItemToSelect != Player.selectedItem) SoundEngine.PlaySound(SoundID.MenuTick);
                 Player.nonTorch = ItemToSelect;
                 Player.selectItemOnNextUse = true;
                 ItemToSelect = -1;
@@ -165,7 +164,7 @@ namespace AdvancedControls.Common.Players {
             if (!Main.inFancyUI && !Main.ingameOptionsWindow)
                 theorheticalOffset += PlayerInput.ScrollWheelDelta / -120;
 
-            if (!conf.scrollDuringItemUse || PlayerInput.Triggers.Current.SmartSelect || (!conf.ShouldScrollEntireInventory() && Player.selectedItem >= 10) || (Player.itemAnimation == 0 && Player.ItemTimeIsZero && Player.reuseDelay == 0) || theorheticalOffset == 0 || Main.playerInventory || Main.mapFullscreen) {
+            if (!conf.scrollDuringItemUse || PlayerInput.Triggers.Current.SmartSelect || (!conf.ShouldScrollEntireInventory() && Player.selectedItem >= 10) || noItem || theorheticalOffset == 0 || Main.playerInventory || Main.mapFullscreen) {
                 valuesChanged = false;
                 return;
             }

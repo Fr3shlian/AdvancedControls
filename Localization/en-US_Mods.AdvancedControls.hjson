@@ -238,6 +238,11 @@ Configs: {
 			Tooltip: Changing the equipped mount will also change the active mount (also counts for the minecart)
 			Label: Change Active Mount
 		}
+
+		cancelChannellingItems: {
+			Label: Cancel Channelling Item
+			Tooltip: Allows you to cancel channelling items (e.g. Yoyos) by switching items
+		}
 	}
 
 	MountDashBehaviour: {
