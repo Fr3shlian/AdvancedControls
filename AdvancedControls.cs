@@ -32,7 +32,7 @@ namespace AdvancedControls {
             Tile curTile = Main.tile[tX, tY];
             bool enterAutoRegrowth = conf.autoSelectRegrowthItem && Main.tileAlch[curTile.TileType];
             Tile nextTile = Main.tile[tX, tY + 1];
-            bool enterAutoSeed = conf.autoSelectPlanterSeeds && nextTile.TileType == TileID.PlanterBox;
+            bool enterAutoSeed = conf.autoSelectPlanterSeeds && nextTile.TileType == TileID.PlanterBox && (!curTile.HasTile || TileID.Sets.BreakableWhenPlacing[curTile.TileType] || Main.tileCut[curTile.TileType]);
 
             if (!altOverride && (enterAutoRegrowth || enterAutoSeed)) {
                 //Copied from SmartSelect_GetToolStrategy to determine whether the player is in range
