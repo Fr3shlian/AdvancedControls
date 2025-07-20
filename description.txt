@@ -5,11 +5,10 @@ List of keybinds:
 [list]
     [*] Chest actions
     [*] Dashing (compatible with Vanilla, Calamity, Fargo's Souls, ...?)
-    [*] Cycling all inventory slots (not just the hotbar)
     [*] Dynamic shortcuts to inventory slots ("Dynamic Hotbar" from console Terraria)
     [*] Equipment Change
     [*] Toggling rulers
-    [*] Using Rod of Discord/Harmony
+    [*] Using the Rod of Discord/Harmony
     [*] Using teleport items like Recall Potions and the Magic Conch (including teleport items from the Thorium Mod)
     [*] Using the Money Trough and Void Bag
     [*] Using bug nets
@@ -23,15 +22,17 @@ List of tweaks (all can be disabled separately in the configs):
     [*] Select a hammer with auto select while holding Alt
     [*] Select a regrowth item when hovering an alchemy plant (this works with modded plants if they are registered in Main.tileAlch)
     [*] Select alchemy plants seeds when hovering over a planter box (only works with vanilla planters and seeds)
+    [*] Cancel channeling items (e.g. Yoyos or Flails) without manually releasing Use Item by switching items
 [/list]
 
 Instruction for Dynamic Hotbar:
 [olist]
     [*] Open your inventory
     [*] Hover over a slot and press the keybind to bind it to that inventory slot
-    [*] Press it again to activate it
+    [*] Press it again to switch to that slot
     [*] Hold the button for a moment while in your inventory to unbind it
 [/olist]
+Note: Starting from a slot that is not referenced by Dynamic Hotbar will store that slot into its memory. Pressing the same Dynamic Hotbar key again will change the current slot to the slot in memory. Using hotbar keys or scrolling through the inventory will clear the memory while using another Dynamic Hotbar key will not.
 
 Instruction for Equipment Change:
 [olist]

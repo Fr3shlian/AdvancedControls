@@ -1,14 +1,17 @@
-﻿[h1]v1.8.0 - Now featuring: Tweaks
+﻿[h1]v1.8.1
 [list]
-    [*] Added a tweak to allow scrolling through the entire inventory
-    [*] Added a tweak to allow scrolling the inventory during item usage
-    [*] Added a tweak to disable wall climb from climbing gear
-    [*] Added a tweak to select hammers using auto select when Alt is held
-    [*] Added a tweak to select a regrowth item when hovering an alchemy plant (this works with modded plants if they are registered in Main.tileAlch)
-    [*] Added a tweak to select alchemy plants seeds when hovering over a planter box (only works with vanilla planters and seeds)
-    [*] Removed cycle inventory keybinds since the existing ones serve the same purpose now
-    [*] Item switching will no longer make a sound when the slot that is switched to is already selected
-    [*] Item switching will no longer be attempted when autoselect is being held down
-    [*] Item switching will no longer be attempted when an item is on the cursor
-    [*] Fixed bugnet keybind not working when a bugnet is already selected
+    [*] Smoothened item switching logic by using the same logic the hotbar keys use (instead of mimicing the player releasing "Use Item")
+    [*] Hotbar scrolling no longer uses modified switching logic when no item is in use
+    [*] Scrolling during item usage is now properly based on item usage and not holding "Use Item"
+    [*] Fixed a bug that made scrolling on a non-hotbar slot possible without having that option turned on
+    [*] Fixed some minor bugs with switching and using an item once
+    [*] Dynamic Hotbar will no longer set its memory when starting from a slot referenced by it
+    [*] Using the hotbar keys or scrolling will now clear Dynamic Hotbar memory
+    [*] Added a tweak to cancel channelling items such as Yoyos or Flails by switching items
+    [*] Equipment Change Indicator will now properly display animated items
+    [*] Added the option to disable the Equipment Change Indicator
+    [*] Added the option to disable the active mount/minecart getting changed on Equipment Change keybind usage
+    [*] Auto select regrowth item will now try to find a seed to match the plant if no regrowth item is found
+    [*] Auto select seeds will no longer pick seeds when the tile above a planter is solid
+    [*] Other auto select tweaks will no longer override Auto Select Hammer (Alt)
 [/list]
